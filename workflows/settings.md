@@ -46,14 +46,24 @@ If yes → create `USER.md` from template with sensible defaults (English, auto-
 ### 3. Execute Change
 
 **For `language`:**
+
+> [!CAUTION]
+> Language changes MUST update CLAUDE.md — USER.md alone does NOT change AI behavior.
+> CLAUDE.md Iron Rule #1 is the authoritative language setting. If you only update USER.md, the AI will continue using the old language.
+
 1. Update `USER.md` → `**Language**: [new language]`
-2. Update `CLAUDE.md` Iron Rule #1 → `All communication in [new language]`
-3. Confirm:
+2. **🚨 MUST update `CLAUDE.md`** Iron Rule #1 → find the line containing `**Language**:` and replace with:
+   ```
+   1. **Language**: All communication in [new language]
+   ```
+3. **Verify** both files were updated (read back the changed lines)
+4. Confirm:
    ```
    ✅ Language: [old] → [new]
-   CLAUDE.md Iron Rule #1 updated.
+   ✅ CLAUDE.md Iron Rule #1 updated.
    All future conversations will use [new language].
    ```
+5. **Immediately switch** the current conversation to the new language
 
 **For `model`:**
 1. Fuzzy-match input to known models (e.g., `opus` → `Claude Opus 4`)
