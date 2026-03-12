@@ -30,7 +30,7 @@ When you encounter build errors (Vercel, Expo, TypeScript), invoke this skill to
 - ❌ Refactor unrelated code
 - ❌ Change architecture
 
-## Common Fixes for DYA
+## Common Fixes
 - **Supabase Types**: Ensure generated types are used or add explicit interfaces.
 - **Expo/RN**: Check for named export issues or Metro config.
 - **Next.js**: Check for "use client" directives if hooks are used.

@@ -24,10 +24,10 @@ description: 结束对话的一键收尾指令。自动汇总工作、同步 .mu
 ### 2. 判断身份和同步方向
 从对话内容自动判断本轮身份，**强制执行对应 sync**：
 - Strategy 大脑 → sync strategy down（有新决策时）
-- DYA 开发 → **必须** sync build up
-- DYA 增长 → **必须** sync growth up
-- Prometheus 开发 → **必须** sync prometheus build up
-- Prometheus 增长 → **必须** 更新 Prometheus/.muse/growth.md
+- 开发对话 → **必须** sync build up
+- 增长对话 → **必须** sync growth up
+- 子项目开发 → **必须** sync [project] build up
+- 子项目增长 → **必须** sync [project] growth up
 
 #### ⚠️ 重大事件强制回传 checklist
 以下任何一项发生时，**无论 Agent 是否认为"只是内部事"，都必须 sync up 到 strategy**：
