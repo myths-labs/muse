@@ -2,6 +2,24 @@
 
 **Memory-Unified Skills & Execution**（记忆统一技能与执行）
 
+<p align="center">
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/myths-labs/muse/blob/main/LICENSE)
+[![Version](https://img.shields.io/badge/version-2.3-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
+[![Stars](https://img.shields.io/github/stars/myths-labs/muse?style=social)](https://github.com/myths-labs/muse)
+[![Pure Markdown](https://img.shields.io/badge/pure-markdown-green.svg)](#)
+[![Zero Dependencies](https://img.shields.io/badge/dependencies-zero-brightgreen.svg)](#)
+
+</p>
+
+<p align="center">
+
+[![X @MythsLabs](https://img.shields.io/badge/X-@MythsLabs-black?logo=x)](https://x.com/MythsLabs)
+[![Myths Labs](https://img.shields.io/badge/GitHub-Myths_Labs-181717?logo=github)](https://github.com/myths-labs)
+[![X Creator](https://img.shields.io/badge/X_Creator-@SunshiningDay-black?logo=x)](https://x.com/sunshiningday)
+
+</p>
+
 > *希腊神话中九位缪斯女神是记忆女神 **Mnemosyne** 的女儿。她们将母亲的全知记忆化为对艺术与科学的精通。*
 >
 > *MUSE 继承了这一血脉。它确保 AI 对话中的每一个洞见都不会丢失，将原始会话数据转化为驱动执行的结构化知识。*
