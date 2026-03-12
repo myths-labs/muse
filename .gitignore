@@ -4,3 +4,7 @@ memory/
 convo/
 __pycache__/
 *.pyc
+USER.md
+CLAUDE.md
+MEMORIES.md
+.agent/
