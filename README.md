@@ -9,7 +9,7 @@
 <p align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/myths-labs/muse/blob/main/LICENSE)
-[![Version](https://img.shields.io/badge/version-2.6-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-2.7-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
 [![Stars](https://img.shields.io/github/stars/myths-labs/muse?style=social)](https://github.com/myths-labs/muse)
 [![Pure Markdown](https://img.shields.io/badge/pure-markdown-green.svg)](#)
 [![Zero Dependencies](https://img.shields.io/badge/dependencies-zero-brightgreen.svg)](#)
@@ -178,12 +178,14 @@ graph TB
 
 | Command | Description | Input |
 |---------|------------|:-----:|
+| `/start` | First-time setup — configures project, roles, language | None (interactive) |
 | `/resume [scope]` | Boot — restore context & start work | `build`, `growth`, etc. |
+| `/settings` | Change language, AI model, or preferences | Subcommand (optional) |
 | `/ctx` | Context health check (🟢🟡🔴) | None needed |
 | `/bye` | One-click wrap-up — save, sync, archive | None needed |
 | `/distill` | Condense `memory/` → `MEMORIES.md` | None needed |
-| `/distill [project]` | Distill only one project's memory | Project name |
 | `/sync [direction]` | Cross-file sync in multi-role setup | Direction (optional) |
+| `/sync receive` | Pull updates from other roles mid-conversation | None needed |
 | `/resume crash` | Recover from context blowout | None needed |
 
 ### Defensive Auto-Save (L0 Defense)
@@ -354,6 +356,6 @@ MIT © [Myths Labs](https://github.com/myths-labs)
 </p>
 
 <p align="center">
-  <i>MUSE v2.6</i>
+  <i>MUSE v2.7</i>
 </p>
 

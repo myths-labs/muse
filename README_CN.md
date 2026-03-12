@@ -9,7 +9,7 @@
 <p align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/myths-labs/muse/blob/main/LICENSE)
-[![Version](https://img.shields.io/badge/version-2.6-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-2.7-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
 [![Stars](https://img.shields.io/github/stars/myths-labs/muse?style=social)](https://github.com/myths-labs/muse)
 [![Pure Markdown](https://img.shields.io/badge/pure-markdown-green.svg)](#)
 [![Zero Dependencies](https://img.shields.io/badge/dependencies-zero-brightgreen.svg)](#)
@@ -137,11 +137,14 @@ graph TB
 
 | 命令 | 说明 | 输入 |
 |------|------|:----:|
+| `/start` | 首次配置 — 设置项目、角色、语言 | 无需（交互式） |
 | `/resume [scope]` | 启动 — 恢复上下文 | `build`、`growth` 等 |
+| `/settings` | 切换语言、模型、偏好设置 | 子命令（可选） |
 | `/ctx` | 上下文健康检查（🟢🟡🔴） | 无需输入 |
 | `/bye` | 零输入一键收尾 | 无需输入 |
 | `/distill` | 蒸馏 memory/ → MEMORIES.md | 无需输入 |
 | `/sync [方向]` | 多角色跨文件同步 | 方向（可选） |
+| `/sync receive` | 对话中拉取其他角色的更新 | 无需输入 |
 | `/resume crash` | 上下文爆掉后恢复 | 无需输入 |
 
 ### 防御式自动保存（L0 防御）
@@ -296,5 +299,5 @@ MIT © [Myths Labs](https://github.com/myths-labs)
 </p>
 
 <p align="center">
-  <i>MUSE v2.6</i>
+  <i>MUSE v2.7</i>
 </p>

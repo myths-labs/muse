@@ -1,4 +1,22 @@
 # Changelog
+
+## [2.7.0] - 2026-03-13
+
+### Added
+- **`/settings` command** — Unified preference management: language, AI model, docs convention, code style. Replaces `/model` (backward-compatible alias kept)
+- **Pre-Flight Check in `/resume`** — Detects missing `CLAUDE.md` / `USER.md` / `memory/` / `.muse/` and redirects to `/start` instead of crashing
+- **Mid-Conversation Sync** — `/sync receive` pulls updates from other roles without ending the conversation (e.g., build pulls QA results live)
+- **`/start` in README Commands** — First-time setup now prominently listed
+
+### Changed
+- **`resume.md` fully genericized** — Removed all DYA/Prometheus hardcoded tables and paths. Now works for any project out of the box
+- **`resume.md` rewritten in English** — All instructions localized to English for open-source users
+- **`start.md` updated** — Added `/settings` to command tutorial and post-setup notes
+- **`setup.sh` updated** — Next steps now mention `/start` and `/settings`
+- **README.md + README_CN.md** — Commands table updated with `/start`, `/settings`, `/sync receive`
+
+### Removed
+- **`model.md`** — Replaced by `/settings` (which handles model + language + docs + code style)
 ## [2.6.0] - 2026-03-13
 
 ### Added

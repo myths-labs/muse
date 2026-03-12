@@ -146,7 +146,7 @@ Ask:
 - Create `.agent/skills/` directory structure
 - Copy Core skills (always)
 - Copy selected Toolkit skills
-- Copy all workflows to `.agent/workflows/` (resume, bye, sync, distill, ctx, model, role, start)
+- Copy all workflows to `.agent/workflows/` (resume, bye, sync, distill, ctx, settings, role, start)
 
 ### Step 6: File Creation Summary
 
@@ -174,7 +174,7 @@ Report what was created:
    .muse/qa.md            — quality verification
    .agent/skills/core/    — 3 core skills
    .agent/skills/toolkit/ — N toolkit skills
-   .agent/workflows/      — 8 workflows (resume/bye/sync/distill/ctx/model/role/start)
+   .agent/workflows/      — 8 workflows (resume/bye/sync/distill/ctx/settings/role/start)
    convo/                 — conversation archive directory
    .gitignore             — MUSE private files added
 ```
@@ -186,22 +186,26 @@ Display interactive cheat sheet:
 ```
 4️⃣ Quick Command Reference:
 
-   ┌─────────────────────────────────────────────┐
-   │  /resume [role]  Start working              │
-   │    e.g. /resume build   — continue coding   │
-   │    e.g. /resume growth  — continue marketing│
-   │                                             │
-   │  /ctx            Check context health       │
-   │    → 🟢 keep going  🟡 wrap up  🔴 exit now│
-   │                                             │
-   │  /bye            End session (auto-saves)   │
-   │    → writes memory, syncs roles, suggests   │
-   │      conversation export                    │
-   │                                             │
-   │  /distill        Extract lessons            │
-   │    → memory/ daily logs → MEMORIES.md       │
-   │    → run weekly or after milestones         │
-   └─────────────────────────────────────────────┘
+   ┌──────────────────────────────────────────────┐
+   │  /resume [role]  Start working               │
+   │    e.g. /resume build   — continue coding    │
+   │    e.g. /resume growth  — continue marketing │
+   │                                              │
+   │  /ctx            Check context health        │
+   │    → 🟢 keep going  🟡 wrap up  🔴 exit now │
+   │                                              │
+   │  /bye            End session (auto-saves)    │
+   │    → writes memory, syncs roles, suggests    │
+   │      conversation export                     │
+   │                                              │
+   │  /settings       Change language/model/prefs │
+   │    → /settings language 简体中文             │
+   │    → /settings model claude opus 4           │
+   │                                              │
+   │  /distill        Extract lessons             │
+   │    → memory/ daily logs → MEMORIES.md        │
+   │    → run weekly or after milestones          │
+   └──────────────────────────────────────────────┘
 
    💡 Tip: You can always ask "what commands do I have?"
       and I'll show this reference again.
@@ -295,6 +299,7 @@ Use minimal 10-line templates with section headers only.
 
 After `/start` completes:
 - `/start` should NOT be run again (check for existing CLAUDE.md)
-- User should use `/resume [role]` for all future sessions
+- Use `/resume [role]` for all future sessions
+- Use `/settings` to change language, model, or preferences anytime
 - `/bye` at end of every session
 - `/distill` weekly to extract lessons
