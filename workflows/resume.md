@@ -27,6 +27,7 @@ description: 新对话开始时恢复项目上下文的标准流程
 | 继续开发 | `/resume build` |
 | 继续增长/营销 | `/resume growth` |
 | 继续战略 | `/resume strategy` |
+| **继续 QA 验证** | **`/resume qa`** |
 | 继续运维/发布 | `/resume ops` |
 | 继续研究 | `/resume research` |
 | 继续融资执行 | `/resume fundraise` |
@@ -39,11 +40,16 @@ description: 新对话开始时恢复项目上下文的标准流程
 |------|------|
 | 继续开发 | `/resume prometheus` |
 | 继续增长/营销 | `/resume prometheus growth` |
+| **继续 QA 验证** | **`/resume prometheus qa`** |
 
 我会：
 1. 读 `memory/YYYY-MM-DD.md`（今天+昨天）快速恢复上下文
 2. 再读指定的 .muse/ 角色文件确认待办和完整进度
-2.5 **扫描 memory `➡️ 下一步` 中的 🔲 未完成项** → 有则在恢复报告中**主动提醒**（不管是否属于当前角色范围）
+2.5 **扫描 memory 未完成项** → 搜索 memory 最近 2 天文件中的 **所有** 未完成项格式：
+   - `🔲` 项
+   - `- [ ]` 项
+   - `➡️ 下一步` section 下的所有非 `[x]`/非 `✅` 项
+   → 有则在恢复报告中**主动提醒**（不管是否属于当前角色范围）
 2.7 **角色文件膨胀检查**：`wc -l` 目标 .muse/ 文件，**>800 行 → 先执行归档再开始工作**（移动已完成工作记录/已传递指令到 `.muse/archive/`，目标 ≤500 行）
 3. **🚨 自动拉取战略指令（所有非 strategy 角色必须执行）**：
    - `grep_search` 扫描 `.muse/strategy.md` 中的「📡 战略指令队列 → 活跃指令」
@@ -53,6 +59,10 @@ description: 新对话开始时恢复项目上下文的标准流程
    - 没找到 → 跳过（静默）
    - ⚡ **Prometheus 角色同理**：`/resume prometheus` → 搜 `→PROMETHEUS/BUILD`，`/resume prometheus growth` → 搜 `→PROMETHEUS/GROWTH`
 4. **如果是 `/resume build`：自动检查 `.muse/qa.md` 有没有未处理的 ❌ FAIL** → 有则先修复
+4.5 **如果是 `/resume [project] qa`：自动读取 QA 指令来源**
+   - 用户会在指令中说明 AC 来源（如 "执行 S028 QA"）
+   - 如没说明 → 检查 qa.md「最近 QA 结果」是否有待复验的 FAIL 项
+   - 输出恢复报告时包含：上次 QA 状态 + 有无待执行的 QA 指令
 5. **如果是 `/resume strategy`：检查 memory/ 中是否有未同步到 strategy.md 的重大事件**（grep 关键词：被拒/通过/审核/定稿/部署/融资/resubmit/rejected/approved/MUSE/开源/repo）→ 有则提醒用户需要 sync
 5.1 **冲突解决**：memory 和角色文件数据冲突时，**以角色文件为准**（memory 是写入时的快照，角色文件持续更新）。恢复报告只引用角色文件中的数据，memory 仅用于发现遗漏
 5.2 **内部一致性校验**：输出恢复报告前，交叉检查角色文件内的同一事实是否在多处一致（如融资表/决策表/待办/指令队列中同一事项的状态是否矛盾）
@@ -62,6 +72,7 @@ description: 新对话开始时恢复项目上下文的标准流程
 **文件路径约定**：
 - `/resume gm` → `DYA/.muse/gm.md`（项目 GM · v2.0）
 - `/resume build` → `DYA/.muse/build.md`（+ 检查 `qa.md` FAIL）
+- `/resume qa` → `DYA/.muse/qa.md`（QA 验证 · 独立于 build）
 - `/resume growth` → `DYA/.muse/growth.md`
 - `/resume strategy` → `DYA/.muse/strategy.md`
 - `/resume ops` → `DYA/.muse/ops.md`
@@ -69,6 +80,7 @@ description: 新对话开始时恢复项目上下文的标准流程
 - `/resume fundraise` → `DYA/.muse/fundraise.md`
 - `/resume prometheus gm` → `Prometheus/.muse/gm.md`（Prometheus GM · v2.0）
 - `/resume prometheus` → `Prometheus/.muse/build.md` + `Prometheus/PRD.md`
+- `/resume prometheus qa` → `Prometheus/.muse/qa.md`（QA 验证）
 - `/resume prometheus growth` → `Prometheus/.muse/growth.md`
 
 **向后兼容**（旧指令自动映射）：

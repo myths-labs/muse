@@ -1,4 +1,21 @@
 # Changelog
+## [2.6.0] - 2026-03-13
+
+### Added
+- **QA System v2.0** — Complete rewrite of `qa.md` with:
+  - 🚀 Quick Start guide (3 launch methods: Strategy-assigned / Build-completed / Pre-release regression)
+  - 📋 7-step SOP (AC source → environment → verify → error paths → report → judge → routing)
+  - 📝 3 complete use cases with step-by-step examples
+  - 📡 Result routing table (PASS/FAIL → where to write, who to notify)
+- **`/resume [project] qa`** — New QA-specific resume route in `resume.md`
+- **Quick Start sections** — Added to all role files (`build.md`, `growth.md`, `ops.md`, `research.md`, `fundraise.md`)
+- **QA routes in MUSE.md** — `/resume qa` and `/resume prometheus qa` in routing table
+
+### Fixed
+- **`bye.md` convo naming bug** — Replaced hardcoded example date with dynamic rules (use current date, check folder for max sequence number). Added ❌/✅ error/correct examples
+- **`resume.md` memory scanning** — Now detects `🔲` + `- [ ]` + `➡️ 下一步` items (was only `🔲`)
+- **`bye.md` distill detection** — Improved MEMORIES.md timestamp check (stat + grep dual method)
+
 ## [2.5.0] - 2026-03-12
 
 ### Added
