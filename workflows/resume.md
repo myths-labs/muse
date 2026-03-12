@@ -98,9 +98,10 @@ For workspaces with multiple projects, prefix with project name:
    - Found → highlight in resume report as "📡 New Strategy Directive", write to role file
    - Not found → skip silently
 6. **If `/resume build`**: auto-check `.muse/qa.md` for unresolved ❌ FAIL → fix those first
-7. **If `/resume qa`**: check for AC source
-   - User specifies (e.g., "run S028 QA") → read AC from strategy.md
-   - No specification → check qa.md for pending re-verify items
+7. **If `/resume qa`**: auto-detect what needs verification:
+   - Check qa.md "Pending Re-Verify" section for ❌ FAIL items → **automatically re-verify them** (user doesn't need to specify anything)
+   - If user mentions a strategy directive (e.g., "S028") → read AC from strategy.md
+   - If nothing in qa.md and user gives no instruction → ask what to verify
 8. **If `/resume strategy`**: grep `memory/` for major events not yet synced (keywords: rejected/approved/deployed/launched/funded/resubmit/merged/released)
 9. **Conflict resolution**: Role file > memory snapshot (role files are continuously updated, memory is point-in-time)
 10. **Internal consistency check**: cross-verify same facts across sections before outputting report

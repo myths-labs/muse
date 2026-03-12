@@ -255,6 +255,12 @@ After user responds, switch to normal working mode — read the relevant .muse/ 
 2. **No self-verification** — build cannot verify its own code
 3. **Deep QA only** — HTTP 200 is NOT a pass
 
+## Pending Re-Verify
+> When QA reports ❌ FAIL, items go here. `/resume qa` auto-detects and re-verifies.
+> After re-verify PASS → move to QA Reports. After re-verify FAIL → stays here.
+
+(none)
+
 ## QA Reports
 (empty — populated after first QA cycle)
 ```
