@@ -1,4 +1,14 @@
 # Changelog
+
+## [2.7.2] - 2026-03-13
+
+### Fixed
+- **QA↔BUILD sync gap** — `/sync receive` in BUILD now checks `build.md` itself for QA→BUILD notifications (previously only checked `strategy.md` + `qa.md`, missing QA broadcasts entirely)
+- **`/resume build` dual QA check** — Now checks both `qa.md` for FAIL reports AND `build.md` for QA→BUILD notifications
+- **QA broadcast format standardized** — Fixed section header (`📡 QA→BUILD 通知`) + searchable marker (`🟡 待 BUILD 处理`) so agents can grep-find notifications
+- **QA iron rule #7: READ-ONLY** — QA must never modify source code directly; only report bugs and route to BUILD via standard notification format
+- **Search keyword reference table** — Added to `sync.md` so agents know exactly what to grep for each notification type
+
 ## [2.7.1] - 2026-03-13
 
 ### Added
