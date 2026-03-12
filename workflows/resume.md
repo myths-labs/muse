@@ -1,175 +1,156 @@
 ---
-description: Restore project context at the start of every new conversation. Boot sequence assembles constitution, memory, preferences, and role state.
+description: 新对话开始时恢复项目上下文的标准流程
 ---
 
-## 🚨 Rule Zero
+## 🚨 第零铁律
 
-**The role you load is the only topic you discuss.** Never talk about marketing in a build session, or code in a growth session.
+**读哪个文件就只聊哪个文件的内容。** 绝不在开发对话里谈营销，也不在营销对话里谈代码。
 
-## Pre-Flight Check
-
-Before running the boot sequence, verify essential files exist:
+## Boot 序列（MUSE 上下文组装 — 每次新对话按顺序执行）
 
 ```
-✅ Required:  CLAUDE.md
-✅ Required:  USER.md
-✅ Required:  memory/ directory
-✅ Required:  .muse/ directory (with at least one role file)
+① CLAUDE.md + MEMORIES.md  → 宪法 + 长期教训（自动注入）
+② memory/今天.md + 昨天.md → 短期记忆（最近发生了什么）
+②.5 扫描 memory `➡️ 下一步` 中的 🔲 项 → 有未完成项则主动提醒
+③ 跨天任务? grep_search memory/ 搜索任务关键词 → 定位更早的相关记忆
+④ USER.md                  → 用户偏好
+⑤ 对应 .muse/ 角色文件     → 完整进度（按指令决定读哪个）
+⑥ 🚨 strategy.md 指令拉取  → 非 strategy 角色自动 grep 活跃指令（→BUILD / →GROWTH 等）
 ```
 
-**If ANY required file is missing** → STOP and tell the user:
+> ③ 只在任务跨度 > 2 天时执行（≈ LCM lcm_grep 深度检索）
 
-```
-⚠️ MUSE is not configured yet. Missing: [list missing files]
+### DYA 项目
 
-Run /start to set up MUSE for this project first.
-```
+| 场景 | 指令 |
+|------|------|
+| 继续开发 | `/resume build` |
+| 继续增长/营销 | `/resume growth` |
+| 继续战略 | `/resume strategy` |
+| **继续 QA 验证** | **`/resume qa`** |
+| 继续运维/发布 | `/resume ops` |
+| 继续研究 | `/resume research` |
+| 继续融资执行 | `/resume fundraise` |
+| 跨层参考 | `/resume strategy + build` |
+| **上下文爆掉恢复** | **`/resume crash`** |
 
-Do NOT proceed with the boot sequence. Do NOT create files silently. Let `/start` handle initial setup.
+### Prometheus 项目
 
----
+| 场景 | 指令 |
+|------|------|
+| 继续开发 | `/resume prometheus` |
+| 继续增长/营销 | `/resume prometheus growth` |
+| **继续 QA 验证** | **`/resume prometheus qa`** |
 
-## Boot Sequence (run in order, every new conversation)
+我会：
+1. 读 `memory/YYYY-MM-DD.md`（今天+昨天）快速恢复上下文
+2. 再读指定的 .muse/ 角色文件确认待办和完整进度
+2.5 **扫描 memory 未完成项** → 搜索 memory 最近 2 天文件中的 **所有** 未完成项格式：
+   - `🔲` 项
+   - `- [ ]` 项
+   - `➡️ 下一步` section 下的所有非 `[x]`/非 `✅` 项
+   → 有则在恢复报告中**主动提醒**（不管是否属于当前角色范围）
+2.7 **角色文件膨胀检查**：`wc -l` 目标 .muse/ 文件，**>800 行 → 先执行归档再开始工作**（移动已完成工作记录/已传递指令到 `.muse/archive/`，目标 ≤500 行）
+3. **🚨 自动拉取战略指令（所有非 strategy 角色必须执行）**：
+   - `grep_search` 扫描 `.muse/strategy.md` 中的「📡 战略指令队列 → 活跃指令」
+   - 查找所有标有当前角色的未传递指令（如 `/resume build` → 搜 `→BUILD` 或 `→DYA/BUILD`；`/resume growth` → 搜 `→GROWTH`）
+   - 找到 → **在恢复报告中高亮显示「📡 新战略指令」**，并写入对应角色文件的「📡 已接收战略指令」区块
+   - 回到 strategy.md 标记「✅ 已传递」
+   - 没找到 → 跳过（静默）
+   - ⚡ **Prometheus 角色同理**：`/resume prometheus` → 搜 `→PROMETHEUS/BUILD`，`/resume prometheus growth` → 搜 `→PROMETHEUS/GROWTH`
+4. **如果是 `/resume build`：双重检查 QA 通知**
+   - ① 检查 `.muse/qa.md` 有没有未处理的 ❌ FAIL → 有则先修复
+   - ② 🚨 **检查 build.md 自身** 中的 QA→BUILD 通知（`grep_search build.md "待 BUILD 处理"`）
+     - 找到 → 恢复报告中高亮 `🚨 QA 有新通知待处理`，列出通知摘要
+     - 未找到 → 静默跳过
+   - 两个检查**都做**，不能只查一个
+4.5 **如果是 `/resume [project] qa`：自动读取 QA 指令来源**
+   - 用户会在指令中说明 AC 来源（如 "执行 S028 QA"）
+   - 如没说明 → 检查 qa.md「最近 QA 结果」是否有待复验的 FAIL 项
+   - 输出恢复报告时包含：上次 QA 状态 + 有无待执行的 QA 指令
+5. **如果是 `/resume strategy`：检查 memory/ 中是否有未同步到 strategy.md 的重大事件**（grep 关键词：被拒/通过/审核/定稿/部署/融资/resubmit/rejected/approved/MUSE/开源/repo）→ 有则提醒用户需要 sync
+5.1 **冲突解决**：memory 和角色文件数据冲突时，**以角色文件为准**（memory 是写入时的快照，角色文件持续更新）。恢复报告只引用角色文件中的数据，memory 仅用于发现遗漏
+5.2 **内部一致性校验**：输出恢复报告前，交叉检查角色文件内的同一事实是否在多处一致（如融资表/决策表/待办/指令队列中同一事项的状态是否矛盾）
+6. 只推荐该文件职责范围内的下一步行动
+7. 按需读取相关代码/文档开始工作
 
-```
-① CLAUDE.md + MEMORIES.md  → Constitution + long-term lessons (auto-injected)
-② memory/today.md + yesterday.md → Short-term memory (what happened recently)
-②.5 Scan memory `➡️ Next` sections for 🔲 / - [ ] items → remind if unfinished
-③ Cross-day task? grep_search memory/ for task keywords → locate older context
-④ USER.md                  → User preferences (language, model, style)
-⑤ Target .muse/ role file  → Full progress (based on /resume scope)
-⑥ 🚨 Strategy directive pull → Non-strategy roles auto-grep active directives
-```
+**文件路径约定**：
+- `/resume gm` → `DYA/.muse/gm.md`（项目 GM · v2.0）
+- `/resume build` → `DYA/.muse/build.md`（+ 检查 `qa.md` FAIL）
+- `/resume qa` → `DYA/.muse/qa.md`（QA 验证 · 独立于 build）
+- `/resume growth` → `DYA/.muse/growth.md`
+- `/resume strategy` → `DYA/.muse/strategy.md`
+- `/resume ops` → `DYA/.muse/ops.md`
+- `/resume research` → `DYA/.muse/research.md`
+- `/resume fundraise` → `DYA/.muse/fundraise.md`
+- `/resume prometheus gm` → `Prometheus/.muse/gm.md`（Prometheus GM · v2.0）
+- `/resume prometheus` → `Prometheus/.muse/build.md` + `Prometheus/PRD.md`
+- `/resume prometheus qa` → `Prometheus/.muse/qa.md`（QA 验证）
+- `/resume prometheus growth` → `Prometheus/.muse/growth.md`
 
-> ③ Only when task spans > 2 days
-
----
-
-## Usage
-
-```
-/resume [role]               — Resume work on a specific role
-/resume [project] [role]     — Multi-project: resume a specific project's role
-/resume crash                — Recover from context blowout
-```
-
-### Standard Roles
-
-| Scope | Command | Role File |
-|-------|---------|-----------|
-| Dev execution | `/resume build` | `.muse/build.md` |
-| Quality verification | `/resume qa` | `.muse/qa.md` |
-| Marketing & growth | `/resume growth` | `.muse/growth.md` |
-| Strategic decisions | `/resume strategy` | `.muse/strategy.md` |
-| DevOps & releases | `/resume ops` | `.muse/ops.md` |
-| Research | `/resume research` | `.muse/research.md` |
-| Fundraising | `/resume fundraise` | `.muse/fundraise.md` |
-| Project GM | `/resume gm` | `.muse/gm.md` |
-
-### Multi-Project
-
-For workspaces with multiple projects, prefix with project name:
-
-```
-/resume [project] build      → [Project]/.muse/build.md
-/resume [project] qa         → [Project]/.muse/qa.md
-/resume [project] growth     → [Project]/.muse/growth.md
-```
-
-### Backward Compatibility
-
+**向后兼容**（旧指令自动映射）：
 - `/resume status` → `/resume build`
 - `/resume marketing` → `/resume growth`
 
----
+### 上下文爆掉恢复
 
-## What the Agent Does
+| 场景 | 指令 |
+|------|------|
+| 上下文爆掉或紧急中断需恢复 | `/resume crash` |
 
-1. Read `memory/YYYY-MM-DD.md` (today + yesterday) for quick context
-2. Read the target `.muse/[role].md` file for full progress and state
-3. **Scan memory for unfinished items** — search recent 2 days for:
-   - `🔲` items
-   - `- [ ]` items
-   - `➡️ Next` sections with incomplete items
-   → Report any found (regardless of current role scope)
-4. **Role file size check**: `wc -l` target file. **>800 lines → archive first** (move completed items to `.muse/archive/`, target ≤500 lines)
-5. **🚨 Auto-pull strategy directives** (all non-strategy roles):
-   - `grep_search` scan `.muse/strategy.md` for active directives tagged with current role
-   - Found → highlight in resume report as "📡 New Strategy Directive", write to role file
-   - Not found → skip silently
-6. **If `/resume build`**: auto-check `.muse/qa.md` for unresolved ❌ FAIL → fix those first
-7. **If `/resume qa`**: auto-detect what needs verification:
-   - Check qa.md "Pending Re-Verify" section for ❌ FAIL items → **automatically re-verify them** (user doesn't need to specify anything)
-   - If user mentions a strategy directive (e.g., "S028") → read AC from strategy.md
-   - If nothing in qa.md and user gives no instruction → ask what to verify
-   - **🚨 ROLE BOUNDARY**: QA NEVER fixes bugs. If a new bug is found during verification → write it to qa.md "Pending Re-Verify" with reproduction steps → tell user to `/resume build` to fix it. QA only reads code, never writes it.
-8. **If `/resume strategy`**: grep `memory/` for major events not yet synced (keywords: rejected/approved/deployed/launched/funded/resubmit/merged/released)
-9. **Conflict resolution**: Role file > memory snapshot (role files are continuously updated, memory is point-in-time)
-10. **Internal consistency check**: cross-verify same facts across sections before outputting report
-11. Only recommend next steps within the role's scope
-12. Read relevant code/docs as needed to begin work
+**`/resume crash` 流程：**
+1. 检查 `memory/CRASH_CONTEXT.md` 是否存在
+   - **存在** → 读取（这是 🔴 时自动预存的快照）→ 恢复后删除该文件
+2. 如不存在，扫描 `convo/` 下最新的 `_CRASH` 文件（按修改时间排序）
+   - **找到** → 读取最后 30% 内容（通常包含最近的讨论和决策）
+   - 提取：当前任务、未完成事项、关键决策、用户最后的问题
+3. 如都没找到 → 用户手动指定文件路径
+4. 执行标准 Boot 序列（memory/ + USER.md + .muse/ 角色文件）
+5. 输出恢复报告：上轮做了什么、未完成什么、建议下一步
 
 ---
 
-## Context Blowout Recovery
-
-```
-/resume crash
-```
-
-1. Check `memory/CRASH_CONTEXT.md` — if exists, read it (auto-saved snapshot) → delete after recovery
-2. If not found, scan `convo/` for latest `_CRASH` file → read last 30%
-3. If nothing found → ask user for file path
-4. Run standard boot sequence
-5. Output recovery report: what was being worked on, what's unfinished, suggested next steps
-
----
-
-## Ending Conversations
+## 结束对话时
 
 ```
 /bye
 ```
 
-Zero input. Auto-summarizes → syncs .muse/ role files → writes `memory/YYYY-MM-DD.md`. See `bye.md`.
+零输入。自动汇总本轮工作 → 同步 .muse/ 角色文件 → 写 `memory/YYYY-MM-DD.md` → 建议导出到 `convo/`。详见 `bye.md`。
 
-## Mid-Conversation Sync
+## 跨项目同步
 
-When another role finishes work in a separate conversation (e.g., QA completes while build is still active), the active conversation can pull in new results:
+| 方向 | 指令 | 说明 |
+|------|------|------|
+| Prometheus → DYA 战略 | `同步 Prometheus 进度` | 读 Prometheus/.muse/build.md 回传到 STRATEGY |
+| DYA 战略 → Prometheus | `下发 Prometheus 指令` | 写 S021 指令，Prometheus 对话自动拉取 |
+| DYA 角色文件互同步 | `/sync all` | 见 sync.md workflow |
 
-```
-/sync receive          — Pull updates from other role files into current session
-```
+## 角色文件分工
 
-**Common scenarios:**
+| 文件 | 内容 | 更新时机 |
+|------|------|---------| 
+| `.muse/strategy.md` | 商业战略、PMF、融资、增长、**Prometheus 战略 (S021)** | 战略讨论后 |
+| `.muse/build.md` | DYA 代码开发、Bug修复 | 代码/Bug后 |
+| `.muse/growth.md` | 广告创意、品牌文案、社交媒体、视频 | 营销讨论后 |
+| `.muse/qa.md` | QA 验证规范、AC 流程、反弄虚作假 | QA 验证后 |
+| `.muse/ops.md` | App Store 提审、CI/CD、版本号、发布 | 提审/发布后 |
+| `.muse/research.md` | 竞品分析、用户调研、市场数据、OXYZ | 研究讨论后 |
+| `.muse/fundraise.md` | Deck内容、申请文案、Pitch脚本、材料自检 | 融资执行后 |
+| `Prometheus/.muse/build.md` | Prometheus SDK/Marketplace/Plugin | Prometheus 开发后 |
+| `memory/YYYY-MM-DD.md` | 每日快照（轻量，跨所有项目） | **每轮对话结束时** |
 
-| You're in... | What happened elsewhere | What to do |
-|-------------|------------------------|------------|
-| `/resume build` | QA finished, wrote results to `qa.md` | `/sync receive` → reads qa.md FAILs → fix them |
-| `/resume build` | Strategy issued new directive | `/sync receive` → reads strategy.md directives |
-| `/resume growth` | Build shipped new feature | `/sync receive` → reads build.md for launch content |
+## 什么时候该开新对话？
 
-**How it works:**
-1. User says `/sync receive` (or mentions "QA results are in" / "check qa.md")
-2. Agent reads the relevant role file(s) for new information
-3. Integrates new tasks/directives into current session
-4. Continues working with updated context
+- ✅ 完成了一个完整功能/任务
+- ✅ **切换了工作主题**（最重要的信号）
+- ✅ 感觉回复变慢或质量下降
+- ✅ 大约 15-20 轮交互后
+- ✅ `/ctx` 检查显示 ≥ 80%
 
-> This avoids the need to end a conversation and start a new one just to pick up cross-role updates.
+## 关键原则
 
----
-
-## When to Start a New Conversation
-
-- ✅ Completed a full feature/task
-- ✅ **Switching work topics** (most important signal)
-- ✅ Responses feel slow or quality drops
-- ✅ ~15-20 interaction rounds
-- ✅ `/ctx` shows ≥ 80%
-
-## Core Principles
-
-1. **Role isolation** — build/qa/growth/strategy are independent
-2. **Load one, discuss one** — never cross-contaminate roles
-3. **Short and dense** — each conversation focuses on one topic
-4. **Save on exit** — always update .muse/ + write memory/
+1. **MUSE 四角色制** — strategy/build/growth/qa 各自独立，互不干扰
+2. **读哪个聊哪个** — 绝不跨文件混聊
+3. **短对话、高密度** — 每次对话聚焦一个主题
+4. **结束即存档** — 更新 .muse/ 角色文件 + 写入 memory/
