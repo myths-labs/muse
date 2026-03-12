@@ -88,14 +88,31 @@ cat muse/templates/.gitignore-template >> 你的项目/.gitignore
 
 ---
 
+> 💡 也可以用交互式安装: `git clone https://github.com/myths-labs/muse.git && cd muse && ./setup.sh`
+
 完整文档请参阅 [English README](./README.md)。
+
+---
+
+## 💬 关注我们
+
+- 🌐 GitHub: [Myths Labs](https://github.com/myths-labs)
+- 🐦 X (Twitter): [@MythsLabs](https://x.com/MythsLabs)
+- 👤 创始人: [@SunshiningDay](https://x.com/sunshiningday) — 独立开发者，一人全栈构建 MUSE
 
 ---
 
 ## 📜 License
 
-MIT License — Myths Labs
+MIT © [Myths Labs](https://github.com/myths-labs)
 
 ---
 
-*MUSE v2.2 — Built by [Myths Labs](https://mythslabs.ai)*
+<p align="center">
+  Built with 🎭 by <a href="https://github.com/myths-labs">Myths Labs</a> — Solo-developed by <a href="https://github.com/jc-myths">JC</a>
+</p>
+
+<p align="center">
+  <i>MUSE v2.3</i>
+</p>
+

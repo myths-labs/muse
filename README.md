@@ -286,11 +286,11 @@ lossless-claw is a code plugin (SQLite + DAG + sub-agents) that requires the Ope
 **Q: What if memory/ files pile up?**
 Archive files older than 30 days to `memory/archive/`. Use `/distill` to extract key lessons into `MEMORIES.md` first, then safely archive the originals.
 
----
+## 💬 Follow Us
 
-## 📜 License
-
-MIT License — Myths Labs
+- 🌐 GitHub: [Myths Labs](https://github.com/myths-labs)
+- 🐦 X (Twitter): [@MythsLabs](https://x.com/MythsLabs)
+- 👤 Creator: [@SunshiningDay](https://x.com/sunshiningday) — indie dev, solo-building MUSE
 
 ---
 
@@ -302,4 +302,17 @@ MIT License — Myths Labs
 
 ---
 
-*MUSE v2.3 — Built by [Myths Labs](https://mythslabs.ai)*
+## 📜 License
+
+MIT © [Myths Labs](https://github.com/myths-labs)
+
+---
+
+<p align="center">
+  Built with 🎭 by <a href="https://github.com/myths-labs">Myths Labs</a> — Solo-developed by <a href="https://github.com/jc-myths">JC</a>
+</p>
+
+<p align="center">
+  <i>MUSE v2.3</i>
+</p>
+
