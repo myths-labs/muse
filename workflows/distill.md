@@ -26,8 +26,7 @@ description: 从 memory/ 日志和 STATUS 文件中蒸馏关键教训到 MEMORIE
 | 指令 | 范围 | 说明 |
 |------|:----:|------|
 | `/distill` | 🌍 全局 | 读**所有**项目 memory/ → 写全局 MEMORIES.md |
-| `/distill dya` | 📁 DYA | 只读 DYA memory/ → 写全局 MEMORIES.md |
-| `/distill prometheus` | 📁 Prometheus | 只读 Prometheus memory/ → 写全局 MEMORIES.md |
+| `/distill [project]` | 📁 项目 | 只读指定项目 memory/ → 写全局 MEMORIES.md |
 
 > 教训跨项目通用，**始终写入全局 MEMORIES.md**（不按项目拆分）。
 
