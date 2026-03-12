@@ -54,7 +54,7 @@ If yes → create `USER.md` from template with sensible defaults (English, auto-
 1. Update `USER.md` → `**Language**: [new language]`
 2. **🚨 MUST update `CLAUDE.md`** Iron Rule #1 → find the line containing `**Language**:` and replace with:
    ```
-   1. **Language**: All communication in [new language]
+   1. **Language**: 🚨 YOU MUST communicate in **[new language]**. Every response, explanation, question, and comment MUST be in [new language]. This is NON-NEGOTIABLE. Do NOT default to English unless this rule explicitly says English.
    ```
 3. **Verify** both files were updated (read back the changed lines)
 4. Confirm:
