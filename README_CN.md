@@ -15,6 +15,7 @@
 <p align="center">
 
 [![X @MythsLabs](https://img.shields.io/badge/X-@MythsLabs-black?logo=x)](https://x.com/MythsLabs)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Myths_Labs-0A66C2?logo=linkedin)](https://linkedin.com/company/MythsLabs)
 [![Myths Labs](https://img.shields.io/badge/GitHub-Myths_Labs-181717?logo=github)](https://github.com/myths-labs)
 [![X Creator](https://img.shields.io/badge/X_Creator-@SunshiningDay-black?logo=x)](https://x.com/sunshiningday)
 
@@ -116,6 +117,7 @@ cat muse/templates/.gitignore-template >> 你的项目/.gitignore
 
 - 🌐 GitHub: [Myths Labs](https://github.com/myths-labs)
 - 🐦 X (Twitter): [@MythsLabs](https://x.com/MythsLabs)
+- 💼 LinkedIn: [Myths Labs](https://linkedin.com/company/MythsLabs)
 - 👤 创始人: [@SunshiningDay](https://x.com/sunshiningday) — 独立开发者，一人全栈构建 MUSE
 
 ---

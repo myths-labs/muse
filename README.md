@@ -15,6 +15,7 @@
 <p align="center">
 
 [![X @MythsLabs](https://img.shields.io/badge/X-@MythsLabs-black?logo=x)](https://x.com/MythsLabs)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Myths_Labs-0A66C2?logo=linkedin)](https://linkedin.com/company/MythsLabs)
 [![Myths Labs](https://img.shields.io/badge/GitHub-Myths_Labs-181717?logo=github)](https://github.com/myths-labs)
 [![X Creator](https://img.shields.io/badge/X_Creator-@SunshiningDay-black?logo=x)](https://x.com/sunshiningday)
 
@@ -308,6 +309,7 @@ Archive files older than 30 days to `memory/archive/`. Use `/distill` to extract
 
 - 🌐 GitHub: [Myths Labs](https://github.com/myths-labs)
 - 🐦 X (Twitter): [@MythsLabs](https://x.com/MythsLabs)
+- 💼 LinkedIn: [Myths Labs](https://linkedin.com/company/MythsLabs)
 - 👤 Creator: [@SunshiningDay](https://x.com/sunshiningday) — indie dev, solo-building MUSE
 
 ---
