@@ -1,0 +1,126 @@
+---
+description: 新对话开始时恢复项目上下文的标准流程
+---
+
+## 🚨 第零铁律
+
+**读哪个文件就只聊哪个文件的内容。** 绝不在开发对话里谈营销，也不在营销对话里谈代码。
+
+## Boot 序列（MUSE 上下文组装 — 每次新对话按顺序执行）
+
+```
+① CLAUDE.md + MEMORIES.md  → 宪法 + 长期教训（自动注入）
+② memory/今天.md + 昨天.md → 短期记忆（最近发生了什么）
+③ 跨天任务? grep_search memory/ 搜索任务关键词 → 定位更早的相关记忆
+④ USER.md                  → 用户偏好
+⑤ 对应 .muse/ 角色文件     → 完整进度（按指令决定读哪个）
+```
+
+> ③ 只在任务跨度 > 2 天时执行（≈ LCM lcm_grep 深度检索）
+
+### DYA 项目
+
+| 场景 | 指令 |
+|------|------|
+| 继续开发 | `/resume build` |
+| 继续增长/营销 | `/resume growth` |
+| 继续战略 | `/resume strategy` |
+| 继续运维/发布 | `/resume ops` |
+| 继续研究 | `/resume research` |
+| 继续融资执行 | `/resume fundraise` |
+| 跨层参考 | `/resume strategy + build` |
+| **上下文爆掉恢复** | **`/resume crash`** |
+
+### Prometheus 项目
+
+| 场景 | 指令 |
+|------|------|
+| 继续开发 | `/resume prometheus` |
+| 继续增长/营销 | `/resume prometheus growth` |
+
+我会：
+1. 读 `memory/YYYY-MM-DD.md`（今天+昨天）快速恢复上下文
+2. 再读指定的 .muse/ 角色文件确认待办和完整进度
+3. **如果是 `/resume build`：自动检查 `.muse/qa.md` 有没有未处理的 ❌ FAIL** → 有则先修复
+4. **如果是 `/resume strategy`：检查 memory/ 中是否有未同步到 strategy.md 的重大事件**（grep 关键词：被拒/通过/审核/定稿/部署/融资/resubmit/rejected/approved）→ 有则提醒用户需要 sync
+5. 只推荐该文件职责范围内的下一步行动
+6. 按需读取相关代码/文档开始工作
+
+**文件路径约定**：
+- `/resume gm` → `DYA/.muse/gm.md`（项目 GM · v2.0）
+- `/resume build` → `DYA/.muse/build.md`（+ 检查 `qa.md` FAIL）
+- `/resume growth` → `DYA/.muse/growth.md`
+- `/resume strategy` → `DYA/.muse/strategy.md`
+- `/resume ops` → `DYA/.muse/ops.md`
+- `/resume research` → `DYA/.muse/research.md`
+- `/resume fundraise` → `DYA/.muse/fundraise.md`
+- `/resume prometheus gm` → `Prometheus/.muse/gm.md`（Prometheus GM · v2.0）
+- `/resume prometheus` → `Prometheus/.muse/build.md` + `Prometheus/PRD.md`
+- `/resume prometheus growth` → `Prometheus/.muse/growth.md`
+
+**向后兼容**（旧指令自动映射）：
+- `/resume status` → `/resume build`
+- `/resume marketing` → `/resume growth`
+
+### 上下文爆掉恢复
+
+| 场景 | 指令 |
+|------|------|
+| 上下文爆掉或紧急中断需恢复 | `/resume crash` |
+
+**`/resume crash` 流程：**
+1. 检查 `memory/CRASH_CONTEXT.md` 是否存在
+   - **存在** → 读取（这是 🔴 时自动预存的快照）→ 恢复后删除该文件
+2. 如不存在，扫描 `convo/` 下最新的 `_CRASH` 文件（按修改时间排序）
+   - **找到** → 读取最后 30% 内容（通常包含最近的讨论和决策）
+   - 提取：当前任务、未完成事项、关键决策、用户最后的问题
+3. 如都没找到 → 用户手动指定文件路径
+4. 执行标准 Boot 序列（memory/ + USER.md + .muse/ 角色文件）
+5. 输出恢复报告：上轮做了什么、未完成什么、建议下一步
+
+---
+
+## 结束对话时
+
+```
+/bye
+```
+
+零输入。自动汇总本轮工作 → 同步 .muse/ 角色文件 → 写 `memory/YYYY-MM-DD.md` → 建议导出到 `convo/`。详见 `bye.md`。
+
+## 跨项目同步
+
+| 方向 | 指令 | 说明 |
+|------|------|------|
+| Prometheus → DYA 战略 | `同步 Prometheus 进度` | 读 Prometheus/.muse/build.md 回传到 STRATEGY |
+| DYA 战略 → Prometheus | `下发 Prometheus 指令` | 写 S021 指令，Prometheus 对话自动拉取 |
+| DYA 角色文件互同步 | `/sync all` | 见 sync.md workflow |
+
+## 角色文件分工
+
+| 文件 | 内容 | 更新时机 |
+|------|------|---------| 
+| `.muse/strategy.md` | 商业战略、PMF、融资、增长、**Prometheus 战略 (S021)** | 战略讨论后 |
+| `.muse/build.md` | DYA 代码开发、Bug修复 | 代码/Bug后 |
+| `.muse/growth.md` | 广告创意、品牌文案、社交媒体、视频 | 营销讨论后 |
+| `.muse/qa.md` | QA 验证规范、AC 流程、反弄虚作假 | QA 验证后 |
+| `.muse/ops.md` | App Store 提审、CI/CD、版本号、发布 | 提审/发布后 |
+| `.muse/research.md` | 竞品分析、用户调研、市场数据、OXYZ | 研究讨论后 |
+| `.muse/fundraise.md` | Deck内容、申请文案、Pitch脚本、材料自检 | 融资执行后 |
+| `Prometheus/.muse/build.md` | Prometheus SDK/Marketplace/Plugin | Prometheus 开发后 |
+| `memory/YYYY-MM-DD.md` | 每日快照（轻量，跨所有项目） | **每轮对话结束时** |
+
+## 什么时候该开新对话？
+
+- ✅ 完成了一个完整功能/任务
+- ✅ **切换了工作主题**（最重要的信号）
+- ✅ 感觉回复变慢或质量下降
+- ✅ 大约 15-20 轮交互后
+- ✅ `/ctx` 检查显示 ≥ 80%
+
+## 关键原则
+
+1. **MUSE 四角色制** — strategy/build/growth/qa 各自独立，互不干扰
+2. **读哪个聊哪个** — 绝不跨文件混聊
+3. **短对话、高密度** — 每次对话聚焦一个主题
+4. **结束即存档** — 更新 .muse/ 角色文件 + 写入 memory/

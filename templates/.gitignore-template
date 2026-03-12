@@ -1,0 +1,29 @@
+# === MUSE Private Files ===
+# These should NOT be committed to public repos
+.muse/
+memory/
+convo/
+CLAUDE.md
+USER.md
+MEMORIES.md
+.agent/
+docs/internal/
+
+# === Dev/Deploy ===
+node_modules/
+.env
+.env.*
+.vercel/
+dist/
+.next/
+out/
+
+# === IDE ===
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# === OS ===
+.DS_Store
+Thumbs.db
