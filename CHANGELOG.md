@@ -1,4 +1,13 @@
 # Changelog
+## [2.7.1] - 2026-03-13
+
+### Added
+- **Auto QA Re-Verify** — `/resume qa` auto-detects FAIL items from `qa.md` "Pending Re-Verify" section and re-verifies them. User just types `/resume qa` — zero manual input
+- **qa.md template** — Added "Pending Re-Verify" section for structured FAIL item tracking
+
+### Fixed
+- **`/settings language` enforcement** — Language changes now MUST update `CLAUDE.md` Iron Rule #1 (not just `USER.md`). Added `[!CAUTION]` block + verify step + immediate language switch. Prevents silent language change failures
+- **MUSE repo self-configuration** — Added `.agent/` symlinks, `memory/`, `CLAUDE.md`, `MEMORIES.md` so the MUSE repo itself works as a MUSE workspace
 
 ## [2.7.0] - 2026-03-13
 
