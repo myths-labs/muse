@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./assets/banner.png" alt="MUSE — Memory-Unified Skills & Execution" width="100%">
+</p>
+
 # 🎭 MUSE
 
 **Memory-Unified Skills & Execution**
@@ -241,6 +245,12 @@ project/
 ├── LICENSE                # License
 ├── USER.md                # Preferences (private)
 ├── MEMORIES.md            # Long-term lessons (private)
+├── assets/                # 🎨 Project assets (public)
+│   ├── logo.png           # Project logo
+│   ├── banner.png         # README/social banner
+│   ├── screenshots/       # App screenshots
+│   ├── diagrams/          # Architecture diagrams
+│   └── social/            # Social media assets (OG images, previews)
 ├── .muse/                 # 🎭 Role states (private)
 │   ├── build.md / qa.md / growth.md / ...
 ├── memory/                # Short-term memory (private)
@@ -262,6 +272,17 @@ project/
 | Conversations | `YYMMDD-NN-desc.md` | `260312-02-muse_setup.md` |
 | Crash archives | `+_CRASH` suffix | `260312-05-debug_CRASH.md` |
 | .muse roles | `[role].md` lowercase | `build.md`, `qa.md` |
+
+### Assets Convention
+
+| Subdirectory | Purpose | Naming Pattern |
+|-------------|---------|---------------|
+| `assets/` (root) | Logo, banner, favicon | `logo.png`, `banner.png`, `favicon.ico` |
+| `assets/screenshots/` | App/feature screenshots | `feature-name.png` or `YYMMDD-feature.png` |
+| `assets/diagrams/` | Architecture, flow charts | `component-name-diagram.png` |
+| `assets/social/` | OG images, social cards | `og-default.png`, `x-card.png` |
+
+> **Tip**: Keep `assets/` in git (public). Large video files (>10MB) should use Git LFS or external hosting.
 
 ---
 

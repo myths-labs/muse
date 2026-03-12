@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./assets/banner.png" alt="MUSE — Memory-Unified Skills & Execution" width="100%">
+</p>
+
 # 🎭 MUSE
 
 **Memory-Unified Skills & Execution**（记忆统一技能与执行）
