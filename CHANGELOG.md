@@ -1,4 +1,20 @@
 # Changelog
+## [2.4.0] - 2026-03-12
+
+### Added
+- **21 new skills** (total: 4 Core + 25 Toolkit = 29 skills)
+  - **Core**: `using-superpowers` — meta-skill for effective skill usage
+  - **Toolkit — Dev Flow**: `code-refactoring`, `code-documentation`, `security-review`, `tdd-workflow`, `changelog-generator`, `skill-creator`, `skills-updater`, `webapp-testing`
+  - **Toolkit — Collaboration**: `github-pr-creation`, `github-pr-review`, `receiving-code-review`, `requesting-code-review`, `finishing-a-development-branch`
+  - **Toolkit — Planning & Design**: `brainstorming`, `writing-plans`, `executing-plans`, `planner-agent`, `architect-agent`, `frontend-design`, `ui-ux-pro-max`
+
+### Improved
+- **README_CN.md**: Expanded from 142 → 310 lines (Architecture, LCM mapping, Defensive Auto-Save, Directory Convention, Customization, FAQ)
+- **resume.md**: Added ②.5 unchecked items scan, 2.7 bloat check, 4.1 conflict resolution, 4.2 consistency check
+- **bye.md**: Added 4.5 bloat check, triple cross-check (cross-file + intra-file + memory retroactive)
+- **Assets**: banner.png compressed -36%
+- **.gitignore**: Added `.muse/` `memory/` `convo/`
+
 
 All notable changes to MUSE are documented here.
 

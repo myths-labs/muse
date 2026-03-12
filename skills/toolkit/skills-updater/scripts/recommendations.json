@@ -1,0 +1,200 @@
+{
+  "_meta": {
+    "description": "Skill recommendations configuration file",
+    "last_updated": "2025-01-22",
+    "note": "Edit this file to update recommendations without modifying code"
+  },
+  "fallback_trending": [
+    {
+      "name": "vercel-react-best-practices",
+      "installs": 25500,
+      "repo": "vercel/react-best-practices"
+    },
+    {
+      "name": "web-design-guidelines",
+      "installs": 19200,
+      "repo": "webdesign/guidelines"
+    },
+    {
+      "name": "remotion-best-practices",
+      "installs": 2200,
+      "repo": "remotion-dev/remotion-best-practices"
+    },
+    {
+      "name": "nextjs-cursor-rules",
+      "installs": 1800,
+      "repo": "vercel/nextjs-cursor-rules"
+    },
+    {
+      "name": "ai-coding-standards",
+      "installs": 1500,
+      "repo": "anthropic/ai-coding-standards"
+    },
+    {
+      "name": "typescript-best-practices",
+      "installs": 1200,
+      "repo": "typescript-skills/best-practices"
+    },
+    {
+      "name": "react-native-guidelines",
+      "installs": 1100,
+      "repo": "react-native/guidelines"
+    },
+    {
+      "name": "tailwind-design-system",
+      "installs": 950,
+      "repo": "tailwindlabs/design-system"
+    },
+    {
+      "name": "python-clean-code",
+      "installs": 900,
+      "repo": "python-skills/clean-code"
+    },
+    {
+      "name": "security-best-practices",
+      "installs": 850,
+      "repo": "security-skills/best-practices"
+    },
+    {
+      "name": "api-design-patterns",
+      "installs": 800,
+      "repo": "api-skills/design-patterns"
+    },
+    {
+      "name": "testing-strategies",
+      "installs": 750,
+      "repo": "testing-skills/strategies"
+    },
+    {
+      "name": "devops-automation",
+      "installs": 700,
+      "repo": "devops-skills/automation"
+    },
+    {
+      "name": "database-optimization",
+      "installs": 650,
+      "repo": "database-skills/optimization"
+    },
+    {
+      "name": "frontend-performance",
+      "installs": 600,
+      "repo": "frontend-skills/performance"
+    },
+    {
+      "name": "backend-architecture",
+      "installs": 550,
+      "repo": "backend-skills/architecture"
+    },
+    {
+      "name": "mobile-development",
+      "installs": 500,
+      "repo": "mobile-skills/development"
+    },
+    {
+      "name": "cloud-infrastructure",
+      "installs": 450,
+      "repo": "cloud-skills/infrastructure"
+    },
+    {
+      "name": "data-engineering",
+      "installs": 400,
+      "repo": "data-skills/engineering"
+    },
+    {
+      "name": "machine-learning-ops",
+      "installs": 350,
+      "repo": "ml-skills/ops"
+    }
+  ],
+  "category_recommendations": {
+    "developer-tools": [
+      {
+        "name": "github-ops",
+        "repo": "daymade/claude-code-skills",
+        "description": "GitHub CLI operations for PRs, issues, and workflows"
+      },
+      {
+        "name": "commit-commands",
+        "repo": "anthropics/claude-plugins-official",
+        "description": "Smart git commit message generation"
+      }
+    ],
+    "testing": [
+      {
+        "name": "playwright-skill",
+        "repo": "lackeyjb/playwright-skill",
+        "description": "Browser automation and web testing"
+      },
+      {
+        "name": "qa-expert",
+        "repo": "daymade/claude-code-skills",
+        "description": "Comprehensive QA testing infrastructure"
+      }
+    ],
+    "frontend": [
+      {
+        "name": "frontend-design",
+        "repo": "anthropics/skills",
+        "description": "Production-grade frontend interfaces"
+      },
+      {
+        "name": "canvas-design",
+        "repo": "anthropics/skills",
+        "description": "Visual design with canvas-based components"
+      }
+    ],
+    "document-tools": [
+      {
+        "name": "document-skills",
+        "repo": "anthropics/skills",
+        "description": "Excel, Word, PowerPoint, PDF processing"
+      },
+      {
+        "name": "markdown-tools",
+        "repo": "daymade/claude-code-skills",
+        "description": "Document to markdown conversion"
+      }
+    ],
+    "security": [
+      {
+        "name": "security-guidance",
+        "repo": "anthropics/claude-plugins-official",
+        "description": "Security best practices guidance"
+      },
+      {
+        "name": "repomix-safe-mixer",
+        "repo": "daymade/claude-code-skills",
+        "description": "Secure code packaging"
+      }
+    ],
+    "learning": [
+      {
+        "name": "learning-output-style",
+        "repo": "anthropics/claude-plugins-official",
+        "description": "Educational explanations style"
+      },
+      {
+        "name": "explanatory-output-style",
+        "repo": "anthropics/claude-plugins-official",
+        "description": "Detailed explanatory output"
+      }
+    ]
+  },
+  "default_recommendations": [
+    {
+      "name": "skill-creator",
+      "repo": "daymade/claude-code-skills",
+      "description": "Create effective Claude Code skills"
+    },
+    {
+      "name": "superpowers",
+      "repo": "obra/superpowers-marketplace",
+      "description": "Extended Claude capabilities"
+    },
+    {
+      "name": "planning-with-files",
+      "repo": "OthmanAdi/planning-with-files",
+      "description": "File-based planning workflow"
+    }
+  ]
+}

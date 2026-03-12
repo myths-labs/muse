@@ -9,7 +9,7 @@
 <p align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/myths-labs/muse/blob/main/LICENSE)
-[![Version](https://img.shields.io/badge/version-2.3-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-2.4-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
 [![Stars](https://img.shields.io/github/stars/myths-labs/muse?style=social)](https://github.com/myths-labs/muse)
 [![Pure Markdown](https://img.shields.io/badge/pure-markdown-green.svg)](#)
 [![Zero Dependencies](https://img.shields.io/badge/dependencies-zero-brightgreen.svg)](#)
@@ -219,8 +219,8 @@ Every `/bye` automatically checks `memory/` accumulation. Reminds you to `/disti
 
 | Tier | Description | Ships with MUSE? | Examples |
 |:----:|------|:-------------:|------|
-| **🏛 Core** | Required for MUSE to function | ✅ Built-in | `context-health-check`, `strategic-compact`, `verification-before-completion` |
-| **🔧 Toolkit** | General dev tools, recommended | ✅ Included | `git-commit`, `systematic-debugging`, `code-reviewer-agent` |
+| **🏛 Core** | Required for MUSE to function | ✅ Built-in | `context-health-check`, `strategic-compact`, `verification-before-completion`, `using-superpowers` |
+| **🔧 Toolkit** | General dev tools, recommended | ✅ Included | `git-commit`, `systematic-debugging`, `security-review`, `tdd-workflow`, `frontend-design`, `ui-ux-pro-max`, +19 more |
 | **🎯 Domain** | User-created, domain-specific | ❌ Private | Your own custom skills |
 
 ### Skill Lifecycle
@@ -354,6 +354,6 @@ MIT © [Myths Labs](https://github.com/myths-labs)
 </p>
 
 <p align="center">
-  <i>MUSE v2.3</i>
+  <i>MUSE v2.4</i>
 </p>
 

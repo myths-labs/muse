@@ -114,13 +114,13 @@ if [ "$skills_choice" != "3" ]; then
   # Core skills (always)
   if [ -d "$SCRIPT_DIR/skills/core" ]; then
     cp -r "$SCRIPT_DIR/skills/core" "$TARGET_DIR/.agent/skills/core"
-    echo "   ✅ Core skills installed (3)"
+    echo "   ✅ Core skills installed (4)"
   fi
 
   # Toolkit skills (if chosen)
   if [ "$skills_choice" = "1" ] && [ -d "$SCRIPT_DIR/skills/toolkit" ]; then
     cp -r "$SCRIPT_DIR/skills/toolkit" "$TARGET_DIR/.agent/skills/toolkit"
-    echo "   ✅ Toolkit skills installed (5)"
+    echo "   ✅ Toolkit skills installed (25)"
   fi
 
   # Workflows (always)

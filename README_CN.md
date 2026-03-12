@@ -9,7 +9,7 @@
 <p align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/myths-labs/muse/blob/main/LICENSE)
-[![Version](https://img.shields.io/badge/version-2.3-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-2.4-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
 [![Stars](https://img.shields.io/github/stars/myths-labs/muse?style=social)](https://github.com/myths-labs/muse)
 [![Pure Markdown](https://img.shields.io/badge/pure-markdown-green.svg)](#)
 [![Zero Dependencies](https://img.shields.io/badge/dependencies-zero-brightgreen.svg)](#)
@@ -177,8 +177,8 @@ graph TB
 
 | 层级 | 说明 | 随 MUSE 发布？ | 示例 |
 |:----:|------|:-------------:|------|
-| **🏛 Core** | MUSE 运转必须 | ✅ 内置 | `context-health-check`、`strategic-compact`、`verification-before-completion` |
-| **🔧 Toolkit** | 通用开发工具 | ✅ 推荐 | `git-commit`、`systematic-debugging`、`code-reviewer-agent` |
+| **�� Core** | MUSE 运转必须 | ✅ 内置 | `context-health-check`、`strategic-compact`、`verification-before-completion`、`using-superpowers` |
+| **🔧 Toolkit** | 通用开发工具 | ✅ 推荐 | `git-commit`、`systematic-debugging`、`security-review`、`tdd-workflow`、`frontend-design`、`ui-ux-pro-max` 等 25 个 |
 | **🎯 Domain** | 用户自建领域技能 | ❌ 私密 | 你自己的定制技能 |
 
 ### 技能生命周期
@@ -296,5 +296,5 @@ MIT © [Myths Labs](https://github.com/myths-labs)
 </p>
 
 <p align="center">
-  <i>MUSE v2.3</i>
+  <i>MUSE v2.4</i>
 </p>

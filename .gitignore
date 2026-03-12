@@ -2,3 +2,5 @@
 .muse/
 memory/
 convo/
+__pycache__/
+*.pyc
