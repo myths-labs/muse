@@ -176,15 +176,15 @@ graph TB
 
 ## 📖 Commands
 
-| Command | Description | User Input? |
-|---------|------------|:-----------:|
-| `/resume [scope]` | Boot — restore context & start work | ✅ One line (say what you're doing) |
-| `/ctx` | Context health check (🟢🟡🔴) | ❌ |
-| `/bye` | One-click wrap-up — save, sync, archive | **❌ Zero input** |
-| `/distill` | Condense `memory/` → `MEMORIES.md` | ❌ |
-| `/distill [project]` | Distill only one project's memory | ❌ |
-| `/sync [direction]` | Cross-file sync in multi-role setup | Optional |
-| `/resume crash` | Recover from context blowout | ❌ |
+| Command | Description | Input |
+|---------|------------|:-----:|
+| `/resume [scope]` | Boot — restore context & start work | `build`, `growth`, etc. |
+| `/ctx` | Context health check (🟢🟡🔴) | None needed |
+| `/bye` | One-click wrap-up — save, sync, archive | None needed |
+| `/distill` | Condense `memory/` → `MEMORIES.md` | None needed |
+| `/distill [project]` | Distill only one project's memory | Project name |
+| `/sync [direction]` | Cross-file sync in multi-role setup | Direction (optional) |
+| `/resume crash` | Recover from context blowout | None needed |
 
 ### Defensive Auto-Save (L0 Defense)
 
