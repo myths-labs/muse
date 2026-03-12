@@ -96,6 +96,40 @@ if [ ! -f "$TARGET_DIR/USER.md" ] && [ ! -f "$TARGET_DIR/CLAUDE.md" ]; then
   fi
 fi
 
+# ─── Skills & Workflows ───
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+echo ""
+echo "5. Install MUSE skills & workflows?"
+echo "   [1] All (Core + Toolkit + Workflows) — recommended"
+echo "   [2] Core only (minimum for MUSE to work)"
+echo "   [3] Skip"
+echo ""
+read -p "   Choice [1]: " skills_choice
+skills_choice=${skills_choice:-1}
+
+if [ "$skills_choice" != "3" ]; then
+  mkdir -p "$TARGET_DIR/.agent/skills" "$TARGET_DIR/.agent/workflows"
+
+  # Core skills (always)
+  if [ -d "$SCRIPT_DIR/skills/core" ]; then
+    cp -r "$SCRIPT_DIR/skills/core" "$TARGET_DIR/.agent/skills/core"
+    echo "   ✅ Core skills installed (3)"
+  fi
+
+  # Toolkit skills (if chosen)
+  if [ "$skills_choice" = "1" ] && [ -d "$SCRIPT_DIR/skills/toolkit" ]; then
+    cp -r "$SCRIPT_DIR/skills/toolkit" "$TARGET_DIR/.agent/skills/toolkit"
+    echo "   ✅ Toolkit skills installed (5)"
+  fi
+
+  # Workflows (always)
+  if [ -d "$SCRIPT_DIR/workflows" ]; then
+    cp "$SCRIPT_DIR/workflows/"*.md "$TARGET_DIR/.agent/workflows/" 2>/dev/null
+    echo "   ✅ Workflows installed"
+  fi
+fi
+
 # ─── Apply Preferences ───
 echo ""
 echo "Applying preferences..."
