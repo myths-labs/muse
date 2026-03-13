@@ -26,6 +26,13 @@ TARGET_DIR="${1:-.}"
 TARGET_DIR=$(cd "$TARGET_DIR" 2>/dev/null && pwd || echo "$TARGET_DIR")
 SCRIPT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 
+# ─── Validate target ───
+if [ ! -d "$TARGET_DIR" ]; then
+  echo ""
+  warn "Target directory does not exist: $TARGET_DIR"
+  exit 1
+fi
+
 OUTPUT_FILE="$TARGET_DIR/.cursorrules"
 
 echo ""
