@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.9.0] - 2026-03-14
+
+### Added
+- **`/bye` Iron Rule** — Mandatory 6-step execution enforcement. Agent can no longer skip SOP steps or give short summaries instead of full sync+memory+archive
+- **Memory System Declaration** — Explicit declaration that MUSE uses `.muse/*.md` role files, NOT trio-status-sop (`STATUS.md`). Prevents erroneous file creation
+- **Complete Project-Role Routing Table** — 13-combination routing table (3 projects × 4+ roles) mapping each conversation type to its correct `.muse/` sync target
+- **`/bye` Step 5 CAUTION block** — Convo export step explicitly marked as non-skippable
+
+### Fixed
+- **`/bye` not auto-executing SOP** — Agent would give brief summary and stop. Now enforced with `NEVER skip` iron rule language
+- **`/bye` creating wrong status files** — Agent confused trio-status-sop SKILL with MUSE role system, creating `STATUS.md` / `MARKETING_STATUS.md` in project roots. Now explicitly banned
+- **`/bye` missing project routing** — Only had 5 identity types. Now has 13 with fallback rules
+
 ## [2.8.1] - 2026-03-13
 
 ### Added

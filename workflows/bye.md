@@ -2,6 +2,21 @@
 description: 结束对话的一键收尾指令。自动汇总工作、同步 .muse/ 角色文件、写短期记忆。零输入。
 ---
 
+## 🚨 铁律 — 必须完整执行（不可违反）
+
+> **每次 `/bye` 必须完整执行下方全部 6 步。**
+> **NEVER skip any step. 不能偷懒给简短摘要就结束。**
+> **如果你只输出了"再见"或几行摘要而没有执行 Step 1-6，你就违反了铁律。**
+
+### 🚨 记忆系统声明 — 读三遍
+
+> **当前项目使用 MUSE 角色文件系统 (`.muse/*.md`)，不是 trio-status-sop。**
+>
+> ✅ 正确的文件: `.muse/strategy.md`, `.muse/build.md`, `.muse/growth.md`, `.muse/qa.md` 等
+> ❌ 严禁创建: `STATUS.md`, `STRATEGY_STATUS.md`, `MARKETING_STATUS.md`
+>
+> 如果你找不到预期的状态文件，**停下来确认**，不能自行创建新文件。
+
 ## 用法
 
 ```
@@ -22,12 +37,35 @@ description: 结束对话的一键收尾指令。自动汇总工作、同步 .mu
 - **不需要用户输入任何描述**
 
 ### 2. 判断身份和同步方向
-从对话内容自动判断本轮身份，**强制执行对应 sync**：
-- Strategy 大脑 → sync strategy down（有新决策时）
-- DYA 开发 → **必须** sync build up
-- DYA 增长 → **必须** sync growth up
-- Prometheus 开发 → **必须** sync prometheus build up
-- Prometheus 增长 → **必须** 更新 Prometheus/.muse/growth.md
+
+⚠️ **必须使用下面的路由表确定同步目标文件，不能猜测。**
+
+#### 项目-角色路由表
+
+| 对话类型 | 同步目标文件 | sync 方向 |
+|---------|-----------|-----------|
+| DYA Strategy | `.muse/strategy.md` | sync strategy down（有新决策时） |
+| DYA 开发/Build | `.muse/build.md` | sync build up |
+| DYA 增长/Growth | `.muse/growth.md` | sync growth up |
+| DYA QA | `.muse/qa.md` | sync qa broadcast* |
+| DYA Ops | `.muse/ops.md` | sync ops up |
+| DYA Fundraise | `.muse/fundraise.md` | sync fundraise up |
+| DYA Research | `.muse/research.md` | 无需 sync |
+| Prometheus 开发 | `Prometheus/.muse/build.md` | sync prometheus build up |
+| Prometheus QA | `Prometheus/.muse/qa.md` | sync prometheus qa broadcast* |
+| Prometheus 增长 | `Prometheus/.muse/growth.md` | sync prometheus growth up |
+| MUSE 开发 | `MUSE/.muse/build.md` | sync muse build up |
+| MUSE QA | `MUSE/.muse/qa.md` | sync muse qa broadcast* |
+| MUSE 增长 | `MUSE/.muse/growth.md` | sync muse growth up |
+
+\* broadcast = 写 QA 报告 + 通知 BUILD + 通知 STRATEGY
+
+**身份判断方法**（按优先级）：
+1. 对话中的 `/resume [xxx]` 指令 → 直接映射
+2. 对话中操作过的 `.muse/` 文件 → 用文件名确定角色
+3. 对话内容关键词（代码/Bug → build, 发帖/视频 → growth, 验证/AC → qa）
+
+**Fallback**: 如果无法确定身份，列出本轮操作过的所有 `.muse/` 文件作为同步目标。
 
 #### ⚠️ 重大事件强制回传 checklist
 以下任何一项发生时，**无论 Agent 是否认为"只是内部事"，都必须 sync up 到 strategy**：
@@ -41,7 +79,7 @@ description: 结束对话的一键收尾指令。自动汇总工作、同步 .mu
 如果 checklist 中任何一项未被 sync，Agent 必须在 Step 3 补同步。
 
 ### 3. 执行同步
-- 按 Step 2 的判断和 checklist 执行 sync
+- 按 Step 2 的路由表和 checklist 执行 sync
 - **Cross-check 三重校验**:
   - ① **跨文件一致性**：本轮 memory 条目 vs 对应 .muse/ 文件，确认重大事件已同步
   - ② **同文件内部一致性**：检查同一事项在角色文件不同位置（融资表/决策表/待办/指令队列）的状态是否矛盾
@@ -85,6 +123,10 @@ description: 结束对话的一键收尾指令。自动汇总工作、同步 .mu
 5. **不触发时**：静默跳过，不打扰用户
 
 ### 5. 对话存档引导
+
+> [!CAUTION]
+> **此步骤不可省略。** 每次 `/bye` 必须输出建议 convo 文件名。跳过此步 = /bye 执行失败。
+
 提醒用户手动导出对话（Agent 无法自动完成导出）。
 
 **⚠️ 严格规则（不可违反）**：
