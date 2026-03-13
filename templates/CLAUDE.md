@@ -22,6 +22,7 @@
   | Build errors | `build-error-resolver` |
   | Debugging | `systematic-debugging` |
   | **Verify completion** | **`verification-before-completion`** |
+  | **GEO/SEO optimization** | **`geo-seo`** → `geo-audit` / `geo-citability` / `geo-schema` / `geo-report-pdf` |
 
 ## Context Health Pre-Check
 

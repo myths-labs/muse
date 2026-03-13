@@ -51,6 +51,14 @@ Inspired by the [LCM (Lossless Context Management)](https://papers.voltropy.com/
 | Cross-day tasks lose continuity | `grep memory/` auto-searches history |
 | Same mistakes repeated | `/distill` distills lessons to long-term memory |
 
+<p align="center">
+  <img src="./assets/demo.webp" alt="MUSE Demo — /resume → work → /bye" width="100%">
+</p>
+
+<p align="center">
+  <img src="./assets/before-after.png" alt="Without MUSE vs With MUSE" width="100%">
+</p>
+
 **Works with**: Claude Code · OpenClaw · Cursor · Windsurf · Gemini CLI · Codex CLI — or any AI tool that supports system prompts.
 
 | Tool | Install Command | Format |
@@ -60,6 +68,8 @@ Inspired by the [LCM (Lossless Context Management)](https://papers.voltropy.com/
 | Windsurf | `./scripts/install.sh --tool windsurf` | `.windsurf/rules/*.md` |
 | Gemini CLI | `./scripts/install.sh --tool gemini` | `.gemini/skills/` + `GEMINI.md` |
 | Codex CLI | `./scripts/install.sh --tool codex` | `AGENTS.md` (single file) |
+
+**Recommended companion**: [**nah**](https://github.com/manuelscgipper/nah) — context-aware permission guard for Claude Code. Deterministic classifier that auto-allows safe operations, asks for ambiguous ones, and blocks dangerous patterns (e.g. `curl | bash`). Eliminates permission fatigue without sacrificing safety. `pip install nah && nah install`
 
 ---
 
@@ -365,6 +375,7 @@ Archive files older than 30 days to `memory/archive/`. Use `/distill` to extract
 
 - [LCM Paper](https://papers.voltropy.com/LCM) by Ehrlich & Blackman — Theoretical foundation for lossless context management
 - [lossless-claw](https://github.com/Martian-Engineering/lossless-claw) by Martian Engineering — OpenClaw implementation of LCM
+- [nah](https://github.com/manuelscgipper/nah) by Manuel Schipper — Context-aware permission guard (complements MUSE's Safety Protocol)
 - Greek Mythology — Mnemosyne and her nine Muses, eternal symbols of memory and creation
 
 ---

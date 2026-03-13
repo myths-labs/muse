@@ -580,6 +580,10 @@ print_summary() {
   echo "  2. Create ${CYAN}memory/${RESET} and ${CYAN}.muse/${RESET} directories"
   echo "  3. Start working: type ${BOLD}/resume${RESET} in your AI tool"
   echo ""
+  echo "${DIM}Tip: Install 'nah' for smart permission management:${RESET}"
+  echo "  ${CYAN}pip install nah && nah install${RESET}"
+  echo "  ${DIM}→ Auto-allows safe ops, blocks dangerous patterns (e.g. curl|bash)${RESET}"
+  echo ""
   echo "📖 Docs: https://github.com/myths-labs/muse"
   echo ""
 }
