@@ -42,6 +42,14 @@ description: 新对话开始时恢复项目上下文的标准流程
 | 继续增长/营销 | `/resume prometheus growth` |
 | **继续 QA 验证** | **`/resume prometheus qa`** |
 
+### MUSE 项目
+
+| 场景 | 指令 |
+|------|------|
+| 继续开发 | `/resume muse` 或 `/resume muse build` |
+| 继续增长/推广 | `/resume muse growth` |
+| **继续 QA 验证** | **`/resume muse qa`** |
+
 我会：
 1. 读 `memory/YYYY-MM-DD.md`（今天+昨天）快速恢复上下文
 2. 再读指定的 .muse/ 角色文件确认待办和完整进度
@@ -92,6 +100,10 @@ description: 新对话开始时恢复项目上下文的标准流程
 - `/resume prometheus` → `Prometheus/.muse/build.md` + `Prometheus/PRD.md`
 - `/resume prometheus qa` → `Prometheus/.muse/qa.md`（QA 验证）
 - `/resume prometheus growth` → `Prometheus/.muse/growth.md`
+- `/resume muse` → `MUSE/.muse/build.md`（MUSE 开发）
+- `/resume muse build` → `MUSE/.muse/build.md`
+- `/resume muse growth` → `MUSE/.muse/growth.md`（MUSE 推广）
+- `/resume muse qa` → `MUSE/.muse/qa.md`（MUSE QA）
 
 **向后兼容**（旧指令自动映射）：
 - `/resume status` → `/resume build`
@@ -143,6 +155,8 @@ description: 新对话开始时恢复项目上下文的标准流程
 | `.muse/research.md` | 竞品分析、用户调研、市场数据、OXYZ | 研究讨论后 |
 | `.muse/fundraise.md` | Deck内容、申请文案、Pitch脚本、材料自检 | 融资执行后 |
 | `Prometheus/.muse/build.md` | Prometheus SDK/Marketplace/Plugin | Prometheus 开发后 |
+| `MUSE/.muse/build.md` | MUSE 开源项目开发 | MUSE 开发后 |
+| `MUSE/.muse/growth.md` | MUSE 开源推广、社区、竞品 | MUSE 增长讨论后 |
 | `memory/YYYY-MM-DD.md` | 每日快照（轻量，跨所有项目） | **每轮对话结束时** |
 
 ## 什么时候该开新对话？
@@ -159,3 +173,4 @@ description: 新对话开始时恢复项目上下文的标准流程
 2. **读哪个聊哪个** — 绝不跨文件混聊
 3. **短对话、高密度** — 每次对话聚焦一个主题
 4. **结束即存档** — 更新 .muse/ 角色文件 + 写入 memory/
+5. **跨项目路径明确** — DYA / Prometheus / MUSE 各有独立的 .muse/ 目录，不能混读
