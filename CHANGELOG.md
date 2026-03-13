@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.8.1] - 2026-03-13
+
+### Added
+- **[nah](https://github.com/manuelscgipper/nah) recommended companion** — Context-aware permission guard for Claude Code. Added to README, README_CN, install.sh post-install tip, and Credits section
+- **P1 features** — Cursor rules generator (`scripts/generate-cursorrules.sh`), skill dependency declarations, memory archive lifecycle
+- **GEO/SEO skill** in CLAUDE.md template speed reference table
+
+### Fixed
+- **MUSE project routing** — Added missing MUSE project routes to `resume.md` (only DYA/Prometheus had routes)
+- **Cursor rules generator** — Target dir validation fix
+
 ## [2.8.0] - 2026-03-13
 
 ### Added
