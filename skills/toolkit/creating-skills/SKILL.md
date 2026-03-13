@@ -46,8 +46,19 @@ EOF
 ---
 name: skill-name          # lowercase, hyphens, no spaces
 description: <desc>       # CRITICAL for discovery (max 1024 chars)
+dependencies:             # OPTIONAL: skills that must be loaded first
+  - git-commit            # list prerequisite skill names
+  - systematic-debugging
 ---
 ```
+
+**Fields:**
+
+| Field | Required | Description |
+|-------|:--------:|-------------|
+| `name` | ✅ | Lowercase, hyphens, no spaces |
+| `description` | ✅ | What + When + Capabilities (max 1024 chars) |
+| `dependencies` | ❌ | List of prerequisite skill names |
 
 ### Description Formula
 
@@ -204,6 +215,7 @@ python3 script.py | grep "Result:"
 Before finalizing a skill:
 
 - [ ] **Frontmatter**: name + description present
+- [ ] **Dependencies**: listed if skill requires other skills
 - [ ] **Description**: includes WHAT + WHEN triggers + capabilities
 - [ ] **Naming**: lowercase, hyphens, descriptive
 - [ ] **Quick Start**: copy-paste ready, < 30 lines
