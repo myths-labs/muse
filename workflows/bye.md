@@ -141,7 +141,7 @@ description: 结束对话的一键收尾指令。自动汇总工作、同步 .mu
 **Step 5b. 🚨 运行 ls 命令获取序号（必须执行，不可跳过）**
 - **必须运行**以下命令（不可跳过、不可假设、不可猜测）：
   ```bash
-  ls convo/YYMMDD/ 2>/dev/null || echo "FOLDER_NOT_EXIST"
+  mkdir -p convo/YYMMDD && ls convo/YYMMDD/ 2>/dev/null || echo "FOLDER_NOT_EXIST"
   ```
 - 从 `ls` 输出中找到最大的 NN 值：
   - 如有 `260314-04-xxx.md` → 最大 NN=04 → **新文件 NN=05**
