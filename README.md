@@ -52,7 +52,7 @@ Inspired by the [LCM (Lossless Context Management)](https://papers.voltropy.com/
 | Same mistakes repeated | `/distill` distills lessons to long-term memory |
 
 <p align="center">
-  <img src="./assets/demo.webp" alt="MUSE Demo — /resume → work → /bye" width="100%">
+  <img src="./assets/demo.webp" alt="MUSE Demo — /resume → boot → work → /ctx → /bye" width="100%">
 </p>
 
 <p align="center">

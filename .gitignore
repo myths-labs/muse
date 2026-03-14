@@ -8,3 +8,7 @@ USER.md
 CLAUDE.md
 MEMORIES.md
 .agent/
+
+# Node.js
+node_modules/
+package-lock.json

@@ -60,17 +60,23 @@ description: 新对话开始时恢复项目上下文的标准流程
    → 有则在恢复报告中**主动提醒**（不管是否属于当前角色范围）
 2.7 **角色文件膨胀检查**：`wc -l` 目标 .muse/ 文件，**>800 行 → 先执行归档再开始工作**（移动已完成工作记录/已传递指令到 `.muse/archive/`，目标 ≤500 行）
 3. **🚨 自动拉取战略指令（所有非 strategy 角色必须执行）**：
-   - `grep_search` 扫描 `.muse/strategy.md` 中的「📡 战略指令队列 → 活跃指令」
+   - 🚨 **先检查 CLAUDE.md** 是否指定了 strategy.md 的绝对路径（跨项目用户）
+     - 有 → 用 CLAUDE.md 指定的绝对路径
+     - 没有 → 默认搜索本地 `.muse/strategy.md`
+   - `grep_search` 扫描 strategy.md 中的「📡 战略指令队列 → 活跃指令」
    - **⚠️ 精确匹配规则**（防止跨项目误拉取）：
-     - `/resume build` → 搜 `→DYA/BUILD` 或 `→BUILD`（不带任何项目前缀的）
-     - `/resume growth` → 搜 `→DYA/GROWTH` 或 `→GROWTH`（不带任何项目前缀的）
-     - **必须排除**: `→MUSE/GROWTH`、`→PROMETHEUS/GROWTH` 等其他项目前缀的指令
-     - 判断方法: 如果 `→` 前面有 `/`（如 `→MUSE/GROWTH`），检查项目名是否匹配当前对话的项目
-   - 找到 → **在恢复报告中高亮显示「📡 新战略指令」**，并写入对应角色文件的「📡 已接收战略指令」区块
-   - 回到 strategy.md 标记「✅ 已传递」
-   - 没找到 → 跳过（静默）
-   - ⚡ **Prometheus 角色同理**：`/resume prometheus` → 只搜 `→PROMETHEUS/BUILD`（不搜裸 `→BUILD`）
-   - ⚡ **MUSE 角色同理**：`/resume muse growth` → 只搜 `→MUSE/GROWTH`
+     - `/resume build` → 搜 `→BUILD`（不带任何项目前缀的）
+     - `/resume growth` → 搜 `→GROWTH`（不带任何项目前缀的）
+     - 如有多项目，搜本项目前缀指令（如 `→MYPROJECT/BUILD`）
+   - 🚨 **✅/🟡 过滤规则（必读·防止漏拉取）**:
+     - **🟡 = 待传递**（还没被目标角色的 /resume 拉取过）→ **必须拉取**
+     - **✅ = 已确认接收**（目标角色的 /resume 已拉取并写入角色文件）→ **跳过**
+     - ⚠️ **只有执行 `/resume` 的目标角色才能标记 ✅** — Strategy 对话创建指令时**必须用 🟡**
+     - ❌ **常见错误**: Strategy 对话创建指令时就标了 ✅ → 目标角色永远拉取不到
+   - **拉取后操作**:
+     - 找到 🟡 指令 → **在恢复报告中高亮显示「📡 新战略指令」**，并写入对应角色文件的「📡 已接收战略指令」区块
+     - 回到 strategy.md 将该指令的 🟡 标记改为「✅ 已传递」
+     - 没找到 🟡 指令 → 跳过（静默）
 4. **如果是 `/resume build`：双重检查 QA 通知**
    - ① 检查 `.muse/qa.md` 有没有未处理的 ❌ FAIL → 有则先修复
    - ② 🚨 **检查 build.md 自身** 中的 QA→BUILD 通知（`grep_search build.md "待 BUILD 处理"`）

@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.10.0] - 2026-03-14
+
+### Added
+- **Cross-project strategy directive path** — `/resume` now pre-checks `CLAUDE.md` for strategy.md absolute path before searching. Supports multi-project setups where strategy.md lives in a different repo
+- **🟡/✅ directive filter rules** — Clear protocol: 🟡 = pending (must pull), ✅ = already received (skip). Only the target role's `/resume` can mark ✅. Prevents Strategy accidentally marking directives as delivered before they're pulled
+- **`/bye` mandatory `ls` three-step method** — Convo filename generation now enforces: Step 5a (determine date) → Step 5b (run `ls` command, never guess) → Step 5c (assemble filename). Eliminates sequence number collisions
+
+### Fixed
+- **`/resume` cross-project directive mismatch** — Was searching local `.muse/strategy.md` (doesn't exist in satellite projects). Now reads absolute path from `CLAUDE.md` Project-Specific Rules (S035)
+- **`/bye` convo sequence number guessing** — Agent would default to `-01-` without checking existing files. Now MUST run `ls convo/YYMMDD/` — skipping = execution failure (S035)
+- **Strategy directive loss** — Directives marked ✅ at creation time were invisible to target roles. New rule: Strategy MUST use 🟡 when creating directives (S035)
+
+### Changed
+- **Demo animation remade** — 85 frames, 17 seconds. Shows full MUSE workflow: `/resume` → boot sequence → work → `/ctx` → `/bye`
+- **.gitignore** — Added `node_modules/` and `package-lock.json`
+
 ## [2.9.0] - 2026-03-14
 
 ### Added
