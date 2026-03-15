@@ -56,6 +56,32 @@ description: 结束对话的一键收尾指令。自动汇总工作、同步 .mu
    - **长对话（≥10 轮）**: 按时间段或功能模块分组，确保每段工作都覆盖
 - **不需要用户输入任何描述**
 
+#### 🆕 语义压缩规则 (v2.14.0 — mem0-inspired)
+
+> 问题: 传统摘要是逐条平铺罗列（10 项工作 = 10 行），长对话写出的 memory 又长又缺结构。
+> 解法: **层次化语义压缩** — 先归类再压缩，而不是平铺。
+
+**压缩方法**（Step 4 写 memory 时使用）：
+
+1. **归类**: 将所有工作按「主线」分组（通常 1-3 条主线）
+   ```
+   ❌ 平铺: "修了A, 改了B, 加了C, 删了D, 测了E, 发了F..."
+   ✅ 归类: "主线1: X功能 (A→B→C) | 主线2: Y发布 (D→E→F)"
+   ```
+
+2. **压缩比例**:
+   | 对话长度 | 压缩目标 | 方法 |
+   |---------|---------|------|
+   | ≤5 轮 | 1:1 (不压缩) | 逐条列举 |
+   | 6-15 轮 | 3:1 | 合并同类项，每条主线 1-2 行 |
+   | ≥16 轮 | 5:1 | 只保留主线+关键决策+结果 |
+
+3. **必保留项**（无论多压缩都不能丢）:
+   - 版本号变更 (v2.12.0→v2.13.0)
+   - 用户明确做的决策
+   - 文件创建/删除
+   - 外部操作 (commit/push/deploy/release)
+
 ### 2. 判断身份和同步方向
 
 ⚠️ **必须使用下面的路由表确定同步目标文件，不能猜测。**
@@ -213,6 +239,52 @@ Auto Capture = **实时提取** — 每次 `/bye` 都把本轮产生的关键知
 - **捕获 ≠ 替代 /distill** — Auto Capture 是实时增量，`/distill` 是定期全量压缩+衰减检测
 - **不修改 memory/ 文件** — Auto Capture 只读 Step 1 摘要 + 写 MEMORIES.md
 
+### 4.8 🆕 Auto Profile (自动用户画像)
+
+> Inspired by Supermemory Auto Profile — 自动从对话中提取用户偏好并丰富 `USER.md`。
+> 本轮新增 (v2.14.0) — 零输入，纯观察。
+
+**每次 /bye 都执行**（紧接 Auto Capture 后）：
+
+#### Why
+`USER.md` 通常只在 `/start` 或 `/settings` 时由用户手动填写。但用户的真实偏好藏在日常对话中（"我喜欢中文回复"、"别用 tailwind"、"commit message 用英文"）。Auto Profile 把这些隐性偏好显性化。
+
+#### How
+
+1. **从本轮对话中检测** 以下信号：
+
+   | 信号类型 | 检测方法 | USER.md 字段 |
+   |---------|---------|-------------|
+   | **语言偏好** | 用户持续用中文/英文/混合交流 | `language` |
+   | **代码风格** | 用户纠正过命名/格式/注释风格 | `code_style` |
+   | **工作节奏** | 对话时间段、频率 | `work_hours` (新) |
+   | **技术偏好** | 反复选择/拒绝某种技术方案 | `tech_preferences` (新) |
+   | **沟通偏好** | "别太啰嗦"/"给我详细解释" | `verbosity` (新) |
+
+2. **Dedup + 冲突检查**：
+   - `grep` 检查 `USER.md` 是否已有该偏好
+   - 已有且一致 → **跳过**
+   - 已有但冲突 → **不修改，在 Step 6 提醒用户确认**
+   - 没有 → **追加**
+
+3. **写入 USER.md**：
+   - 追加到合适的 section（找 `## Preferences` 或文件末尾）
+   - 格式：
+     ```markdown
+     - **[field]**: value (auto-detected from conversation on YYYY-MM-DD)
+     ```
+
+4. **静默 vs 提醒**：
+   - 检测到 ≥1 个新偏好 → Step 6 输出 `👤 Auto-profile: detected N new preferences → USER.md`
+   - 检测到冲突 → Step 6 输出 `⚠️ Profile conflict: [field] current=X detected=Y — 请用 /settings 确认`
+   - 无新发现 → 静默跳过
+
+#### Guardrails
+- **每次 /bye 最多写入 3 个偏好**（防止过拟合单次对话）
+- **永不覆盖用户手动设置的值**（手动 > 自动检测）
+- **只追加，不删除**（用户可通过 `/settings` 手动清理）
+- **不读取对话内容**（只从 Step 1 摘要 + 观察到的交互模式推断）
+
 ### 5. 对话存档引导
 
 > [!CAUTION]
@@ -263,6 +335,7 @@ Auto Capture = **实时提取** — 每次 `/bye` 都把本轮产生的关键知
 - 同步: [列出同步了哪些 .muse/ 文件]
 - 记忆: memory/YYYY-MM-DD.md 已更新
 - 📸 Auto-capture: [N entries → MEMORIES.md / 无新知识 / ⚠️ 已满]
+- 👤 Auto-profile: [N new preferences → USER.md / 无新发现 / ⚠️ 冲突]
 - 导出: convo/YYMMDD/YYMMDD-NN-desc.md（请手动导出）
 ```
 

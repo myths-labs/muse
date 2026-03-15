@@ -143,3 +143,52 @@ For Claude 200K window:
 2. If current conversation has not loaded any status files and is ≤3 turns, report 🟢 directly without detailed calculation
 3. Natural language triggers also apply ("how much context left?", "context enough?", etc.)
 4. If you detect yourself forgetting early conversation content or repeating yourself, even if the formula says there's room left, report 🔴 directly
+
+## 🆕 Session Checkpoint (v2.14.0 — OpenViking-inspired)
+
+> Inspired by OpenViking's session compression — auto-checkpoint mid-conversation to prevent context loss.
+> Complements Defensive Auto-Save (CRASH_CONTEXT.md): Auto-Save = crash recovery safety net, Session Checkpoint = quality preservation.
+
+### Why
+
+Long conversations degrade quality because the Agent loses track of early context. By the time `/bye` runs, the Agent may have already forgotten 50-80% of early work. Session Checkpoint writes compressed mid-session snapshots to preserve context fidelity.
+
+### When to Checkpoint
+
+| Trigger | Action |
+|---------|--------|
+| **Every 15 turns** | Silent checkpoint (no user notification) |
+| **After a major milestone** (commit, deploy, release, version bump) | Silent checkpoint |
+| **When /ctx detects 🟡** | Checkpoint + notify user |
+| **When switching topics** (user asks about something unrelated to current work) | Silent checkpoint |
+
+### What to Write
+
+**File**: `memory/YYYY-MM-DD.md` (append, not overwrite)
+
+**Format** (compressed — use Semantic Compression rules from `/bye`):
+```markdown
+## 📍 Checkpoint (HH:MM, ~turn N)
+- 主线: [1-2 sentence summary of work so far]
+- 决策: [key decisions if any]
+- 状态: [current task status]
+```
+
+### Rules
+
+1. **Silent**: Do NOT announce checkpoints to the user. Do NOT ask for confirmation. Write silently between tool calls
+2. **Append-only**: Never overwrite existing memory content. Always append
+3. **Compressed**: Use the 5:1 compression ratio — max 3-4 lines per checkpoint
+4. **Idempotent**: If the same milestone was already checkpointed, skip (check last checkpoint's content)
+5. **No performance impact**: Checkpoint during response generation or between tool calls, never adding a delay
+6. **Checkpoint counter**: Track `_checkpoint_count` mentally. First checkpoint = turn ~15, then every ~15 turns after
+
+### Interaction with Other Systems
+
+| System | Relationship |
+|--------|-------------|
+| **Defensive Auto-Save** (CRASH_CONTEXT.md) | Auto-Save = full structured snapshot for crash recovery. Checkpoint = lightweight append for quality preservation. Both can coexist |
+| **`/bye` Step 1** | `/bye` should READ checkpoints to reconstruct full session history (prevents the 80% forgetting problem) |
+| **`/bye` Step 4** | Final memory write should reference checkpoints: "See checkpoints at HH:MM, HH:MM" |
+| **`/resume`** | Checkpoints appear as part of daily memory — no special handling needed |
+

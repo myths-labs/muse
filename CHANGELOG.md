@@ -1,5 +1,24 @@
 # Changelog
 
+## [2.14.0] - 2026-03-15
+
+### Added
+- **Semantic Compression** (`/bye` Step 1) — mem0-inspired hierarchical compression for memory writes:
+  - Classify work into 1-3 storylines instead of flat listing
+  - Compression ratios: ≤5 turns = 1:1, 6-15 turns = 3:1, ≥16 turns = 5:1
+  - Must-keep items: version changes, user decisions, file creation/deletion, external operations
+- **Session Checkpoint** (`context-health-check`) — OpenViking-inspired mid-conversation auto-checkpoints:
+  - Silent checkpoint every 15 turns (no user interruption)
+  - Triggers: turn count, milestone events (commit/deploy), 🟡 detection, topic switch
+  - Compressed format: `📍 Checkpoint` with 3-4 line snapshot appended to `memory/`
+  - Complements Defensive Auto-Save: Auto-Save = crash recovery, Checkpoint = quality preservation
+- **Auto Profile** (`/bye` Step 4.8) — Supermemory-inspired automatic user preference detection:
+  - Detects: language, code style, work hours, tech preferences, verbosity
+  - Auto-enriches `USER.md` with `(auto-detected)` tag
+  - Dedup + conflict detection (never overwrites manual `/settings`)
+  - Max 3 preferences per session, guardrails against over-fitting
+  - `/bye` Step 6 output now includes `👤 Auto-profile` feedback line
+
 ## [2.13.0] - 2026-03-15
 
 ### Added
