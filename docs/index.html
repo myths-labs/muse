@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MUSE — Memory-Unified Skills & Execution | AI Memory OS</title>
-  <meta name="description" content="MUSE is a pure-Markdown operating system for AI pair programming. Lossless context management across conversations. Zero dependencies. Works with Claude Code, Cursor, Windsurf, Gemini CLI, and more.">
-  <meta name="keywords" content="MUSE, AI memory, Claude Code, Cursor, AI pair programming, context management, Markdown, agent memory">
+  <meta name="description"
+    content="MUSE is a pure-Markdown operating system for AI pair programming. Lossless context management across conversations. Zero dependencies. Works with Claude Code, Cursor, Windsurf, Gemini CLI, and more.">
+  <meta name="keywords"
+    content="MUSE, AI memory, Claude Code, Cursor, AI pair programming, context management, Markdown, agent memory">
   <meta property="og:title" content="MUSE — Memory-Unified Skills & Execution">
-  <meta property="og:description" content="Pure-Markdown AI Memory OS. Zero dependencies. 56 skills. 6 tools supported.">
+  <meta property="og:description"
+    content="Pure-Markdown AI Memory OS. Zero dependencies. 56 skills. 6 tools supported.">
   <meta property="og:image" content="https://raw.githubusercontent.com/myths-labs/muse/main/assets/banner.png">
   <meta property="og:url" content="https://muse.mythslabs.ai">
   <meta property="og:type" content="website">
@@ -15,15 +19,19 @@
   <link rel="icon" href="https://raw.githubusercontent.com/myths-labs/muse/main/assets/logo.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
   <!-- Navigation -->
   <nav class="nav">
     <div class="container nav-inner">
       <a href="#" class="nav-logo">
-        <img src="https://raw.githubusercontent.com/myths-labs/muse/main/assets/logo.png" alt="MUSE" width="32" height="32">
+        <img src="https://raw.githubusercontent.com/myths-labs/muse/main/assets/logo.png" alt="MUSE" width="32"
+          height="32">
         <span>MUSE</span>
       </a>
       <div class="nav-links">
@@ -31,7 +39,10 @@
         <a href="#tools">Tools</a>
         <a href="#comparison">Compare</a>
         <a href="https://github.com/myths-labs/muse" class="btn btn-sm" target="_blank" rel="noopener">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <path
+              d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+          </svg>
           Star on GitHub
         </a>
       </div>
@@ -42,16 +53,20 @@
   <!-- Hero -->
   <section class="hero">
     <div class="hero-bg">
-      <img src="https://raw.githubusercontent.com/myths-labs/muse/main/assets/banner.png" alt="" loading="eager">
+      <img src="hero-banner.png" alt="" loading="eager">
       <div class="hero-overlay"></div>
     </div>
     <div class="container hero-content">
       <div class="hero-badge">Pure Markdown · Zero Dependencies · MIT Open Source</div>
       <h1>Memory-Unified<br>Skills & Execution</h1>
-      <p class="hero-subtitle">The AI Memory OS that ensures no insight is lost across coding conversations.<br>Works with Claude Code, Cursor, Windsurf, Gemini CLI & more.</p>
+      <p class="hero-subtitle">The AI Memory OS that ensures no insight is lost across coding conversations.<br>Works
+        with Claude Code, Cursor, Windsurf, Gemini CLI & more.</p>
       <div class="hero-actions">
         <a href="https://github.com/myths-labs/muse" class="btn btn-primary" target="_blank" rel="noopener">
-          <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor">
+            <path
+              d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+          </svg>
           View on GitHub
         </a>
         <a href="#install" class="btn btn-ghost">Quick Install →</a>
@@ -108,12 +123,14 @@
         <div class="feature-card">
           <div class="feature-icon">🧠</div>
           <h3>Two-Layer Memory</h3>
-          <p>Short-term daily logs (<code>memory/</code>) + long-term distilled lessons (<code>MEMORIES.md</code>). Never lose a lesson again.</p>
+          <p>Short-term daily logs (<code>memory/</code>) + long-term distilled lessons (<code>MEMORIES.md</code>).
+            Never lose a lesson again.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">🎭</div>
           <h3>Role Isolation</h3>
-          <p>Build, QA, Growth, Strategy — each role has its own state file. No cross-contamination, clean boundaries.</p>
+          <p>Build, QA, Growth, Strategy — each role has its own state file. No cross-contamination, clean boundaries.
+          </p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">📡</div>
@@ -123,17 +140,20 @@
         <div class="feature-card">
           <div class="feature-icon">🔌</div>
           <h3>MCP Server</h3>
-          <p>Built-in Bash MCP server with 6 tools. Claude Code can read your project status through the standard protocol.</p>
+          <p>Built-in Bash MCP server with 6 tools. Claude Code can read your project status through the standard
+            protocol.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">⚡</div>
           <h3>56 Skills</h3>
-          <p>Core + Toolkit + Ecosystem skill packs. Git, debugging, security review, TDD, frontend design, and more.</p>
+          <p>Core + Toolkit + Ecosystem skill packs. Git, debugging, security review, TDD, frontend design, and more.
+          </p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">🛡️</div>
           <h3>Defensive Auto-Save</h3>
-          <p>Silent checkpoints every 10 rounds. Context blowout? At most 10 rounds lost. <code>/resume crash</code> recovers the rest.</p>
+          <p>Silent checkpoints every 10 rounds. Context blowout? At most 10 rounds lost. <code>/resume crash</code>
+            recovers the rest.</p>
         </div>
       </div>
     </div>
@@ -145,7 +165,8 @@
       <h2 class="section-title">See It In Action</h2>
       <p class="section-subtitle"><code>/resume</code> → boot → work → <code>/ctx</code> → <code>/bye</code></p>
       <div class="demo-container">
-        <img src="https://raw.githubusercontent.com/myths-labs/muse/main/assets/demo.webp" alt="MUSE Demo — /resume → boot → work → /ctx → /bye" loading="lazy">
+        <img src="https://raw.githubusercontent.com/myths-labs/muse/main/assets/demo.webp"
+          alt="MUSE Demo — /resume → boot → work → /ctx → /bye" loading="lazy">
       </div>
     </div>
   </section>
@@ -195,7 +216,8 @@
             <h4>Clone MUSE</h4>
             <div class="code-block">
               <code>git clone https://github.com/myths-labs/muse.git</code>
-              <button class="copy-btn" onclick="navigator.clipboard.writeText('git clone https://github.com/myths-labs/muse.git')">Copy</button>
+              <button class="copy-btn"
+                onclick="navigator.clipboard.writeText('git clone https://github.com/myths-labs/muse.git')">Copy</button>
             </div>
           </div>
         </div>
@@ -205,7 +227,8 @@
             <h4>Install to your project</h4>
             <div class="code-block">
               <code>cd muse && ./scripts/install.sh --target /path/to/your-project</code>
-              <button class="copy-btn" onclick="navigator.clipboard.writeText('cd muse && ./scripts/install.sh --target /path/to/your-project')">Copy</button>
+              <button class="copy-btn"
+                onclick="navigator.clipboard.writeText('cd muse && ./scripts/install.sh --target /path/to/your-project')">Copy</button>
             </div>
           </div>
         </div>
@@ -331,7 +354,8 @@
   <footer class="footer">
     <div class="container footer-inner">
       <div class="footer-brand">
-        <img src="https://raw.githubusercontent.com/myths-labs/muse/main/assets/logo.png" alt="MUSE" width="24" height="24">
+        <img src="https://raw.githubusercontent.com/myths-labs/muse/main/assets/logo.png" alt="MUSE" width="24"
+          height="24">
         <span>MUSE v2.15.0</span>
       </div>
       <div class="footer-links">
@@ -341,7 +365,8 @@
         <a href="https://linkedin.com/company/MythsLabs" target="_blank" rel="noopener">LinkedIn</a>
       </div>
       <div class="footer-bottom">
-        <p>MIT © <a href="https://github.com/myths-labs" target="_blank" rel="noopener">Myths Labs</a> · Built by <a href="https://x.com/sunshiningday" target="_blank" rel="noopener">JC</a></p>
+        <p>MIT © <a href="https://github.com/myths-labs" target="_blank" rel="noopener">Myths Labs</a> · Built by <a
+            href="https://x.com/sunshiningday" target="_blank" rel="noopener">JC</a></p>
         <p class="footer-muse"><em>Named after the nine Muses, daughters of Mnemosyne — the Titaness of Memory.</em></p>
       </div>
     </div>
@@ -370,4 +395,5 @@
     });
   </script>
 </body>
+
 </html>
