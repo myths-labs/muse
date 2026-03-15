@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.13.0] - 2026-03-15
+
+### Added
+- **Skill Marketplace Discovery** (`scripts/skill-discovery.sh`) — CLI tool for browsing, searching, and installing MUSE skills:
+  - `list` — Browse all 56 skills with tier badges (🔵 Core / 🟢 Toolkit / 🟠 Ecosystem)
+  - `search <query>` — Case-insensitive keyword search across skill names and descriptions
+  - `info <name>` — Detailed skill view (tier, path, lines, dependencies, description)
+  - `install <name> [dir]` — Copy a skill to any project's `.agent/skills/`
+  - `index` — Auto-generate `SKILL_INDEX.md` catalog with full skill listing
+- **SKILL_INDEX.md** — Auto-generated skill catalog (56 skills across 3 tiers, 7 ecosystem packs)
+
 ## [2.12.0] - 2026-03-15
 
 ### Added

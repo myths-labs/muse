@@ -391,6 +391,6 @@ MIT © [Myths Labs](https://github.com/myths-labs)
 </p>
 
 <p align="center">
-  <i>MUSE v2.12.0</i>
+  <i>MUSE v2.13.0</i>
 </p>
 
