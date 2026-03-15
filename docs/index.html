@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MUSE — Memory-Unified Skills & Execution | AI Memory OS</title>
+  <meta name="description" content="MUSE is a pure-Markdown operating system for AI pair programming. Lossless context management across conversations. Zero dependencies. Works with Claude Code, Cursor, Windsurf, Gemini CLI, and more.">
+  <meta name="keywords" content="MUSE, AI memory, Claude Code, Cursor, AI pair programming, context management, Markdown, agent memory">
+  <meta property="og:title" content="MUSE — Memory-Unified Skills & Execution">
+  <meta property="og:description" content="Pure-Markdown AI Memory OS. Zero dependencies. 56 skills. 6 tools supported.">
+  <meta property="og:image" content="https://raw.githubusercontent.com/myths-labs/muse/main/assets/banner.png">
+  <meta property="og:url" content="https://muse.mythslabs.ai">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="https://raw.githubusercontent.com/myths-labs/muse/main/assets/logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="#" class="nav-logo">
+        <img src="https://raw.githubusercontent.com/myths-labs/muse/main/assets/logo.png" alt="MUSE" width="32" height="32">
+        <span>MUSE</span>
+      </a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#tools">Tools</a>
+        <a href="#comparison">Compare</a>
+        <a href="https://github.com/myths-labs/muse" class="btn btn-sm" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          Star on GitHub
+        </a>
+      </div>
+      <button class="nav-toggle" aria-label="Menu">☰</button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-bg">
+      <img src="https://raw.githubusercontent.com/myths-labs/muse/main/assets/banner.png" alt="" loading="eager">
+      <div class="hero-overlay"></div>
+    </div>
+    <div class="container hero-content">
+      <div class="hero-badge">Pure Markdown · Zero Dependencies · MIT Open Source</div>
+      <h1>Memory-Unified<br>Skills & Execution</h1>
+      <p class="hero-subtitle">The AI Memory OS that ensures no insight is lost across coding conversations.<br>Works with Claude Code, Cursor, Windsurf, Gemini CLI & more.</p>
+      <div class="hero-actions">
+        <a href="https://github.com/myths-labs/muse" class="btn btn-primary" target="_blank" rel="noopener">
+          <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          View on GitHub
+        </a>
+        <a href="#install" class="btn btn-ghost">Quick Install →</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-num">56</span><span class="stat-label">Skills</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">6</span><span class="stat-label">AI Tools</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">0</span><span class="stat-label">Dependencies</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">v2.15</span><span class="stat-label">Latest</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Problem / Solution -->
+  <section class="section section-dark" id="problem">
+    <div class="container">
+      <h2 class="section-title">The Problem with AI Coding Today</h2>
+      <div class="comparison-grid">
+        <div class="comparison-card bad">
+          <div class="comparison-icon">😩</div>
+          <h3>Without MUSE</h3>
+          <ul>
+            <li>AI forgets early context in long sessions</li>
+            <li>New conversations start from scratch</li>
+            <li>Same mistakes repeated across sessions</li>
+            <li>Manual context setup every time</li>
+            <li>Progress lost when context overflows</li>
+          </ul>
+        </div>
+        <div class="comparison-card good">
+          <div class="comparison-icon">🎭</div>
+          <h3>With MUSE</h3>
+          <ul>
+            <li>Pre/Post compaction preserves critical info</li>
+            <li><code>/resume</code> auto-assembles context in 5 steps</li>
+            <li><code>/distill</code> distills lessons to long-term memory</li>
+            <li>Zero-input <code>/bye</code> one-click wrap-up</li>
+            <li>Defensive auto-save every 10 rounds</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="section" id="features">
+    <div class="container">
+      <h2 class="section-title">Core Features</h2>
+      <p class="section-subtitle">Everything you need for lossless AI context management</p>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🧠</div>
+          <h3>Two-Layer Memory</h3>
+          <p>Short-term daily logs (<code>memory/</code>) + long-term distilled lessons (<code>MEMORIES.md</code>). Never lose a lesson again.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎭</div>
+          <h3>Role Isolation</h3>
+          <p>Build, QA, Growth, Strategy — each role has its own state file. No cross-contamination, clean boundaries.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📡</div>
+          <h3>Directive Queue</h3>
+          <p>Async cross-role messaging with 🟡/✅ status tracking. Strategy directs, Build executes, QA verifies.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔌</div>
+          <h3>MCP Server</h3>
+          <p>Built-in Bash MCP server with 6 tools. Claude Code can read your project status through the standard protocol.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>56 Skills</h3>
+          <p>Core + Toolkit + Ecosystem skill packs. Git, debugging, security review, TDD, frontend design, and more.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🛡️</div>
+          <h3>Defensive Auto-Save</h3>
+          <p>Silent checkpoints every 10 rounds. Context blowout? At most 10 rounds lost. <code>/resume crash</code> recovers the rest.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Demo -->
+  <section class="section section-dark" id="demo">
+    <div class="container">
+      <h2 class="section-title">See It In Action</h2>
+      <p class="section-subtitle"><code>/resume</code> → boot → work → <code>/ctx</code> → <code>/bye</code></p>
+      <div class="demo-container">
+        <img src="https://raw.githubusercontent.com/myths-labs/muse/main/assets/demo.webp" alt="MUSE Demo — /resume → boot → work → /ctx → /bye" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <!-- Supported Tools -->
+  <section class="section" id="tools">
+    <div class="container">
+      <h2 class="section-title">Works With Your Tools</h2>
+      <p class="section-subtitle">One install command, automatic format conversion</p>
+      <div class="tools-grid">
+        <div class="tool-card">
+          <div class="tool-name">Claude Code</div>
+          <code>install.sh --tool claude</code>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name">Cursor</div>
+          <code>install.sh --tool cursor</code>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name">Windsurf</div>
+          <code>install.sh --tool windsurf</code>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name">Gemini CLI</div>
+          <code>install.sh --tool gemini</code>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name">Codex CLI</div>
+          <code>install.sh --tool codex</code>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name">OpenClaw</div>
+          <code>install.sh --tool openclaw</code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Install -->
+  <section class="section section-dark" id="install">
+    <div class="container">
+      <h2 class="section-title">Get Started in 60 Seconds</h2>
+      <div class="install-block">
+        <div class="install-step">
+          <span class="step-num">1</span>
+          <div class="step-content">
+            <h4>Clone MUSE</h4>
+            <div class="code-block">
+              <code>git clone https://github.com/myths-labs/muse.git</code>
+              <button class="copy-btn" onclick="navigator.clipboard.writeText('git clone https://github.com/myths-labs/muse.git')">Copy</button>
+            </div>
+          </div>
+        </div>
+        <div class="install-step">
+          <span class="step-num">2</span>
+          <div class="step-content">
+            <h4>Install to your project</h4>
+            <div class="code-block">
+              <code>cd muse && ./scripts/install.sh --target /path/to/your-project</code>
+              <button class="copy-btn" onclick="navigator.clipboard.writeText('cd muse && ./scripts/install.sh --target /path/to/your-project')">Copy</button>
+            </div>
+          </div>
+        </div>
+        <div class="install-step">
+          <span class="step-num">3</span>
+          <div class="step-content">
+            <h4>Start using</h4>
+            <div class="code-block">
+              <code>/resume  →  work  →  /bye</code>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison -->
+  <section class="section" id="comparison">
+    <div class="container">
+      <h2 class="section-title">How MUSE Compares</h2>
+      <p class="section-subtitle">The only zero-dependency, pure-Markdown approach to AI memory</p>
+      <div class="table-wrapper">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th class="highlight">MUSE</th>
+              <th>mem0</th>
+              <th>memsearch</th>
+              <th>lossless-claw</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Dependencies</td>
+              <td class="highlight"><strong>Zero</strong></td>
+              <td>Python + DB</td>
+              <td>Milvus + Node</td>
+              <td>SQLite + DAG</td>
+            </tr>
+            <tr>
+              <td>Format</td>
+              <td class="highlight"><strong>Pure Markdown</strong></td>
+              <td>Vector DB</td>
+              <td>Vector DB</td>
+              <td>Custom DAG</td>
+            </tr>
+            <tr>
+              <td>Tool Support</td>
+              <td class="highlight"><strong>6 tools</strong></td>
+              <td>API only</td>
+              <td>Claude Code</td>
+              <td>OpenClaw</td>
+            </tr>
+            <tr>
+              <td>Role System</td>
+              <td class="highlight">✅ Multi-role</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td>Cross-role Directives</td>
+              <td class="highlight">✅ 📡 Protocol</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td>MCP Server</td>
+              <td class="highlight">✅ Built-in</td>
+              <td>—</td>
+              <td>✅</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td>License</td>
+              <td class="highlight"><strong>MIT</strong></td>
+              <td>Apache 2.0</td>
+              <td>MIT</td>
+              <td>MIT</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Commands -->
+  <section class="section section-dark" id="commands">
+    <div class="container">
+      <h2 class="section-title">Simple Commands</h2>
+      <div class="commands-grid">
+        <div class="command-card">
+          <code>/resume</code>
+          <p>Boot — auto-restore context & start work</p>
+        </div>
+        <div class="command-card">
+          <code>/bye</code>
+          <p>One-click wrap-up — save, sync, archive</p>
+        </div>
+        <div class="command-card">
+          <code>/ctx</code>
+          <p>Context health check (🟢🟡🔴)</p>
+        </div>
+        <div class="command-card">
+          <code>/distill</code>
+          <p>Condense daily logs → long-term memory</p>
+        </div>
+        <div class="command-card">
+          <code>/sync</code>
+          <p>Cross-role synchronization</p>
+        </div>
+        <div class="command-card">
+          <code>/settings</code>
+          <p>Change language, model, preferences</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img src="https://raw.githubusercontent.com/myths-labs/muse/main/assets/logo.png" alt="MUSE" width="24" height="24">
+        <span>MUSE v2.15.0</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/myths-labs/muse" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://github.com/myths-labs/muse/discussions" target="_blank" rel="noopener">Discussions</a>
+        <a href="https://x.com/MythsLabs" target="_blank" rel="noopener">X (Twitter)</a>
+        <a href="https://linkedin.com/company/MythsLabs" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+      <div class="footer-bottom">
+        <p>MIT © <a href="https://github.com/myths-labs" target="_blank" rel="noopener">Myths Labs</a> · Built by <a href="https://x.com/sunshiningday" target="_blank" rel="noopener">JC</a></p>
+        <p class="footer-muse"><em>Named after the nine Muses, daughters of Mnemosyne — the Titaness of Memory.</em></p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile nav toggle
+    document.querySelector('.nav-toggle').addEventListener('click', () => {
+      document.querySelector('.nav-links').classList.toggle('open');
+    });
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        const t = document.querySelector(a.getAttribute('href'));
+        if (t) t.scrollIntoView({ behavior: 'smooth' });
+        document.querySelector('.nav-links').classList.remove('open');
+      });
+    });
+    // Copy button feedback
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.textContent = '✓';
+        setTimeout(() => btn.textContent = 'Copy', 1500);
+      });
+    });
+  </script>
+</body>
+</html>
