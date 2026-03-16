@@ -18,6 +18,7 @@
 
 <p align="center">
 
+[![Website](https://img.shields.io/badge/Website-muse.mythslabs.ai-C9A84C?logo=safari&logoColor=white)](https://muse.mythslabs.ai)
 [![X @MythsLabs](https://img.shields.io/badge/X-@MythsLabs-black?logo=x)](https://x.com/MythsLabs)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Myths_Labs-0A66C2?logo=linkedin)](https://linkedin.com/company/MythsLabs)
 [![Myths Labs](https://img.shields.io/badge/GitHub-Myths_Labs-181717?logo=github)](https://github.com/myths-labs)
