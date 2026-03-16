@@ -544,6 +544,342 @@
             text-decoration: none;
         }
 
+        /* ─── Expandable Role Cards ─── */
+        .role-card {
+            cursor: pointer;
+            position: relative;
+        }
+
+        .role-card .expand-icon {
+            width: 18px;
+            height: 18px;
+            transition: transform 0.3s;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .role-card.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .role-expanded {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, opacity 0.3s;
+            opacity: 0;
+            margin-top: 0;
+        }
+
+        .role-card.expanded .role-expanded {
+            max-height: 600px;
+            opacity: 1;
+            margin-top: 14px;
+        }
+
+        .role-expanded pre {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px;
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            line-height: 1.7;
+            white-space: pre-wrap;
+            word-break: break-word;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .role-section-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 10px 0 4px;
+            display: block;
+        }
+
+        /* ─── Skills Tab ─── */
+        .skills-search {
+            width: 100%;
+            padding: 10px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text);
+            font-family: var(--font);
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            transition: border-color 0.2s;
+        }
+
+        .skills-search:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .skills-search::placeholder {
+            color: var(--text-muted);
+        }
+
+        .skill-category {
+            margin-bottom: 24px;
+        }
+
+        .skill-category-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .skill-tier {
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .tier-core {
+            background: rgba(116, 185, 255, 0.15);
+            color: #74b9ff;
+        }
+
+        .tier-toolkit {
+            background: rgba(0, 184, 148, 0.15);
+            color: #00b894;
+        }
+
+        .tier-ecosystem {
+            background: rgba(253, 203, 110, 0.15);
+            color: #fdcb6e;
+        }
+
+        .skill-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 8px;
+        }
+
+        .skill-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .skill-item:hover {
+            border-color: var(--accent);
+            color: var(--text);
+        }
+
+        .skill-item .skill-name {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .skill-desc {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.3s ease, opacity 0.3s, margin 0.3s;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-top: 0;
+        }
+
+        .skill-item.expanded .skill-desc {
+            max-height: 100px;
+            opacity: 1;
+            margin-top: 6px;
+        }
+
+        .skill-item.expanded {
+            border-color: var(--accent);
+        }
+
+        /* ─── Memory Preview ─── */
+        .tl-item {
+            cursor: pointer;
+            position: relative;
+        }
+
+        .tl-item .expand-icon {
+            position: absolute;
+            right: 14px;
+            top: 14px;
+            width: 16px;
+            height: 16px;
+            transition: transform 0.3s;
+            color: var(--text-muted);
+        }
+
+        .tl-item.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .tl-expanded {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, opacity 0.3s;
+            opacity: 0;
+            margin-top: 0;
+        }
+
+        .tl-item.expanded .tl-expanded {
+            max-height: 400px;
+            opacity: 1;
+            margin-top: 10px;
+        }
+
+        .tl-expanded pre {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        /* ─── Health Section ─── */
+        .health-section {
+            margin-bottom: 32px;
+        }
+
+        .health-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 16px;
+            align-items: start;
+        }
+
+        .health-stat {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            text-align: center;
+        }
+
+        .health-stat .stat-label {
+            margin-top: 8px;
+        }
+
+        .bar-chart {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+        }
+
+        .bar-chart-title {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .bar-chart-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 6px;
+            height: 100px;
+        }
+
+        .bar-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .bar {
+            width: 100%;
+            border-radius: 4px 4px 0 0;
+            min-height: 4px;
+            background: linear-gradient(to top, var(--purple), var(--accent));
+            transition: height 0.6s ease;
+        }
+
+        .bar-label {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+        }
+
+        /* ─── Directives ─── */
+        .directive-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .directive-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            transition: all 0.2s;
+        }
+
+        .directive-item:hover {
+            border-color: var(--accent);
+        }
+
+        .directive-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+        .directive-status {
+            font-size: 0.7rem;
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .directive-pending {
+            background: rgba(253, 203, 110, 0.15);
+            color: #fdcb6e;
+        }
+
+        .directive-done {
+            background: rgba(0, 184, 148, 0.15);
+            color: #00b894;
+        }
+
+        .directive-source {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .directive-text {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+
+        .directive-date {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
         /* Animations */
         @keyframes fadeIn {
             from {
@@ -581,6 +917,18 @@
 
             .nav-links {
                 display: none;
+            }
+
+            .health-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .skill-list {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+
+            .tabs {
+                flex-wrap: wrap;
             }
         }
     </style>
@@ -662,15 +1010,31 @@
 
             <div class="tabs">
                 <button class="tab active" data-tab="roles">🎭 Roles</button>
+                <button class="tab" data-tab="skills">⚡ Skills</button>
                 <button class="tab" data-tab="memory">🧠 Memory</button>
+                <button class="tab" data-tab="health">📈 Health</button>
+                <button class="tab" data-tab="directives">📡 Directives</button>
             </div>
 
             <div class="tab-content active" id="tab-roles">
                 <div class="role-grid" id="role-grid"></div>
             </div>
 
+            <div class="tab-content" id="tab-skills">
+                <input type="text" class="skills-search" id="skills-search" placeholder="Search skills...">
+                <div id="skills-container"></div>
+            </div>
+
             <div class="tab-content" id="tab-memory">
                 <div class="timeline" id="timeline"></div>
+            </div>
+
+            <div class="tab-content" id="tab-health">
+                <div class="health-section" id="health-section"></div>
+            </div>
+
+            <div class="tab-content" id="tab-directives">
+                <div class="directive-list" id="directive-list"></div>
             </div>
         </div>
     </div>
@@ -738,16 +1102,60 @@
             renderDashboard({
                 project: 'my-awesome-project',
                 roles: [
-                    { name: 'build', l0: 'v1.5.0 | Auth system✅, Dashboard WIP, 12 API endpoints, PostgreSQL + Redis', lines: 245, modified: '2026-03-16' },
-                    { name: 'qa', l0: 'Latest QA: 8/8 PASS, 0 regressions, coverage 87%', lines: 130, modified: '2026-03-15' },
-                    { name: 'growth', l0: 'Launch week: 450 GitHub stars, 3 blog posts, Show HN drafted', lines: 198, modified: '2026-03-16' },
+                    {
+                        name: 'build', l0: 'v1.5.0 | Auth system✅, Dashboard WIP, 12 API endpoints, PostgreSQL + Redis', lines: 245, modified: '2026-03-16',
+                        content: '## 📐 Responsibilities\n- Framework code development\n- Bug fixes & architecture\n- API endpoints\n\n## ⏳ TODO (by priority)\n- [x] Auth system (JWT + OAuth)\n- [/] Dashboard frontend\n- [ ] WebSocket real-time updates\n- [ ] Rate limiting middleware\n- [ ] E2E test suite'
+                    },
+                    {
+                        name: 'qa', l0: 'Latest QA: 8/8 PASS, 0 regressions, coverage 87%', lines: 130, modified: '2026-03-15',
+                        content: '## Latest QA Results\n✅ 8/8 AC PASS — Auth Module v1.5.0\nVerifier: QA identity\nBuild: v1.5.0 / main / commit abc1234\n\n## Coverage\n- Unit: 87%\n- Integration: 72%\n- E2E: 45%'
+                    },
+                    {
+                        name: 'growth', l0: 'Launch week: 450 GitHub stars, 3 blog posts, Show HN drafted', lines: 198, modified: '2026-03-16',
+                        content: '## 📊 Metrics\n- GitHub Stars: 450 (+120 this week)\n- npm downloads: 1.2K/week\n- Blog views: 8.5K total\n\n## 📋 Content Pipeline\n- [x] "Why We Built This" blog post\n- [x] Show HN draft v3\n- [ ] Product Hunt launch prep\n- [ ] Dev.to cross-post'
+                    },
                 ],
                 memory: [
-                    { date: '2026-03-16', title: 'Auth Integration Session (10:00-14:00)', lines: 85, size: 4200 },
-                    { date: '2026-03-15', title: 'Dashboard UI Redesign', lines: 62, size: 3100 },
-                    { date: '2026-03-14', title: 'Database Migration + Redis Setup', lines: 94, size: 4800 },
+                    {
+                        date: '2026-03-16', title: 'Auth Integration Session (10:00-14:00)', lines: 85, size: 4200,
+                        content: '## Auth Integration Session (10:00-14:00)\n\n### Completed\n- JWT refresh token rotation\n- OAuth2 Google + GitHub providers\n- Session middleware with Redis store\n- RBAC permission checks on 8 endpoints\n\n### Decisions\n- [DECISION] Use httpOnly cookies over localStorage'
+                    },
+                    {
+                        date: '2026-03-15', title: 'Dashboard UI Redesign', lines: 62, size: 3100,
+                        content: '## Dashboard UI Redesign\n\n### Completed\n- Dark theme with glassmorphism cards\n- Stat grid responsive layout\n- Chart.js integration for metrics\n- Skeleton loading states\n\n### Next\n- [ ] Mobile bottom nav\n- [ ] Notification bell'
+                    },
+                    {
+                        date: '2026-03-14', title: 'Database Migration + Redis Setup', lines: 94, size: 4800,
+                        content: '## Database Migration + Redis Setup\n\n### Completed\n- PostgreSQL 16 with pgvector extension\n- Redis 7.2 for sessions + caching\n- Drizzle ORM schema definitions\n- Migration scripts (up/down)\n\n### Issues\n- Connection pooling needed tuning (max 20→50)'
+                    },
                     { date: '2026-03-13', title: 'API Endpoint Planning', lines: 45, size: 2200 },
                     { date: '2026-03-12', title: 'Project Kickoff & Architecture', lines: 38, size: 1900 },
+                ],
+                skills: [
+                    { name: 'git-commit', tier: 'core', description: 'Enforces conventional commit messages with scope, type, and breaking change detection.' },
+                    { name: 'code-review', tier: 'core', description: 'Structured code review with severity levels, actionable suggestions, and approval criteria.' },
+                    { name: 'context-health-check', tier: 'core', description: 'Monitors context window usage and triggers session checkpoints to prevent overflow.' },
+                    { name: 'layered-context', tier: 'core', description: 'L0/L1/L2 progressive context loading — scan summaries first, deep-read on demand.' },
+                    { name: 'agent-protocol', tier: 'core', description: 'Machine-readable role file protocol for multi-agent communication and MCP integration.' },
+                    { name: 'react-components', tier: 'toolkit', description: 'Best practices for building reusable React components with TypeScript and testing.' },
+                    { name: 'api-design', tier: 'toolkit', description: 'RESTful API design patterns including versioning, pagination, and error handling.' },
+                    { name: 'database-schema', tier: 'toolkit', description: 'Database schema design with migrations, indexing strategies, and normalization.' },
+                    { name: 'testing-strategy', tier: 'toolkit', description: 'Testing pyramid approach: unit → integration → E2E with coverage targets.' },
+                    { name: 'error-handling', tier: 'toolkit', description: 'Structured error handling with custom error classes and user-friendly messages.' },
+                    { name: 'performance-audit', tier: 'toolkit', description: 'Web performance auditing: Core Web Vitals, bundle analysis, and optimization.' },
+                    { name: 'accessibility', tier: 'toolkit', description: 'WCAG 2.1 compliance checks, ARIA patterns, and screen reader testing.' },
+                    { name: 'docker-deploy', tier: 'toolkit', description: 'Dockerfile best practices, multi-stage builds, and container orchestration.' },
+                    { name: 'ci-cd-pipeline', tier: 'toolkit', description: 'CI/CD pipeline setup with GitHub Actions, testing gates, and auto-deployment.' },
+                    { name: 'seo-optimization', tier: 'toolkit', description: 'Technical SEO: meta tags, structured data, sitemap, and Core Web Vitals.' },
+                    { name: 'vercel-deploy', tier: 'ecosystem', description: 'Vercel deployment configuration with preview environments and edge functions.' },
+                    { name: 'stripe-integration', tier: 'ecosystem', description: 'Stripe payment integration: checkout, subscriptions, webhooks, and testing.' },
+                    { name: 'supabase-auth', tier: 'ecosystem', description: 'Supabase authentication with row-level security and social OAuth providers.' },
+                ],
+                directives: [
+                    { text: 'Dashboard v2 — add expandable role cards + skills tab + health chart', status: 'pending', source: 'GROWTH→BUILD', date: '2026-03-16' },
+                    { text: 'WebSocket support needed for real-time collab features', status: 'pending', source: 'STRATEGY→BUILD', date: '2026-03-15' },
+                    { text: 'Auth system MVP — JWT + OAuth + RBAC', status: 'done', source: 'STRATEGY→BUILD', date: '2026-03-13' },
+                    { text: 'QA v1.5.0 — 8/8 AC PASS, no issues', status: 'done', source: 'QA→BUILD', date: '2026-03-15' },
                 ],
                 skillCount: 56,
                 memoriesWords: 1240,
@@ -756,7 +1164,7 @@
 
         // ─── Read from Directory Handle (File System Access API) ───
         async function readProjectFromDirectory(dirHandle) {
-            const data = { project: dirHandle.name, roles: [], memory: [], skillCount: 0, memoriesWords: 0 };
+            const data = { project: dirHandle.name, roles: [], memory: [], skills: [], directives: [], skillCount: 0, memoriesWords: 0 };
 
             // Read .muse/ directory
             try {
@@ -769,10 +1177,13 @@
                         const l0 = lines[0]?.replace('<!-- L0: ', '').replace(' -->', '') || '';
                         data.roles.push({
                             name: name.replace('.md', ''),
-                            l0: l0.substring(0, 150),
+                            l0: l0.substring(0, 200),
                             lines: lines.length,
-                            modified: new Date(file.lastModified).toISOString().split('T')[0]
+                            modified: new Date(file.lastModified).toISOString().split('T')[0],
+                            content: extractSections(content)
                         });
+                        // Extract directives from 📡 sections
+                        extractDirectives(content, name.replace('.md', ''), data.directives);
                     }
                 }
             } catch { }
@@ -789,25 +1200,55 @@
                             date: name.replace('.md', ''),
                             title: firstHeading.substring(0, 80),
                             lines: content.split('\n').length,
-                            size: file.size
+                            size: file.size,
+                            content: content.split('\n').slice(0, 12).join('\n')
                         });
                     }
                 }
                 data.memory.sort((a, b) => b.date.localeCompare(a.date));
             } catch { }
 
-            // Count skills
-            try {
-                const countSkills = async (dir) => {
-                    let count = 0;
-                    for await (const [name, handle] of dir.entries()) {
-                        if (handle.kind === 'file' && name === 'SKILL.md') count++;
-                        if (handle.kind === 'directory') count += await countSkills(handle);
+            // Read skills with tiers + descriptions
+            const readSkillsFromDir = async (dir, tier) => {
+                for await (const [name, handle] of dir.entries()) {
+                    if (handle.kind === 'directory') {
+                        try {
+                            const skillFile = await handle.getFileHandle('SKILL.md');
+                            const file = await skillFile.getFile();
+                            const content = await file.text();
+                            // Parse description from YAML frontmatter
+                            let desc = '';
+                            const fmMatch = content.match(/^---\s*\n([\s\S]*?)\n---/);
+                            if (fmMatch) {
+                                const descLine = fmMatch[1].split('\n').find(l => l.startsWith('description:'));
+                                if (descLine) desc = descLine.replace(/^description:\s*/, '').replace(/^['"]|['"]$/g, '');
+                            }
+                            if (!desc) {
+                                // Fallback: first non-empty line after frontmatter
+                                const afterFm = content.replace(/^---[\s\S]*?---\s*\n?/, '');
+                                desc = afterFm.split('\n').find(l => l.trim() && !l.startsWith('#'))?.trim() || '';
+                            }
+                            data.skills.push({ name, tier, description: desc.substring(0, 150) });
+                            data.skillCount++;
+                        } catch {
+                            await readSkillsFromDir(handle, tier);
+                        }
                     }
-                    return count;
-                };
-                try { data.skillCount = await countSkills(await dirHandle.getDirectoryHandle('skills')); } catch { }
-                try { data.skillCount += await countSkills(await dirHandle.getDirectoryHandle('.agent')); } catch { }
+                }
+            };
+            try {
+                const skillsDir = await dirHandle.getDirectoryHandle('skills');
+                for await (const [name, handle] of skillsDir.entries()) {
+                    if (handle.kind === 'directory') {
+                        const tier = name === 'core' ? 'core' : name === 'ecosystem' ? 'ecosystem' : 'toolkit';
+                        await readSkillsFromDir(handle, tier);
+                    }
+                }
+            } catch { }
+            try {
+                const agentDir = await dirHandle.getDirectoryHandle('.agent');
+                const agentSkillsDir = await agentDir.getDirectoryHandle('skills');
+                await readSkillsFromDir(agentSkillsDir, 'toolkit');
             } catch { }
 
             // Read MEMORIES.md
@@ -822,7 +1263,7 @@
 
         // ─── Read from File List (webkitdirectory) ───
         async function readProjectFromFileList(files) {
-            const data = { project: '', roles: [], memory: [], skillCount: 0, memoriesWords: 0 };
+            const data = { project: '', roles: [], memory: [], skills: [], directives: [], skillCount: 0, memoriesWords: 0 };
 
             for (const file of files) {
                 const path = file.webkitRelativePath || file.name;
@@ -834,9 +1275,11 @@
                     const l0 = lines[0]?.replace('<!-- L0: ', '').replace(' -->', '') || '';
                     data.roles.push({
                         name: file.name.replace('.md', ''),
-                        l0: l0.substring(0, 150), lines: lines.length,
-                        modified: new Date(file.lastModified).toISOString().split('T')[0]
+                        l0: l0.substring(0, 200), lines: lines.length,
+                        modified: new Date(file.lastModified).toISOString().split('T')[0],
+                        content: extractSections(content)
                     });
+                    extractDirectives(content, file.name.replace('.md', ''), data.directives);
                 }
 
                 if (path.includes('memory/') && file.name.endsWith('.md') && !path.includes('.muse/')) {
@@ -844,11 +1287,25 @@
                     const firstHeading = content.split('\n').find(l => l.startsWith('#'))?.replace(/^#+\s*/, '') || '';
                     data.memory.push({
                         date: file.name.replace('.md', ''),
-                        title: firstHeading.substring(0, 80), lines: content.split('\n').length, size: file.size
+                        title: firstHeading.substring(0, 80), lines: content.split('\n').length, size: file.size,
+                        content: content.split('\n').slice(0, 12).join('\n')
                     });
                 }
 
-                if (file.name === 'SKILL.md') data.skillCount++;
+                if (file.name === 'SKILL.md') {
+                    data.skillCount++;
+                    const tier = path.includes('/core/') ? 'core' : path.includes('/ecosystem/') ? 'ecosystem' : 'toolkit';
+                    const parts = path.split('/');
+                    const skillName = parts[parts.length - 2] || 'unknown';
+                    const content = await file.text();
+                    let desc = '';
+                    const fmMatch = content.match(/^---\s*\n([\s\S]*?)\n---/);
+                    if (fmMatch) {
+                        const descLine = fmMatch[1].split('\n').find(l => l.startsWith('description:'));
+                        if (descLine) desc = descLine.replace(/^description:\s*/, '').replace(/^['"]|['"]$/g, '');
+                    }
+                    data.skills.push({ name: skillName, tier, description: desc.substring(0, 150) });
+                }
 
                 if (file.name === 'MEMORIES.md' && !path.includes('.muse/')) {
                     const content = await file.text();
@@ -860,12 +1317,55 @@
             return data;
         }
 
+        // ─── Helper: Extract key sections from a role file ───
+        function extractSections(content) {
+            const lines = content.split('\n');
+            const sections = [];
+            let current = null;
+            for (const line of lines.slice(1)) { // skip L0
+                if (line.startsWith('## ')) {
+                    if (current) sections.push(current);
+                    current = { title: line.replace(/^##\s*/, ''), lines: [] };
+                } else if (current && current.lines.length < 8) {
+                    if (line.trim()) current.lines.push(line);
+                }
+            }
+            if (current) sections.push(current);
+            // Return first 3 most interesting sections
+            return sections.slice(0, 4).map(s => s.title + '\n' + s.lines.join('\n')).join('\n\n');
+        }
+
+        // ─── Helper: Extract directives from 📡 sections ───
+        function extractDirectives(content, roleName, directives) {
+            const lines = content.split('\n');
+            let inDirectiveSection = false;
+            let currentDirective = null;
+            for (const line of lines) {
+                if (line.includes('📡') && (line.startsWith('#') || line.startsWith('>'))) {
+                    inDirectiveSection = true;
+                    const isPending = line.includes('🟡');
+                    const isDone = line.includes('✅');
+                    const dateMatch = line.match(/\d{4}-\d{2}-\d{2}|\d{1,2}\/\d{1,2}/);
+                    const sourceMatch = line.match(/([\w]+→[\w]+|GROWTH→BUILD|QA→BUILD|STRATEGY→BUILD|BUILD→QA)/);
+                    const textMatch = line.replace(/^[#>\s*]+/, '').replace(/📡|🟡|✅|待接收|已接收|已完成/g, '').trim();
+                    if (textMatch.length > 5) {
+                        directives.push({
+                            text: textMatch.substring(0, 120),
+                            status: isPending ? 'pending' : isDone ? 'done' : 'done',
+                            source: sourceMatch ? sourceMatch[1] : roleName.toUpperCase(),
+                            date: dateMatch ? dateMatch[0] : ''
+                        });
+                    }
+                }
+            }
+        }
+
         // ─── Parse raw text content ───
         function parseRawContent(text) {
             return {
                 project: 'My Project',
-                roles: [{ name: 'pasted', l0: text.substring(0, 150), lines: text.split('\n').length, modified: new Date().toISOString().split('T')[0] }],
-                memory: [], skillCount: 0, memoriesWords: text.split(/\s+/).length
+                roles: [{ name: 'pasted', l0: text.substring(0, 200), lines: text.split('\n').length, modified: new Date().toISOString().split('T')[0], content: text.substring(0, 500) }],
+                memory: [], skills: [], directives: [], skillCount: 0, memoriesWords: text.split(/\s+/).length
             };
         }
 
@@ -881,48 +1381,174 @@
             dash.style.display = 'block';
             dash.classList.add('active');
 
-            document.getElementById('dash-title').textContent = `📊 ${data.project || 'Dashboard'}`;
+            document.getElementById('dash-title').textContent = data.project || 'Dashboard';
             document.getElementById('dash-project').textContent = data.project || '';
             document.getElementById('dash-date').textContent = new Date().toLocaleDateString();
 
-            // Stats
+            // Compute last active
+            const lastActive = data.memory?.length ? timeAgo(data.memory[0].date) : 'N/A';
+
+            // Stats (5 cards)
             const stats = [
                 { icon: '🎭', value: data.roles?.length || 0, label: 'Active Roles' },
                 { icon: '🧠', value: data.memory?.length || 0, label: 'Memory Files' },
                 { icon: '⚡', value: data.skillCount || 0, label: 'Skills' },
                 { icon: '📚', value: data.memoriesWords || 0, label: 'Words (Long-term)' },
+                { icon: '🕐', value: lastActive, label: 'Last Active', isText: true },
             ];
             document.getElementById('stats-grid').innerHTML = stats.map(s => `
         <div class="stat-card animate">
           <div class="stat-icon">${s.icon}</div>
-          <div class="stat-value">${s.value.toLocaleString()}</div>
+          <div class="stat-value" ${s.isText ? 'style="font-size:1.3rem"' : ''}>${s.isText ? s.value : s.value.toLocaleString()}</div>
           <div class="stat-label">${s.label}</div>
         </div>
       `).join('');
 
-            // Roles
-            document.getElementById('role-grid').innerHTML = (data.roles || []).map(r => `
-        <div class="role-card animate">
+            // ─── Roles (expandable) ───
+            const chevronSvg = '<svg class="expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+            document.getElementById('role-grid').innerHTML = (data.roles || []).map((r, i) => `
+        <div class="role-card animate" onclick="this.classList.toggle('expanded')" id="role-${i}">
           <div class="role-header">
             <span class="role-name">${esc(r.name)}</span>
-            <span class="role-badge">${r.lines} lines</span>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span class="role-badge">${r.lines} lines</span>
+              ${chevronSvg}
+            </div>
           </div>
           <div class="role-l0">${esc(r.l0 || 'No L0 summary')}</div>
           <div class="role-meta">📅 ${esc(r.modified || '')}</div>
+          <div class="role-expanded">
+            <span class="role-section-label">Key Sections</span>
+            <pre>${esc(r.content || 'No content preview available')}</pre>
+          </div>
         </div>
       `).join('') || '<p style="color:var(--text-muted)">No role files found</p>';
 
-            // Memory
-            document.getElementById('timeline').innerHTML = (data.memory || []).map(m => `
-        <div class="tl-item animate">
+            // ─── Skills (categorized) ───
+            const skillsByTier = { core: [], toolkit: [], ecosystem: [] };
+            (data.skills || []).forEach(s => {
+                if (skillsByTier[s.tier]) skillsByTier[s.tier].push(s);
+                else skillsByTier.toolkit.push(s);
+            });
+            const tierMeta = {
+                core: { emoji: '🔵', label: 'Core', cls: 'tier-core' },
+                toolkit: { emoji: '🟢', label: 'Toolkit', cls: 'tier-toolkit' },
+                ecosystem: { emoji: '🟠', label: 'Ecosystem', cls: 'tier-ecosystem' }
+            };
+            window._allSkillsData = skillsByTier;
+            renderSkills(skillsByTier);
+
+            document.getElementById('skills-search').addEventListener('input', (e) => {
+                const q = e.target.value.toLowerCase();
+                const filtered = {};
+                for (const [tier, skills] of Object.entries(window._allSkillsData)) {
+                    filtered[tier] = skills.filter(s => s.name.toLowerCase().includes(q));
+                }
+                renderSkills(filtered);
+            });
+
+            function renderSkills(byTier) {
+                let html = '';
+                for (const [tier, skills] of Object.entries(byTier)) {
+                    if (skills.length === 0) continue;
+                    const meta = tierMeta[tier];
+                    html += `<div class="skill-category">
+                    <div class="skill-category-header">
+                        ${meta.emoji} ${meta.label}
+                        <span class="skill-tier ${meta.cls}">${skills.length}</span>
+                    </div>
+                    <div class="skill-list">
+                        ${skills.map(s => `<div class="skill-item" onclick="this.classList.toggle('expanded')">
+                            <span class="skill-name">${esc(s.name)}</span>
+                            <div class="skill-desc">${esc(s.description || 'No description available')}</div>
+                        </div>`).join('')}
+                    </div>
+                </div>`;
+                }
+                document.getElementById('skills-container').innerHTML = html || '<p style="color:var(--text-muted)">No skills found</p>';
+            }
+
+            // ─── Memory (expandable) ───
+            document.getElementById('timeline').innerHTML = (data.memory || []).map((m, i) => `
+        <div class="tl-item animate" onclick="this.classList.toggle('expanded')" id="mem-${i}">
+          ${chevronSvg}
           <div class="tl-date">${esc(m.date)}</div>
           <div class="tl-title">${esc(m.title || 'Session notes')}</div>
           <div class="tl-meta">
             <span>${m.lines} lines</span>
             <span>${(m.size / 1024).toFixed(1)} KB</span>
           </div>
+          <div class="tl-expanded">
+            <pre>${esc(m.content || 'No preview available')}</pre>
+          </div>
         </div>
       `).join('') || '<p style="color:var(--text-muted)">No memory files found</p>';
+
+            // ─── Health ───
+            const memoryDates = (data.memory || []).map(m => ({ date: m.date, lines: m.lines }));
+            const last7 = memoryDates.slice(0, 7).reverse();
+            const maxLines = Math.max(...last7.map(m => m.lines), 1);
+            const totalLines = (data.memory || []).reduce((sum, m) => sum + m.lines, 0);
+            const avgLines = last7.length ? Math.round(totalLines / (data.memory?.length || 1)) : 0;
+            const totalKB = ((data.memory || []).reduce((sum, m) => sum + (m.size || 0), 0) / 1024).toFixed(1);
+            // Streak: count consecutive days from most recent
+            let streak = 0;
+            if (data.memory?.length) {
+                const today = new Date(); today.setHours(0, 0, 0, 0);
+                for (let i = 0; i < data.memory.length; i++) {
+                    const d = new Date(data.memory[i].date + 'T00:00:00');
+                    const expected = new Date(today); expected.setDate(expected.getDate() - i);
+                    if (d.getTime() === expected.getTime()) streak++; else break;
+                }
+            }
+            document.getElementById('health-section').innerHTML = `
+        <div style="margin-bottom:20px">
+          <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:6px">Project Health Overview</h3>
+          <p style="font-size:0.85rem;color:var(--text-dim);line-height:1.6">Track your AI-assisted development activity. Each bar represents one day of memory logs — taller bars mean more detailed sessions. A consistent streak indicates healthy project momentum.</p>
+        </div>
+        <div class="health-grid animate">
+          <div class="health-stat">
+            <div class="stat-icon">🔥</div>
+            <div class="stat-value" style="font-size:1.8rem">${streak}d</div>
+            <div class="stat-label">Active Streak</div>
+            <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:12px;text-align:left;font-size:0.75rem;color:var(--text-muted);line-height:2">
+              <div style="display:flex;justify-content:space-between"><span>Last active</span><span style="color:var(--text)">${lastActive}</span></div>
+              <div style="display:flex;justify-content:space-between"><span>Total files</span><span style="color:var(--text)">${data.memory?.length || 0}</span></div>
+              <div style="display:flex;justify-content:space-between"><span>Total lines</span><span style="color:var(--text)">${totalLines.toLocaleString()}</span></div>
+              <div style="display:flex;justify-content:space-between"><span>Avg lines/day</span><span style="color:var(--text)">${avgLines}</span></div>
+              <div style="display:flex;justify-content:space-between"><span>Total size</span><span style="color:var(--text)">${totalKB} KB</span></div>
+            </div>
+          </div>
+          <div class="bar-chart">
+            <div class="bar-chart-title">Memory Activity — lines written per session day</div>
+            <p style="font-size:0.72rem;color:var(--text-muted);margin:-10px 0 14px">Each bar = one day's memory log. Hover for exact line count.</p>
+            <div class="bar-chart-bars">
+              ${last7.map(m => `
+                <div class="bar-col">
+                  <div class="bar" style="height:${Math.max((m.lines / maxLines) * 100, 4)}px" title="${m.date}: ${m.lines} lines"></div>
+                  <div class="bar-label">${m.date.slice(-5)}</div>
+                </div>
+              `).join('')}
+              ${last7.length === 0 ? '<p style="color:var(--text-muted);margin:auto">No memory data yet — start a session!</p>' : ''}
+            </div>
+          </div>
+        </div>`;
+
+            // ─── Directives ───
+            const directives = data.directives || [];
+            const pending = directives.filter(d => d.status === 'pending');
+            const done = directives.filter(d => d.status === 'done');
+            const allDirectives = [...pending, ...done];
+            document.getElementById('directive-list').innerHTML = allDirectives.length ? allDirectives.map(d => `
+        <div class="directive-item animate">
+          <div class="directive-header">
+            <span class="directive-status ${d.status === 'pending' ? 'directive-pending' : 'directive-done'}">${d.status === 'pending' ? '🟡 Pending' : '✅ Done'}</span>
+            <span class="directive-source">${esc(d.source)}</span>
+          </div>
+          <div class="directive-text">${esc(d.text)}</div>
+          ${d.date ? `<div class="directive-date">${esc(d.date)}</div>` : ''}
+        </div>
+      `).join('') : '<p style="color:var(--text-muted)">No directives found</p>';
 
             // Tabs
             document.querySelectorAll('.tab').forEach(tab => {
@@ -939,6 +1565,16 @@
         }
 
         function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+        function timeAgo(dateStr) {
+            const d = new Date(dateStr + 'T12:00:00');
+            const now = new Date();
+            const diff = Math.floor((now - d) / 1000);
+            if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+            if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+            if (diff < 604800) return Math.floor(diff / 86400) + 'd ago';
+            return dateStr;
+        }
 
         // ─── Drag & Drop ───
         const zone = document.getElementById('upload-zone');
