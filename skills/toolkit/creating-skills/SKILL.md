@@ -233,6 +233,87 @@ Before finalizing a skill:
 | Multiple workflows | Confusing | One clear path |
 | Verbose examples | Token waste | Minimal examples |
 | Custom systems | Non-standard | Use official patterns |
+| Generic personality | Forgettable, no engagement | Strong identity + voice |
+| No deliverables | Vague output | Concrete outputs + success metrics |
+| No learning section | Stateless repetition | Pattern recognition + improvement |
+
+## Agent Personality Framework
+
+> Absorbed from [agency-agents](https://github.com/msitarzewski/agency-agents) (35K+ ⭐) prompt engineering best practices.
+
+### Five Pillars of Effective Agent Design
+
+Premium skills go beyond instructions — they create **specialists with character**:
+
+| Pillar | What it does | Example |
+|--------|-------------|---------|
+| 🎭 **Strong Identity** | Name + role + personality traits | "You are **CodeReviewer**, a thorough code review mentor" |
+| 📋 **Clear Deliverables** | Concrete outputs, not vague guidance | "Produce a Verification Report table with AC verdicts" |
+| ✅ **Success Metrics** | Measurable outcomes | "Zero P0 issues, all error paths covered" |
+| 🔄 **Proven Workflow** | Step-by-step process | Numbered phases with entry/exit criteria |
+| 💡 **Learning Memory** | Pattern recognition directive | "Remember common anti-patterns across sessions" |
+
+### Personality Design Template
+
+For skills that benefit from persona (agents, reviewers, specialists):
+
+```markdown
+## 🧠 Identity & Memory
+- **Role**: [specific specialization]
+- **Personality**: [3-4 adjectives: e.g., constructive, thorough, educational]
+- **Voice**: [communication style: e.g., "Reviews like a mentor, not a gatekeeper"]
+
+## 🎯 Core Mission
+[What this agent achieves — 3-5 numbered priorities]
+
+## 🔧 Critical Rules
+[Non-negotiable constraints with bold **ALWAYS**/**NEVER**]
+
+## 💬 Communication Style
+- Be specific: "SQL injection risk on line 42" not "security issue"
+- Explain why, not just what
+- Suggest, don't demand
+
+## 🔄 Learning & Memory
+Remember across sessions:
+- Successful patterns that produce quality output
+- Common pitfalls in this domain
+- User preferences and project conventions
+```
+
+### Priority Markers
+
+Use consistent markers for issue classification:
+
+| Marker | Meaning | When to use |
+|--------|---------|-------------|
+| 🔴 **Blocker** | Must fix before done | Security, data loss, breaking changes |
+| 🟡 **Suggestion** | Should fix | Missing validation, unclear naming, perf |
+| 💭 **Nit** | Nice to have | Style, minor naming, docs gaps |
+
+### Skill Quality Elevation Checklist
+
+Beyond the basic quality checklist, premium skills should also satisfy:
+
+- [ ] **Identity**: Does the skill have a clear persona or voice?
+- [ ] **Deliverables**: Are concrete output formats defined?
+- [ ] **Process**: Is there a numbered, repeatable workflow?
+- [ ] **Judgment**: Can the skill self-assess quality of its output?
+- [ ] **Learning**: Does it instruct remembering patterns across sessions?
+
+## Cross-Tool Compatibility
+
+MUSE skills can be exported to other tools via `scripts/convert-skills.sh`:
+
+| Target Tool | Format | Command |
+|-------------|--------|---------|
+| Cursor | `.mdc` rule files | `./scripts/convert-skills.sh --tool cursor` |
+| Windsurf | `.windsurfrules` | `./scripts/convert-skills.sh --tool windsurf` |
+| Copilot | `.github/copilot-instructions.md` | `./scripts/convert-skills.sh --tool copilot` |
+| OpenClaw | Agent files | `./scripts/convert-skills.sh --tool openclaw` |
+| Aider | `CONVENTIONS.md` | `./scripts/convert-skills.sh --tool aider` |
+
+Reverse import from agency-agents: `./scripts/convert-skills.sh --import agency-agents /path/to/repo`
 
 ## Examples
 

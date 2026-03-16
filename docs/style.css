@@ -375,11 +375,6 @@ body {
   border-color: rgba(61, 214, 140, 0.15);
 }
 
-.comparison-icon {
-  font-size: 2rem;
-  margin-bottom: 16px;
-}
-
 .comparison-card h3 {
   font-size: 1.2rem;
   margin-bottom: 16px;
@@ -454,8 +449,16 @@ body {
 }
 
 .feature-icon {
-  font-size: 2rem;
-  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid rgba(201, 168, 76, 0.15);
+  color: var(--gold);
+  margin-bottom: 16px;
 }
 
 .feature-card h3 {
@@ -685,6 +688,51 @@ body {
 .command-card p {
   color: var(--text-muted);
   font-size: 0.85rem;
+}
+
+/* ─── Maker Story ─── */
+.maker-story {
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 40px;
+  border-radius: var(--radius);
+  border: 1px solid rgba(201, 168, 76, 0.15);
+  background: rgba(201, 168, 76, 0.03);
+}
+
+.maker-quote {
+  font-size: 1.15rem;
+  font-style: italic;
+  color: var(--text-primary);
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+.maker-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.maker-name {
+  font-weight: 700;
+  color: var(--gold);
+  font-size: 1rem;
+}
+
+.maker-role {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.maker-role a {
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+.maker-role a:hover {
+  color: var(--gold);
 }
 
 /* ─── Footer ─── */

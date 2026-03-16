@@ -1,5 +1,24 @@
 # Changelog
 
+## [2.16.0] - 2026-03-16
+
+### Added
+- **Skill Format Converter** (`scripts/convert-skills.sh`) — Export all 56 MUSE skills to 6 AI coding tool formats:
+  - **Cursor**: `.cursor/rules/*.mdc` (per-skill rule files with frontmatter)
+  - **Windsurf**: `.windsurfrules` (single combined file)
+  - **Copilot**: `.github/copilot-instructions.md` (single file)
+  - **OpenClaw**: `.openclaw/agents/*/SOUL.md + AGENTS.md`
+  - **Aider**: `CONVENTIONS.md` (single combined file)
+  - **Antigravity**: `.gemini/antigravity/skills/*/SKILL.md`
+  - `--tool all` exports to all 6 formats at once
+  - `--import agency-agents /path` imports 142 agent prompts from agency-agents (35K+ ⭐) into MUSE format
+  - `--list` browses all 56 skills with tier badges
+- **Agent Personality Framework** (`creating-skills` skill) — Absorbed from agency-agents prompt engineering best practices:
+  - Five Pillars of Effective Agent Design (Identity, Deliverables, Metrics, Workflow, Memory)
+  - Personality Design Template for role-based skills
+  - Priority Markers standard (🔴 Blocker / 🟡 Suggestion / 💭 Nit)
+  - Quality Elevation Checklist
+
 ## [2.15.0] - 2026-03-15
 
 ### Added
