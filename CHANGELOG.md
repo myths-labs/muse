@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.18.0] - 2026-03-16
+
+### Added
+- **Web Dashboard** (`scripts/dashboard.sh`) — Zero-dependency HTML dashboard generated from MUSE project data:
+  - Stats grid: active roles, memory files, skills count, long-term memory words
+  - Role cards with L0 summary lines, line counts, last modified dates
+  - Memory timeline with chronological session entries (date, title, size)
+  - Git metadata: branch name, commit count
+  - Dark theme with glassmorphism, animated transitions, tabbed navigation
+  - Serve mode: `--serve [port]` for instant local preview
+  - Self-contained single HTML file (no external dependencies)
+
 ## [2.17.0] - 2026-03-16
 
 ### Added
