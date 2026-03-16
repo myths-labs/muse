@@ -1,0 +1,77 @@
+# MUSE — Memory-Unified Skills & Execution
+
+> Pure-Markdown operating system for AI pair programming. Zero dependencies.
+
+MUSE is an open-source framework that provides lossless context management across AI coding conversations. It works with Claude Code, Cursor, Windsurf, Gemini CLI, Codex CLI, and OpenClaw.
+
+## Core Concept
+
+MUSE wraps AI coding assistants with a document protocol (pure Markdown files) that enables:
+- Cross-conversation memory persistence
+- Role-based context isolation (build, qa, growth, strategy)
+- Automated context save/restore workflows
+- Memory distillation from short-term to long-term
+
+## Key Features
+
+- **Two-Layer Memory**: Daily logs (`memory/YYYY-MM-DD.md`) + long-term lessons (`MEMORIES.md`)
+- **Role Isolation**: Build, QA, Growth, Strategy — each role reads only its own state file
+- **Directive Queue**: Async cross-role messaging with 🟡/✅ status protocol
+- **MCP Server**: Built-in Bash MCP server with 6 JSON-RPC tools, zero dependencies
+- **56 Skills**: Core (5) + Toolkit (42) + Ecosystem (9) reusable skill packs
+- **Auto Memory Capture**: Automatic LESSON/DECISION/FACT extraction on session end
+- **Semantic Compression**: 3-tier context compression based on session length
+- **Session Checkpoint**: Silent progress save every 15 interaction rounds
+- **Defensive Auto-Save**: Crash recovery with at most 10 rounds of data loss
+
+## Quick Start
+
+```bash
+git clone https://github.com/myths-labs/muse.git
+cd muse && ./setup.sh
+```
+
+## Commands
+
+- `/resume [role]` — Boot and restore context
+- `/bye` — One-click wrap-up, auto-save
+- `/ctx` — Context health check (🟢🟡🔴)
+- `/distill` — Condense daily logs to long-term memory
+- `/sync` — Cross-role synchronization
+
+## Supported Tools
+
+| Tool | Install Command |
+|------|----------------|
+| Claude Code | `./scripts/install.sh --tool claude` |
+| Cursor | `./scripts/install.sh --tool cursor` |
+| Windsurf | `./scripts/install.sh --tool windsurf` |
+| Gemini CLI | `./scripts/install.sh --tool gemini` |
+| Codex CLI | `./scripts/install.sh --tool codex` |
+| OpenClaw | `./scripts/install.sh --tool openclaw` |
+
+## Comparison with Alternatives
+
+| Feature | MUSE | mem0 | memsearch | lossless-claw |
+|---------|------|------|-----------|---------------|
+| Dependencies | Zero | Python + DB | Milvus + Node | SQLite + DAG |
+| Format | Pure Markdown | Vector DB | Vector DB | Custom DAG |
+| Tool Support | 6 tools | API only | Claude Code | OpenClaw |
+| Role System | ✅ Multi-role | — | — | — |
+| MCP Server | ✅ Built-in | — | ✅ | — |
+| License | MIT | Apache 2.0 | MIT | MIT |
+
+## Links
+
+- Website: https://muse.mythslabs.ai
+- GitHub: https://github.com/myths-labs/muse
+- Discussions: https://github.com/myths-labs/muse/discussions
+- X (Twitter): https://x.com/MythsLabs
+- Creator: https://x.com/sunshiningday
+
+## Optional
+
+- [Full documentation](https://github.com/myths-labs/muse/blob/main/README.md)
+- [Chinese docs](https://github.com/myths-labs/muse/blob/main/README_CN.md)
+- [Changelog](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
+- [Skill Index](https://github.com/myths-labs/muse/blob/main/SKILL_INDEX.md)
