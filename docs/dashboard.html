@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUSE Dashboard — Visualize Your AI Memory</title>
+    <meta name="description"
+        content="Load your MUSE project files and see a personalized dashboard. 100% client-side — your data never leaves your browser.">
+    <link rel="icon" href="https://raw.githubusercontent.com/myths-labs/muse/main/assets/logo.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #08080e;
+            --bg-card: #111119;
+            --bg-card-hover: #181825;
+            --border: #1e1e30;
+            --border-hover: #6c5ce7;
+            --text: #e0e0ec;
+            --text-dim: #8888aa;
+            --text-muted: #555570;
+            --accent: #c9a84c;
+            --accent-glow: rgba(201, 168, 76, 0.15);
+            --purple: #6c5ce7;
+            --purple-glow: rgba(108, 92, 231, 0.2);
+            --success: #00b894;
+            --warning: #fdcb6e;
+            --info: #74b9ff;
+            --radius: 14px;
+            --radius-sm: 10px;
+            --font: 'Inter', -apple-system, sans-serif;
+            --mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* ─── Nav ─── */
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            background: rgba(8, 8, 14, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 0;
+        }
+
+        .nav-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .nav-logo img {
+            border-radius: 6px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+        }
+
+        .btn-sm {
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            background: var(--purple);
+            color: white !important;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ─── Container ─── */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ─── Header ─── */
+        .header {
+            text-align: center;
+            padding: 120px 0 48px;
+        }
+
+        .header h1 {
+            font-size: 2.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), #e8d591);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+        }
+
+        .header p {
+            color: var(--text-dim);
+            font-size: 1.05rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .privacy-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--accent-glow);
+            border: 1px solid rgba(201, 168, 76, 0.25);
+            border-radius: 20px;
+            padding: 6px 16px;
+            margin-top: 16px;
+            font-size: 0.8rem;
+            color: var(--accent);
+        }
+
+        /* ─── Upload Zone ─── */
+        .upload-zone {
+            background: var(--bg-card);
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 48px;
+            text-align: center;
+            margin: 32px auto;
+            max-width: 700px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .upload-zone:hover,
+        .upload-zone.drag-over {
+            border-color: var(--accent);
+            background: var(--accent-glow);
+        }
+
+        .upload-zone h3 {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+
+        .upload-zone p {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        .upload-zone .icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+
+        .upload-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-upload {
+            padding: 10px 24px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #111;
+        }
+
+        .btn-primary:hover {
+            background: #d4b35c;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border) !important;
+            color: var(--text-dim);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent) !important;
+            color: var(--text);
+        }
+
+        /* ─── Or Divider ─── */
+        .or-divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 24px auto;
+            max-width: 700px;
+            color: var(--text-muted);
+        }
+
+        .or-divider::before,
+        .or-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* ─── Paste Zone ─── */
+        .paste-zone {
+            max-width: 700px;
+            margin: 0 auto 48px;
+        }
+
+        .paste-zone label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-bottom: 8px;
+        }
+
+        .paste-zone textarea {
+            width: 100%;
+            height: 120px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text);
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            padding: 16px;
+            resize: vertical;
+        }
+
+        .paste-zone textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .paste-zone .hint {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        .paste-zone .hint code {
+            background: var(--bg-card);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: var(--mono);
+            font-size: 0.75rem;
+        }
+
+        /* ─── Dashboard ─── */
+        #dashboard {
+            display: none;
+        }
+
+        #dashboard.active {
+            display: block;
+        }
+
+        .dash-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .dash-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .dash-meta {
+            display: flex;
+            gap: 16px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .stat-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 24px var(--accent-glow);
+            transform: translateY(-2px);
+        }
+
+        .stat-icon {
+            font-size: 1.3rem;
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), #e8d591);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .tab {
+            padding: 8px 20px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-family: var(--font);
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .tab:hover {
+            border-color: var(--accent);
+            color: var(--text);
+        }
+
+        .tab.active {
+            background: var(--accent);
+            color: #111;
+            border-color: var(--accent);
+            font-weight: 600;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Role Cards */
+        .role-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+        }
+
+        .role-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            transition: all 0.2s;
+        }
+
+        .role-card:hover {
+            border-color: var(--purple);
+            background: var(--bg-card-hover);
+        }
+
+        .role-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .role-name {
+            font-weight: 700;
+            text-transform: capitalize;
+            font-size: 1.05rem;
+        }
+
+        .role-badge {
+            font-size: 0.7rem;
+            padding: 3px 10px;
+            border-radius: 12px;
+            background: var(--purple-glow);
+            color: var(--info);
+            border: 1px solid rgba(108, 92, 231, 0.3);
+        }
+
+        .role-l0 {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .role-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Timeline */
+        .timeline {
+            padding-left: 24px;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--accent), var(--border));
+        }
+
+        .tl-item {
+            position: relative;
+            margin-bottom: 14px;
+            padding: 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            transition: all 0.2s;
+        }
+
+        .tl-item:hover {
+            border-color: var(--accent);
+        }
+
+        .tl-item::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 22px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 2px solid var(--bg);
+        }
+
+        .tl-date {
+            font-size: 0.8rem;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .tl-title {
+            font-size: 0.9rem;
+            color: var(--text);
+            margin: 4px 0;
+        }
+
+        .tl-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            gap: 16px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 48px;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate {
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .upload-zone {
+                padding: 32px 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .role-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Nav -->
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="./" class="nav-logo">
+                <img src="https://raw.githubusercontent.com/myths-labs/muse/main/assets/logo.png" alt="MUSE" width="28"
+                    height="28">
+                <span>MUSE</span>
+            </a>
+            <div class="nav-links">
+                <a href="./">Home</a>
+                <a href="./#features">Features</a>
+                <a href="https://github.com/myths-labs/muse" class="btn-sm" target="_blank" rel="noopener">
+                    ⭐ GitHub
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header" id="upload-section">
+            <h1>🎭 Your MUSE Dashboard</h1>
+            <p>Load your project files and see a personalized visualization of your AI memory, roles, and skills.</p>
+            <div class="privacy-badge">🔒 100% client-side — your data never leaves your browser</div>
+        </div>
+
+        <!-- Upload Zone -->
+        <div class="upload-zone" id="upload-zone">
+            <div class="icon">📂</div>
+            <h3>Load your MUSE project</h3>
+            <p>Select your project folder or drag & drop files</p>
+            <div class="upload-actions">
+                <button class="btn-upload btn-primary" id="btn-folder">📁 Select Project Folder</button>
+                <button class="btn-upload btn-secondary" id="btn-files">📄 Select Individual Files</button>
+            </div>
+        </div>
+
+        <div class="or-divider">or paste command output</div>
+
+        <!-- Paste Zone -->
+        <div class="paste-zone">
+            <label>Run this in your MUSE project, then paste the output below:</label>
+            <div style="position:relative">
+                <textarea id="paste-input" placeholder='Paste the JSON output from the command here...'></textarea>
+            </div>
+            <div class="hint">
+                Run: <code>./scripts/dashboard.sh --json</code> &nbsp;or&nbsp; manually paste your
+                <code>.muse/*.md</code> file contents
+            </div>
+            <div style="margin-top:12px; text-align:center">
+                <button class="btn-upload btn-primary" id="btn-parse" style="padding:8px 32px">Load Dashboard →</button>
+            </div>
+        </div>
+
+        <!-- Demo Button -->
+        <div style="text-align:center; margin-bottom:48px">
+            <button class="btn-upload btn-secondary" id="btn-demo" style="font-size:0.85rem">
+                🎯 Try with Demo Data
+            </button>
+        </div>
+
+        <!-- Dashboard (hidden until data loaded) -->
+        <div id="dashboard">
+            <div class="dash-header">
+                <h2 id="dash-title">📊 Dashboard</h2>
+                <div class="dash-meta">
+                    <span id="dash-project"></span>
+                    <span id="dash-date"></span>
+                </div>
+            </div>
+
+            <div class="stats-grid" id="stats-grid"></div>
+
+            <div class="tabs">
+                <button class="tab active" data-tab="roles">🎭 Roles</button>
+                <button class="tab" data-tab="memory">🧠 Memory</button>
+            </div>
+
+            <div class="tab-content active" id="tab-roles">
+                <div class="role-grid" id="role-grid"></div>
+            </div>
+
+            <div class="tab-content" id="tab-memory">
+                <div class="timeline" id="timeline"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>🎭 MUSE — Memory-Unified Skills & Execution</p>
+        <p><a href="https://github.com/myths-labs/muse">GitHub</a> · <a href="./">Home</a> · MIT © <a
+                href="https://github.com/myths-labs">Myths Labs</a></p>
+    </div>
+
+    <script>
+        // ─── File System Access API ───
+        const btnFolder = document.getElementById('btn-folder');
+        const btnFiles = document.getElementById('btn-files');
+        const btnParse = document.getElementById('btn-parse');
+        const btnDemo = document.getElementById('btn-demo');
+        const pasteInput = document.getElementById('paste-input');
+
+        // Select folder (modern browsers)
+        btnFolder.addEventListener('click', async () => {
+            try {
+                if (!('showDirectoryPicker' in window)) {
+                    alert('Your browser doesn\'t support folder selection. Please use Chrome, Edge, or paste the command output instead.');
+                    return;
+                }
+                const dirHandle = await window.showDirectoryPicker();
+                const data = await readProjectFromDirectory(dirHandle);
+                renderDashboard(data);
+            } catch (e) {
+                if (e.name !== 'AbortError') console.error(e);
+            }
+        });
+
+        // Select individual files
+        btnFiles.addEventListener('click', () => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.multiple = true;
+            input.accept = '.md';
+            input.webkitdirectory = true;
+            input.addEventListener('change', async (e) => {
+                const files = Array.from(e.target.files);
+                const data = await readProjectFromFileList(files);
+                renderDashboard(data);
+            });
+            input.click();
+        });
+
+        // Parse pasted content
+        btnParse.addEventListener('click', () => {
+            const text = pasteInput.value.trim();
+            if (!text) return;
+            try {
+                const data = JSON.parse(text);
+                renderDashboard(data);
+            } catch {
+                // Try parsing as raw markdown content
+                const data = parseRawContent(text);
+                renderDashboard(data);
+            }
+        });
+
+        // Demo data
+        btnDemo.addEventListener('click', () => {
+            renderDashboard({
+                project: 'my-awesome-project',
+                roles: [
+                    { name: 'build', l0: 'v1.5.0 | Auth system✅, Dashboard WIP, 12 API endpoints, PostgreSQL + Redis', lines: 245, modified: '2026-03-16' },
+                    { name: 'qa', l0: 'Latest QA: 8/8 PASS, 0 regressions, coverage 87%', lines: 130, modified: '2026-03-15' },
+                    { name: 'growth', l0: 'Launch week: 450 GitHub stars, 3 blog posts, Show HN drafted', lines: 198, modified: '2026-03-16' },
+                ],
+                memory: [
+                    { date: '2026-03-16', title: 'Auth Integration Session (10:00-14:00)', lines: 85, size: 4200 },
+                    { date: '2026-03-15', title: 'Dashboard UI Redesign', lines: 62, size: 3100 },
+                    { date: '2026-03-14', title: 'Database Migration + Redis Setup', lines: 94, size: 4800 },
+                    { date: '2026-03-13', title: 'API Endpoint Planning', lines: 45, size: 2200 },
+                    { date: '2026-03-12', title: 'Project Kickoff & Architecture', lines: 38, size: 1900 },
+                ],
+                skillCount: 56,
+                memoriesWords: 1240,
+            });
+        });
+
+        // ─── Read from Directory Handle (File System Access API) ───
+        async function readProjectFromDirectory(dirHandle) {
+            const data = { project: dirHandle.name, roles: [], memory: [], skillCount: 0, memoriesWords: 0 };
+
+            // Read .muse/ directory
+            try {
+                const museDir = await dirHandle.getDirectoryHandle('.muse');
+                for await (const [name, handle] of museDir.entries()) {
+                    if (handle.kind === 'file' && name.endsWith('.md')) {
+                        const file = await handle.getFile();
+                        const content = await file.text();
+                        const lines = content.split('\n');
+                        const l0 = lines[0]?.replace('<!-- L0: ', '').replace(' -->', '') || '';
+                        data.roles.push({
+                            name: name.replace('.md', ''),
+                            l0: l0.substring(0, 150),
+                            lines: lines.length,
+                            modified: new Date(file.lastModified).toISOString().split('T')[0]
+                        });
+                    }
+                }
+            } catch { }
+
+            // Read memory/ directory
+            try {
+                const memDir = await dirHandle.getDirectoryHandle('memory');
+                for await (const [name, handle] of memDir.entries()) {
+                    if (handle.kind === 'file' && name.endsWith('.md')) {
+                        const file = await handle.getFile();
+                        const content = await file.text();
+                        const firstHeading = content.split('\n').find(l => l.startsWith('#'))?.replace(/^#+\s*/, '') || '';
+                        data.memory.push({
+                            date: name.replace('.md', ''),
+                            title: firstHeading.substring(0, 80),
+                            lines: content.split('\n').length,
+                            size: file.size
+                        });
+                    }
+                }
+                data.memory.sort((a, b) => b.date.localeCompare(a.date));
+            } catch { }
+
+            // Count skills
+            try {
+                const countSkills = async (dir) => {
+                    let count = 0;
+                    for await (const [name, handle] of dir.entries()) {
+                        if (handle.kind === 'file' && name === 'SKILL.md') count++;
+                        if (handle.kind === 'directory') count += await countSkills(handle);
+                    }
+                    return count;
+                };
+                try { data.skillCount = await countSkills(await dirHandle.getDirectoryHandle('skills')); } catch { }
+                try { data.skillCount += await countSkills(await dirHandle.getDirectoryHandle('.agent')); } catch { }
+            } catch { }
+
+            // Read MEMORIES.md
+            try {
+                const memFile = await (await dirHandle.getFileHandle('MEMORIES.md')).getFile();
+                const content = await memFile.text();
+                data.memoriesWords = content.split(/\s+/).length;
+            } catch { }
+
+            return data;
+        }
+
+        // ─── Read from File List (webkitdirectory) ───
+        async function readProjectFromFileList(files) {
+            const data = { project: '', roles: [], memory: [], skillCount: 0, memoriesWords: 0 };
+
+            for (const file of files) {
+                const path = file.webkitRelativePath || file.name;
+                if (!data.project) data.project = path.split('/')[0];
+
+                if (path.includes('.muse/') && file.name.endsWith('.md')) {
+                    const content = await file.text();
+                    const lines = content.split('\n');
+                    const l0 = lines[0]?.replace('<!-- L0: ', '').replace(' -->', '') || '';
+                    data.roles.push({
+                        name: file.name.replace('.md', ''),
+                        l0: l0.substring(0, 150), lines: lines.length,
+                        modified: new Date(file.lastModified).toISOString().split('T')[0]
+                    });
+                }
+
+                if (path.includes('memory/') && file.name.endsWith('.md') && !path.includes('.muse/')) {
+                    const content = await file.text();
+                    const firstHeading = content.split('\n').find(l => l.startsWith('#'))?.replace(/^#+\s*/, '') || '';
+                    data.memory.push({
+                        date: file.name.replace('.md', ''),
+                        title: firstHeading.substring(0, 80), lines: content.split('\n').length, size: file.size
+                    });
+                }
+
+                if (file.name === 'SKILL.md') data.skillCount++;
+
+                if (file.name === 'MEMORIES.md' && !path.includes('.muse/')) {
+                    const content = await file.text();
+                    data.memoriesWords = content.split(/\s+/).length;
+                }
+            }
+
+            data.memory.sort((a, b) => b.date.localeCompare(a.date));
+            return data;
+        }
+
+        // ─── Parse raw text content ───
+        function parseRawContent(text) {
+            return {
+                project: 'My Project',
+                roles: [{ name: 'pasted', l0: text.substring(0, 150), lines: text.split('\n').length, modified: new Date().toISOString().split('T')[0] }],
+                memory: [], skillCount: 0, memoriesWords: text.split(/\s+/).length
+            };
+        }
+
+        // ─── Render Dashboard ───
+        function renderDashboard(data) {
+            document.getElementById('upload-section').style.display = 'none';
+            document.querySelector('.upload-zone').style.display = 'none';
+            document.querySelector('.or-divider').style.display = 'none';
+            document.querySelector('.paste-zone').style.display = 'none';
+            document.getElementById('btn-demo').parentElement.style.display = 'none';
+
+            const dash = document.getElementById('dashboard');
+            dash.style.display = 'block';
+            dash.classList.add('active');
+
+            document.getElementById('dash-title').textContent = `📊 ${data.project || 'Dashboard'}`;
+            document.getElementById('dash-project').textContent = data.project || '';
+            document.getElementById('dash-date').textContent = new Date().toLocaleDateString();
+
+            // Stats
+            const stats = [
+                { icon: '🎭', value: data.roles?.length || 0, label: 'Active Roles' },
+                { icon: '🧠', value: data.memory?.length || 0, label: 'Memory Files' },
+                { icon: '⚡', value: data.skillCount || 0, label: 'Skills' },
+                { icon: '📚', value: data.memoriesWords || 0, label: 'Words (Long-term)' },
+            ];
+            document.getElementById('stats-grid').innerHTML = stats.map(s => `
+        <div class="stat-card animate">
+          <div class="stat-icon">${s.icon}</div>
+          <div class="stat-value">${s.value.toLocaleString()}</div>
+          <div class="stat-label">${s.label}</div>
+        </div>
+      `).join('');
+
+            // Roles
+            document.getElementById('role-grid').innerHTML = (data.roles || []).map(r => `
+        <div class="role-card animate">
+          <div class="role-header">
+            <span class="role-name">${esc(r.name)}</span>
+            <span class="role-badge">${r.lines} lines</span>
+          </div>
+          <div class="role-l0">${esc(r.l0 || 'No L0 summary')}</div>
+          <div class="role-meta">📅 ${esc(r.modified || '')}</div>
+        </div>
+      `).join('') || '<p style="color:var(--text-muted)">No role files found</p>';
+
+            // Memory
+            document.getElementById('timeline').innerHTML = (data.memory || []).map(m => `
+        <div class="tl-item animate">
+          <div class="tl-date">${esc(m.date)}</div>
+          <div class="tl-title">${esc(m.title || 'Session notes')}</div>
+          <div class="tl-meta">
+            <span>${m.lines} lines</span>
+            <span>${(m.size / 1024).toFixed(1)} KB</span>
+          </div>
+        </div>
+      `).join('') || '<p style="color:var(--text-muted)">No memory files found</p>';
+
+            // Tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    tab.classList.add('active');
+                    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+                });
+            });
+
+            // Scroll to dashboard
+            dash.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+        // ─── Drag & Drop ───
+        const zone = document.getElementById('upload-zone');
+        zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('drag-over'); });
+        zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+        zone.addEventListener('drop', async (e) => {
+            e.preventDefault(); zone.classList.remove('drag-over');
+            const items = [...e.dataTransfer.items];
+            const dirItem = items.find(i => i.kind === 'file');
+            if (dirItem && dirItem.webkitGetAsEntry) {
+                // Try to read as directory entry
+                const entry = dirItem.webkitGetAsEntry();
+                if (entry?.isDirectory) {
+                    const files = await readDirectoryEntry(entry);
+                    const data = await readProjectFromFileList(files);
+                    renderDashboard(data);
+                    return;
+                }
+            }
+            // Fallback: read as files
+            const files = [...e.dataTransfer.files];
+            if (files.length) {
+                const data = await readProjectFromFileList(files);
+                renderDashboard(data);
+            }
+        });
+
+        async function readDirectoryEntry(entry, path = '') {
+            const files = [];
+            if (entry.isFile) {
+                const file = await new Promise(r => entry.file(r));
+                Object.defineProperty(file, 'webkitRelativePath', { value: path + file.name });
+                files.push(file);
+            } else if (entry.isDirectory) {
+                const reader = entry.createReader();
+                const entries = await new Promise(r => reader.readEntries(r));
+                for (const e of entries) {
+                    files.push(...await readDirectoryEntry(e, path + entry.name + '/'));
+                }
+            }
+            return files;
+        }
+    </script>
+</body>
+
+</html>
