@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.19.0] - 2026-03-16
+
+### Added
+- **VS Code Extension** (`vscode-extension/`) — Browse MUSE roles, skills, and memory directly in VS Code:
+  - Activity bar with **Roles**, **Skills**, and **Memory** tree views
+  - In-editor **Dashboard** webview (Catppuccin dark theme)
+  - **Skill Search** via QuickPick with keyword matching
+  - **Context Health Check** command with memory file status
+  - **Dashboard Generator** integration (runs `scripts/dashboard.sh`)
+  - Status bar indicator showing MUSE project detection
+  - Auto-activation on `CLAUDE.md`, `.muse/`, or `.agent/skills/` detection
+  - 8 registered commands accessible via Command Palette
+
 ## [2.18.0] - 2026-03-16
 
 ### Added
