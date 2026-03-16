@@ -68,6 +68,11 @@ Inspired by [LCM (Lossless Context Management)](https://papers.voltropy.com/LCM)
 | Same mistakes repeated | `/distill` distills lessons → `/search` finds them later |
 | No visibility into project health | Web Dashboard + VS Code Extension |
 
+> 🎯 **Benchmark** (run `./scripts/benchmark.sh` on your own project):
+> - `/resume` loads **16.9× more context** than a bare `.cursorrules` cold start
+> - **15/15** governance features vs **0/15** for format-spec-only setups
+> - 344 lines of accumulated project knowledge vs 0 retained across sessions
+
 <p align="center">
   <img src="./assets/demo.webp" alt="MUSE Demo — /resume → boot → work → /ctx → /bye" width="100%">
 </p>
