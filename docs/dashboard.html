@@ -1118,6 +1118,7 @@
                 <button class="tab" data-tab="memory">🧠 Memory</button>
                 <button class="tab" data-tab="health">📈 Health</button>
                 <button class="tab" data-tab="directives">📡 Directives</button>
+                <button class="tab" data-tab="topology">🕸 Topology</button>
             </div>
 
             <div class="tab-content active" id="tab-roles">
@@ -1139,6 +1140,16 @@
 
             <div class="tab-content" id="tab-directives">
                 <div class="directive-list" id="directive-list"></div>
+            </div>
+
+            <div class="tab-content" id="tab-topology">
+                <div id="topology-container"
+                    style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:40px;min-height:500px;display:flex;justify-content:center;align-items:center;">
+                    <p style="color:var(--text-muted)">Generating AI Flow Topology...</p>
+                </div>
+                <p style="text-align:center;font-size:0.8rem;color:var(--text-dim);margin-top:16px;">
+                    This dynamic Directed Acyclic Graph (DAG) visualizes communication paths across specialized agents.
+                </p>
             </div>
         </div>
     </div>
@@ -1715,6 +1726,94 @@
 
             // Scroll to dashboard
             dash.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            // ─── Render Topology DAG (P2 Mermaid) ───
+            renderTopology(data);
+        }
+
+        // Add dynamic loaded Mermaid
+        let mermaidLoaded = false;
+        async function renderTopology(data) {
+            const container = document.getElementById('topology-container');
+
+            // Extract relations from Directives
+            const edges = new Map();
+            const nodes = new Set();
+
+            (data.directives || []).forEach(d => {
+                const parts = d.source.split('→');
+                if (parts.length === 2) {
+                    const from = parts[0];
+                    const to = parts[1];
+                    nodes.add(from);
+                    nodes.add(to);
+                    const key = `${from}->${to}`;
+                    edges.set(key, (edges.get(key) || 0) + 1);
+                }
+            });
+
+            // Add roles as nodes even if no edges
+            (data.roles || []).forEach(r => nodes.add(r.name.toUpperCase()));
+
+            if (nodes.size === 0) {
+                container.innerHTML = '<p style="color:var(--text-muted)">Not enough role data to generate topology.</p>';
+                return;
+            }
+
+            // Build Mermaid syntax
+            let graphStr = 'graph TD\n';
+            graphStr += '    %% Theme configuration\n';
+            graphStr += '    classDef default fill:#1a1b26,stroke:#3b4054,stroke-width:2px,color:#a9b1d6,rx:8px,ry:8px;\n';
+            graphStr += '    classDef role fill:#1f2335,stroke:#c9a84c,stroke-width:2px,color:#c9a84c,font-weight:bold;\n';
+
+            nodes.forEach(n => {
+                graphStr += `    ${n}["🎭 ${n}"]:::role\n`;
+            });
+
+            edges.forEach((weight, key) => {
+                const [from, to] = key.split('->');
+                // The thicker the line, the more comms
+                const linkStyle = weight > 2 ? '==>' : '-->';
+                graphStr += `    ${from} ${linkStyle}|"${weight} directives"| ${to}\n`;
+            });
+
+            if (!mermaidLoaded) {
+                container.innerHTML = '<p style="color:var(--text-muted)">Loading Rendering Engine...</p>';
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js';
+                script.onload = () => {
+                    mermaidLoaded = true;
+                    mermaid.initialize({
+                        startOnLoad: false,
+                        theme: 'dark',
+                        fontFamily: 'Inter, sans-serif',
+                        themeVariables: {
+                            edgeLabelBackground: 'transparent',
+                            textColor: '#a9b1d6'
+                        }
+                    });
+                    renderMermaidGraph(graphStr, container);
+                };
+                document.body.appendChild(script);
+            } else {
+                renderMermaidGraph(graphStr, container);
+            }
+        }
+
+        async function renderMermaidGraph(graphStr, container) {
+            try {
+                const { svg } = await mermaid.render('topology-svg', graphStr);
+                container.innerHTML = svg;
+                // Make the SVG responsive
+                const svgElement = container.querySelector('svg');
+                if (svgElement) {
+                    svgElement.style.maxWidth = '100%';
+                    svgElement.style.height = 'auto';
+                }
+            } catch (err) {
+                console.error("Mermaid parsing error:", err);
+                container.innerHTML = '<p style="color:var(--danger)">Failed to render topology graph.</p>';
+            }
         }
 
         function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
