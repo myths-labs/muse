@@ -81,6 +81,14 @@ Inspired by [LCM (Lossless Context Management)](https://papers.voltropy.com/LCM)
   <img src="./assets/before-after.png" alt="Without MUSE vs With MUSE" width="100%">
 </p>
 
+## Optional
+
+- [Full documentation](https://github.com/myths-labs/muse/blob/main/README.md)
+- [MUSE Protocol Spec v1.0](https://github.com/myths-labs/muse/blob/main/docs/PROTOCOL.md)
+- [Chinese docs](https://github.com/myths-labs/muse/blob/main/README_CN.md)
+- [Changelog](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
+- [Skill Index](https://github.com/myths-labs/muse/blob/main/SKILL_INDEX.md)
+
 **Works with**: Claude Code · OpenClaw · Cursor · Windsurf · Gemini CLI · Codex CLI — or any AI tool that supports system prompts.
 
 | Tool | Install Command | Format |
