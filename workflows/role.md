@@ -1,98 +1,108 @@
 ---
-description: Create a new MUSE role. For extending the role system with new responsibilities.
+description: 创建新的 MUSE 角色。用于扩展角色体系，添加新的职责分工。
 ---
 
-## Usage
+## 用法
 
 ```
-/role [role-name]
+/role [角色名]
 ```
 
-## Steps
+例：`/role legal`
 
-### 1. Validate
+---
 
-- Role name must be lowercase, single word (e.g., `research`, `fundraise`, `ops`)
-- Check if `.muse/[role-name].md` already exists → if yes, abort with message
+## 执行步骤
 
-### 2. Create role file
+// turbo-all
 
-Create `.muse/[role-name].md` from template:
+### 1. 确认角色信息
+
+向用户确认（如未提供）：
+- **角色名**（英文小写，如 `devrel`、`legal`、`content`）
+- **一句话职责描述**
+- **归属项目**：全局（workspace 层）还是某个特定项目？
+
+### 2. 创建角色文件
+
+在对应的 `.muse/` 目录下创建 `[角色名].md`，使用以下模板：
 
 ```markdown
-# [Emoji] [Role Name] — [Role Title]
+# [Emoji] [角色名] — [中文描述]
 
-> Last updated: YYYY-MM-DD (initialized)
-> `/resume [role-name]` to read this file
+> 最后更新: YYYY-MM-DD (初始化)
+> `/resume [角色名]` 时读取此文件
 
-## 📐 Scope
+## 📐 职责边界
 
-| This role handles | This role does NOT handle |
-|-------------------|--------------------------|
-| [responsibilities] | [out of scope] |
+| 归 [角色名]（本文件） | 不归 [角色名] |
+|-----------------------|--------------|
+| [职责1] | [归谁] → [角色] |
+| [职责2] | [归谁] → [角色] |
 
-## ⬇️ Information Flow
+## ⬇️ 信息流向
 
 \```
-STRATEGY → [role]: [what comes in]
-[role] → STRATEGY: [what goes out]
-[role] → [other roles]: [lateral data]
+STRATEGY → [角色名]: [什么信息]
+[角色名] → STRATEGY: [什么信息]
+[其他角色] → [角色名]: [什么信息]
 \```
 
-## 📋 Current Status
+## 📋 当前状态
 
-### In Progress
-- [current work items]
+> 待填充
 
-### Backlog
-- [future items]
+## 📡 指令接收队列
 
-## 📡 Incoming Directives
-
-<!-- Populated by /sync -->
+> 未处理的指令会在这里列出
 ```
 
-### 3. Update references
+### 3. 更新 resume.md
 
-Add to `resume.md` project command table:
+在 `resume.md` 的 DYA 项目表格中添加：
 ```
-| Continue [role] | `/resume [role-name]` |
-```
-
-Add file path mapping:
-```
-- `/resume [role-name]` → `.muse/[role-name].md`
+| 继续[中文描述] | `/resume [角色名]` |
 ```
 
-### 4. Confirm
-
+在文件路径约定中添加：
 ```
-✅ New role created: .muse/[role-name].md
-📖 Resume with: /resume [role-name]
-🔄 Sync with: /sync [project] [role-name] up/down
+- `/resume [角色名]` → `DYA/.muse/[角色名].md`
 ```
 
-## Available Tier 1 Roles (pre-defined)
+在角色文件分工表中添加：
+```
+| `.muse/[角色名].md` | [职责描述] | [更新时机] |
+```
 
-| Role | File | Purpose |
-|------|------|---------|
-| strategy | `.muse/strategy.md` | Business strategy, PMF, fundraising, growth planning |
-| build | `.muse/build.md` | Code development, bug fixes, architecture |
-| qa | `.muse/qa.md` | Quality verification, acceptance criteria |
-| growth | `.muse/growth.md` | Marketing, brand, social media, content |
+### 4. 更新 MUSE.md
 
-## Available Tier 2 Roles (optional)
+在 Quick Start 的 `.muse/` 目录树中添加新角色文件。
 
-| Role | File | Purpose |
-|------|------|---------|
-| ops | `.muse/ops.md` | Releases, CI/CD, deployment, App Store |
-| research | `.muse/research.md` | Competitive analysis, market data, user research |
-| fundraise | `.muse/fundraise.md` | Deck content, applications, pitch scripts |
+### 5. 确认完成
 
-## GM Role (Tier 0.5)
+```
+✅ /add-role [角色名] 完成
+- 文件: .muse/[角色名].md ✅
+- resume.md 已更新 ✅
+- MUSE.md 已更新 ✅
+- 使用: `/resume [角色名]` 开始工作
+```
 
-| Role | File | Purpose |
-|------|------|---------|
-| gm | `.muse/gm.md` | Project-level CEO, cross-role coordination, L1/L2 decisions |
+---
 
-> GM is optional — only needed for multi-role projects with 3+ active roles.
+## Tier 参考
+
+| Tier | 说明 | 角色 |
+|:---:|------|------|
+| **1** | 核心（每个项目必须） | strategy, build, qa, growth |
+| **2** | 推荐（按需添加） | ops, research, fundraise |
+| **3** | 可选（特定场景） | devrel, legal, content, data... |
+
+---
+
+## 注意事项
+
+- 新角色必须定义清晰的**职责边界**（归谁 / 不归谁）
+- 新角色必须定义与现有角色的**信息流向**
+- 创建前先问：这个职责真的不能归入现有角色吗？
+- 全局角色（跨项目）放在 workspace `.muse/`，项目角色放在项目 `.muse/`

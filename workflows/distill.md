@@ -1,138 +1,75 @@
 ---
-description: Condense memory/ daily logs into long-term MEMORIES.md lessons
+description: 从 memory/ 日志和 STATUS 文件中蒸馏关键教训到 MEMORIES.md（MUSE condensation 操作）
 ---
 
-## When to Run
+> **MUSE 架构定位**: `/distill` = condensation 操作（≈ LCM DAG 的向上压缩）
+> - `memory/` 日文件 = 叶节点（原始每日记录）
+> - `MEMORIES.md` = condensed 节点（跨天蒸馏的模式和教训）
+> - 蒸馏时**保留**: 决策依据 + 教训 + 模式识别 + 反复出现的问题
+> - 蒸馏时**丢弃**: 具体操作步骤 + 临时 debug 细节 + 一次性事件
 
-### Automatic Trigger (from /bye)
-- `/bye` detects memory/ accumulation and suggests `/distill` in the next session
-- Thresholds: ≥7 days of logs, ≥5 new files since last distill, or ≥15 total files
+## 触发时机
 
-### Manual Trigger
-- User explicitly runs `/distill` or `/distill [project]`
-- After completing a major milestone
-- After a series of debugging sessions with repeated patterns
+### 自动提醒（`/bye` 内置检测）
+每次 `/bye` 时自动扫描 `memory/`，满足以下任一条件时提醒：
+- memory/ 有 **≥ 7 天**的未蒸馏日志
+- 距上次 distill 已 **≥ 5 个日志文件**
+- memory/ 总文件数 **≥ 15** 且从未 distill 过
 
-### Relationship with Auto Capture (v2.12.0+)
-> `/bye` Step 4.7 **Auto Capture** extracts `[LESSON]/[DECISION]/[FACT]` in real-time at session end.
-> `/distill` is the **batch complement** — periodic full-scan with decay detection, token budget rebalancing, and overflow archiving.
-> **Both coexist**: Auto Capture = incremental (every `/bye`), Distill = comprehensive (weekly/on-demand).
+### 手动触发
+- 用户说 "蒸馏记忆" / "整理教训" / "distill" / `/distill`
+- 每个 milestone 完成后（版本发布、重大功能上线）
+- Strategy 对话中复盘时
 
-## Scope Control
+### 范围控制
 
-| Command | Scope | Description |
-|---------|:-----:|-------------|
-| `/distill` | 🌍 Global | Read **all** projects' memory/ → write to global MEMORIES.md |
-| `/distill [project]` | 📁 Project | Read only specified project's memory/ → write to global MEMORIES.md |
+| 指令 | 范围 | 说明 |
+|------|:----:|------|
+| `/distill` | 🌍 全局 | 读**所有**项目 memory/ → 写全局 MEMORIES.md |
+| `/distill dya` | 📁 DYA | 只读 DYA memory/ → 写全局 MEMORIES.md |
+| `/distill prometheus` | 📁 Prometheus | 只读 Prometheus memory/ → 写全局 MEMORIES.md |
 
-> Lessons are cross-project universal — **always write to the global MEMORIES.md** (not split by project).
+> 教训跨项目通用，**始终写入全局 MEMORIES.md**（不按项目拆分）。
 
-## Execution Steps
+## 执行步骤
 
-### Step 1: Scan & Classify
+1. **读取 memory/ 目录**
+   - 扫描 `memory/*.md`，按日期排序
+   - 重点看最近 7 天的文件
 
-Scan all `memory/YYYY-MM-DD.md` files (or project-specific if scoped).
+2. **提取值得长期保留的内容**
+   - ✅ 犯过的错误和根因（防止重蹈覆辙）
+   - ✅ 有效的工作模式（值得复用的方法）
+   - ✅ 关键决策及其理由（为什么选 A 不选 B）
+   - ✅ 用户偏好的新发现（更新 USER.md）
+   - ❌ 不保留：具体代码细节、临时调试过程、已解决的 bug 细节
 
-**🆕 Structured Extraction**: Classify each memory entry into one of 4 types:
+3. **更新 MEMORIES.md**
+   - 按主题分类追加（不是按日期）
+   - 去重：如果已有类似教训，合并而非重复
+   - 删除过时项：如果某个教训不再适用，标记删除
 
-| Type | Tag | Description | Example |
-|------|-----|-------------|---------|
-| **FACT** | `[FACT]` | Objective truth, data point, measurement | "小红书 v2 = 18 浏览" |
-| **DECISION** | `[DECISION]` | Choice made, with rationale | "Show HN 暂缓 — T3 不能发" |
-| **LESSON** | `[LESSON]` | Pattern learned, mistake to avoid | "自推广型内容被限流" |
-| **TODO** | `[TODO]` | Unfinished work carried forward | "🔲 Reddit 解封后发帖" |
+4. **考虑是否升级 Skill 或宪法**
+   - 如果某个教训反复出现 → 应该写入 CLAUDE.md 宪法
+   - 如果某个方法论足够通用 → 应该写成 Skill
+   - "记住 X" 级别的 → MEMORIES.md 就够了
 
-### Step 2: Dedup Detection
+5. **清理旧 memory/**
+   - 超过 30 天的 memory/ 文件可以归档到 `memory/archive/`
+   - 不要删除，可能偶尔需要回查
 
-**🆕 Compare against existing MEMORIES.md** before writing:
-
-| Action | When | What to Do |
-|--------|------|-----------|
-| **ADD** | New lesson not in MEMORIES.md | Append to appropriate section |
-| **UPDATE** | Existing lesson but new context/data | Merge new info into existing entry |
-| **NOOP** | Already captured accurately | Skip (cite existing entry) |
-
-> Inspired by mem0's ADD/UPDATE/DELETE/NOOP memory consolidation pipeline.
-
-### Step 3: Decay Detection
-
-**🆕 Flag stale entries** in MEMORIES.md:
-
-1. Check each existing MEMORIES.md entry's source date
-2. If source date > 30 days old AND not referenced in recent memory/ files → mark `[DECAY]`
-3. `[DECAY]` entries go to a "🗑️ Candidates for Removal" section
-4. User decides whether to keep or remove
-
-> Inspired by Supermemory's TTL-based smart forgetting.
-
-### Step 4: Token Budget Check
-
-**🆕 Post-distill size check**:
-
-1. After writing, run `wc -w MEMORIES.md`
-2. Target: **≤ 2250 words** (~3000 tokens)
-3. If over budget → prioritize LESSON > DECISION > FACT
-4. Move lower-priority entries to `memory/archive/distilled_overflow.md`
-
-### Step 5: Write to MEMORIES.md
-
-Categorize into themed sections:
-- Mistakes made more than once
-- Debugging patterns worth remembering
-- Architecture decisions and their rationale
-- Tool/platform gotchas (e.g., API quirks, deployment issues)
-- Process improvements
-
-Format:
-```markdown
-## [Topic]
-- **Lesson**: [description] (source: memory/YYYY-MM-DD.md) `[LESSON]`
-- **Decision**: [choice + rationale] (source: memory/YYYY-MM-DD.md) `[DECISION]`
-```
-
-### Step 6: Update Timestamp
-
-Update the "Last distilled" timestamp in MEMORIES.md header.
-
-### Step 7: Suggest Upgrades
-
-- Lesson appears ≥3 times → consider adding to CLAUDE.md as an iron rule
-- Methodology is generic → consider creating a new Skill
-
-## Output Format
+## 输出格式
 
 ```markdown
-# 🧠 Long-term Memories
+## 蒸馏报告 YYYY-MM-DD
 
-> Distilled from memory/ logs via /distill.
-> Last distilled: YYYY-MM-DD
-> Scope: [global / project-specific]
-> Token budget: XXXX / 3000
+### 新增到 MEMORIES.md
+- [教训描述] （来源: memory/2026-03-XX.md）
 
-## [Category 1]
-- **Lesson**: [description] (source: memory/YYYY-MM-DD.md) `[LESSON]`
+### 升级建议
+- 建议将 [X] 写入 CLAUDE.md 宪法（原因: 已出现 3 次）
+- 建议将 [Y] 写成新 Skill（原因: 足够通用）
 
-## [Category 2]
-- **Decision**: [choice] (source: memory/YYYY-MM-DD.md) `[DECISION]`
-
-## 🗑️ Candidates for Removal
-- ~~[Stale entry]~~ (source: memory/YYYY-MM-DD.md, last referenced: YYYY-MM-DD) `[DECAY]`
-
----
-
-> 📌 Upgrade suggestions:
-> - ✅ [Topic] → already in CLAUDE.md
-> - ⏳ [Topic] → consider creating a Skill
-```
-
-## Distill Report (output at end)
-
-```
-✅ /distill 完成
-- 扫描: N 天日志
-- 新增: X 条 (ADD)
-- 更新: Y 条 (UPDATE)
-- 跳过: Z 条 (NOOP)
-- 衰减: W 条 (DECAY) → 见 MEMORIES.md 🗑️ section
-- Token: XXXX / 3000
+### 已归档
+- memory/2026-02-XX.md → memory/archive/
 ```

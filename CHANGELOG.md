@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.21.0] - 2026-03-16
+## [2.21.0] - 2026-03-17
 
 ### Added
 - **TF-IDF Search** (`scripts/search.sh`) — Zero-dependency ranked search across MUSE project context:
@@ -15,6 +15,10 @@
   - Health tab: 🔥 active streak counter, 5 detailed stats (total lines, avg/day, total size), explanatory header
   - Bar chart hover: now shows `date: N lines`
   - GitHub button: purple → gold accent (matching landing page)
+- **Benchmark Script** (`scripts/benchmark.sh`) — MUSE vs `.cursorrules` context coverage analysis:
+  - Measures token efficiency, coverage breadth, and context quality
+  - Generates comparison data for README and landing page
+- **Benchmark Data in README** — Added quantitative MUSE vs `.cursorrules` comparison to README and landing page
 
 ### Changed
 - **Strategic Repositioning** — "Memory-Unified Skills & Execution" → "The AI Coding Governance System"
