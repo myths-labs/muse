@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.24.0] - 2026-03-18
+
+### Added
+- **Dashboard v3 — Paperclip Iterations** (`docs/dashboard.html`):
+  - **Memory Constellation (P0)**: Semantic knowledge mapping that parses `MEMORIES.md` for `[FACT]`, `[DECISION]`, and `[LESSON]` tags to generate a meaningful word cloud of project intelligence.
+  - **Interactive Node Drill-Down (P1)**: Clickable Mermaid.js topology nodes. Opens a glassmorphic modal showing the Agent's internal Constitutional State (L0), active directives, and performance metrics.
+  - **Local File Polling (P2)**: Live auto-refresh capability using the File System Access API. Synchronizes the dashboard every 15 seconds when a local project directory is loaded.
+  - **Silent Refresh Logic**: Optimized rendering to prevent layout jumps or scroll resets during background auto-updates.
+- **Improved Demo Data**: Updated "Try with Demo Data" flow with rich mock constellation and topology metrics for a better first-time experience.
+
 ## [2.23.0] - 2026-03-18
 
 ### Added

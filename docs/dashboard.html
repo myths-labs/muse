@@ -1035,6 +1035,133 @@
                 flex-wrap: wrap;
             }
         }
+
+        /* ─── Modal (Node Drill-Down) ─── */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            width: 600px;
+            max-width: 90%;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .modal-close:hover {
+            color: var(--text);
+        }
+
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .modal-section {
+            margin-bottom: 20px;
+        }
+
+        .modal-section-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            border-bottom: 1px dashed var(--border);
+            padding-bottom: 4px;
+        }
+
+        /* ─── Live Indicator ─── */
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(0, 184, 148, 0.7);
+            }
+
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 6px rgba(0, 184, 148, 0);
+            }
+
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(0, 184, 148, 0);
+            }
+        }
+
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            margin-left: auto;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: #00b894;
+            border-radius: 50%;
+        }
+
+        .live-dot.active {
+            animation: pulse 2s infinite;
+        }
+
+        .live-text {
+            font-weight: 600;
+        }
     </style>
 </head>
 
@@ -1103,7 +1230,13 @@
         <!-- Dashboard (hidden until data loaded) -->
         <div id="dashboard">
             <div class="dash-header">
-                <h2 id="dash-title">📊 Dashboard</h2>
+                <div style="display:flex; align-items:center; gap:16px; width:100%;">
+                    <h2 id="dash-title" style="margin:0;">📊 Dashboard</h2>
+                    <div id="live-status" class="live-indicator" style="display:none;">
+                        <div class="live-dot active"></div>
+                        <span class="live-text">LIVE AUTO-REFRESH</span>
+                    </div>
+                </div>
                 <div class="dash-meta">
                     <span id="dash-project"></span>
                     <span id="dash-date"></span>
@@ -1116,6 +1249,7 @@
                 <button class="tab active" data-tab="roles">🎭 Roles</button>
                 <button class="tab" data-tab="skills">⚡ Skills</button>
                 <button class="tab" data-tab="memory">🧠 Memory</button>
+                <button class="tab" data-tab="constellation">✨ Constellation</button>
                 <button class="tab" data-tab="health">📈 Health</button>
                 <button class="tab" data-tab="directives">📡 Directives</button>
                 <button class="tab" data-tab="topology">🕸 Topology</button>
@@ -1138,6 +1272,18 @@
                 <div class="health-section" id="health-section"></div>
             </div>
 
+            <div class="tab-content" id="tab-constellation">
+                <div id="constellation-container"
+                    style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:40px;min-height:500px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+                    <h3 style="margin-bottom:20px;color:var(--accent);">Semantic Knowledge Mapping</h3>
+                    <div id="constellation-viz"
+                        style="width:100%;display:flex;flex-wrap:wrap;justify-content:center;gap:12px;"></div>
+                </div>
+                <p style="text-align:center;font-size:0.8rem;color:var(--text-dim);margin-top:16px;">
+                    This visualization represents key concepts and decisions extracted from your long-term memory.
+                </p>
+            </div>
+
             <div class="tab-content" id="tab-directives">
                 <div class="directive-list" id="directive-list"></div>
             </div>
@@ -1154,365 +1300,447 @@
         </div>
     </div>
 
-    <div class="footer">
-        <p>🎭 MUSE — The AI Coding Governance System</p>
-        <p><a href="https://github.com/myths-labs/muse">GitHub</a> · <a href="./">Home</a> · MIT © <a
-                href="https://github.com/myths-labs">Myths Labs</a></p>
+    <!-- Interactive Node Modal -->
+    <div class="modal-overlay" id="node-modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title" id="modal-title">🎭 Agent Details</div>
+                <button class="modal-close"
+                    onclick="document.getElementById('node-modal').classList.remove('active')">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-content">
+                <!-- Injected via JS -->
+            </div>
+        </div>
     </div>
 
-    <script>
-        // ─── File System Access API ───
-        const btnFolder = document.getElementById('btn-folder');
-        const btnFiles = document.getElementById('btn-files');
-        const btnParse = document.getElementById('btn-parse');
-        const btnDemo = document.getElementById('btn-demo');
-        const pasteInput = document.getElementById('paste-input');
 
-        // Select folder (modern browsers)
-        btnFolder.addEventListener('click', async () => {
-            try {
-                if (!('showDirectoryPicker' in window)) {
-                    alert('Your browser doesn\'t support folder selection. Please use Chrome, Edge, or paste the command output instead.');
-                    return;
+    <div class="footer">
+
+        <div class="footer">
+            <p>🎭 MUSE — The AI Coding Governance System</p>
+            <p><a href="https://github.com/myths-labs/muse">GitHub</a> · <a href="./">Home</a> · MIT © <a
+                    href="https://github.com/myths-labs">Myths Labs</a></p>
+        </div>
+
+        <script>
+            // ─── File System Access API ───
+            const btnFolder = document.getElementById('btn-folder');
+            const btnFiles = document.getElementById('btn-files');
+            const btnParse = document.getElementById('btn-parse');
+            const btnDemo = document.getElementById('btn-demo');
+            const pasteInput = document.getElementById('paste-input');
+            const liveStatus = document.getElementById('live-status');
+
+            let pollingInterval = null;
+            let currentDirHandle = null;
+
+            function stopPolling() {
+                if (pollingInterval) {
+                    clearInterval(pollingInterval);
+                    pollingInterval = null;
                 }
-                const dirHandle = await window.showDirectoryPicker();
-                const data = await readProjectFromDirectory(dirHandle);
-                renderDashboard(data);
-            } catch (e) {
-                if (e.name !== 'AbortError') console.error(e);
+                liveStatus.style.display = 'none';
             }
-        });
 
-        // Select individual files
-        btnFiles.addEventListener('click', () => {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.multiple = true;
-            input.accept = '.md';
-            input.webkitdirectory = true;
-            input.addEventListener('change', async (e) => {
-                const files = Array.from(e.target.files);
-                const data = await readProjectFromFileList(files);
-                renderDashboard(data);
-            });
-            input.click();
-        });
+            async function startPolling(dirHandle) {
+                stopPolling();
+                currentDirHandle = dirHandle;
+                liveStatus.style.display = 'inline-flex';
 
-        // Parse pasted content
-        btnParse.addEventListener('click', () => {
-            const text = pasteInput.value.trim();
-            if (!text) return;
-            try {
-                const data = JSON.parse(text);
-                renderDashboard(data);
-            } catch {
-                // Try parsing as raw markdown content
-                const data = parseRawContent(text);
-                renderDashboard(data);
+                // Poll every 15 seconds
+                pollingInterval = setInterval(async () => {
+                    try {
+                        // Check if we still have permission
+                        const status = await dirHandle.queryPermission({ mode: 'read' });
+                        if (status === 'granted') {
+                            const data = await readProjectFromDirectory(dirHandle);
+                            renderDashboard(data, true); // true indicates it's a silent refresh
+                        } else {
+                            stopPolling();
+                        }
+                    } catch (e) {
+                        console.error("Polling error:", e);
+                        stopPolling();
+                    }
+                }, 15000);
             }
-        });
 
-        // Demo data
-        btnDemo.addEventListener('click', () => {
-            renderDashboard({
-                project: 'my-awesome-project',
-                roles: [
-                    {
-                        name: 'build', l0: 'v1.5.0 | Auth system✅, Dashboard WIP, 12 API endpoints, PostgreSQL + Redis', lines: 245, modified: '2026-03-16',
-                        content: '## 📐 Responsibilities\n- Framework code development\n- Bug fixes & architecture\n- API endpoints\n\n## ⏳ TODO (by priority)\n- [x] Auth system (JWT + OAuth)\n- [/] Dashboard frontend\n- [ ] WebSocket real-time updates\n- [ ] Rate limiting middleware\n- [ ] E2E test suite'
-                    },
-                    {
-                        name: 'qa', l0: 'Latest QA: 8/8 PASS, 0 regressions, coverage 87%', lines: 130, modified: '2026-03-15',
-                        content: '## Latest QA Results\n✅ 8/8 AC PASS — Auth Module v1.5.0\nVerifier: QA identity\nBuild: v1.5.0 / main / commit abc1234\n\n## Coverage\n- Unit: 87%\n- Integration: 72%\n- E2E: 45%'
-                    },
-                    {
-                        name: 'growth', l0: 'Launch week: 450 GitHub stars, 3 blog posts, Show HN drafted', lines: 198, modified: '2026-03-16',
-                        content: '## 📊 Metrics\n- GitHub Stars: 450 (+120 this week)\n- npm downloads: 1.2K/week\n- Blog views: 8.5K total\n\n## 📋 Content Pipeline\n- [x] "Why We Built This" blog post\n- [x] Show HN draft v3\n- [ ] Product Hunt launch prep\n- [ ] Dev.to cross-post'
-                    },
-                ],
-                memory: [
-                    {
-                        date: '2026-03-16', title: 'Auth Integration Session (10:00-14:00)', lines: 85, size: 4200,
-                        content: '## Auth Integration Session (10:00-14:00)\n\n### Completed\n- JWT refresh token rotation\n- OAuth2 Google + GitHub providers\n- Session middleware with Redis store\n- RBAC permission checks on 8 endpoints\n\n### Decisions\n- [DECISION] Use httpOnly cookies over localStorage'
-                    },
-                    {
-                        date: '2026-03-15', title: 'Dashboard UI Redesign', lines: 62, size: 3100,
-                        content: '## Dashboard UI Redesign\n\n### Completed\n- Dark theme with glassmorphism cards\n- Stat grid responsive layout\n- Chart.js integration for metrics\n- Skeleton loading states\n\n### Next\n- [ ] Mobile bottom nav\n- [ ] Notification bell'
-                    },
-                    {
-                        date: '2026-03-14', title: 'Database Migration + Redis Setup', lines: 94, size: 4800,
-                        content: '## Database Migration + Redis Setup\n\n### Completed\n- PostgreSQL 16 with pgvector extension\n- Redis 7.2 for sessions + caching\n- Drizzle ORM schema definitions\n- Migration scripts (up/down)\n\n### Issues\n- Connection pooling needed tuning (max 20→50)'
-                    },
-                    { date: '2026-03-13', title: 'API Endpoint Planning', lines: 45, size: 2200 },
-                    { date: '2026-03-12', title: 'Project Kickoff & Architecture', lines: 38, size: 1900 },
-                ],
-                skills: [
-                    { name: 'git-commit', tier: 'core', description: 'Enforces conventional commit messages with scope, type, and breaking change detection.' },
-                    { name: 'code-review', tier: 'core', description: 'Structured code review with severity levels, actionable suggestions, and approval criteria.' },
-                    { name: 'context-health-check', tier: 'core', description: 'Monitors context window usage and triggers session checkpoints to prevent overflow.' },
-                    { name: 'layered-context', tier: 'core', description: 'L0/L1/L2 progressive context loading — scan summaries first, deep-read on demand.' },
-                    { name: 'agent-protocol', tier: 'core', description: 'Machine-readable role file protocol for multi-agent communication and MCP integration.' },
-                    { name: 'react-components', tier: 'toolkit', description: 'Best practices for building reusable React components with TypeScript and testing.' },
-                    { name: 'api-design', tier: 'toolkit', description: 'RESTful API design patterns including versioning, pagination, and error handling.' },
-                    { name: 'database-schema', tier: 'toolkit', description: 'Database schema design with migrations, indexing strategies, and normalization.' },
-                    { name: 'testing-strategy', tier: 'toolkit', description: 'Testing pyramid approach: unit → integration → E2E with coverage targets.' },
-                    { name: 'error-handling', tier: 'toolkit', description: 'Structured error handling with custom error classes and user-friendly messages.' },
-                    { name: 'performance-audit', tier: 'toolkit', description: 'Web performance auditing: Core Web Vitals, bundle analysis, and optimization.' },
-                    { name: 'accessibility', tier: 'toolkit', description: 'WCAG 2.1 compliance checks, ARIA patterns, and screen reader testing.' },
-                    { name: 'docker-deploy', tier: 'toolkit', description: 'Dockerfile best practices, multi-stage builds, and container orchestration.' },
-                    { name: 'ci-cd-pipeline', tier: 'toolkit', description: 'CI/CD pipeline setup with GitHub Actions, testing gates, and auto-deployment.' },
-                    { name: 'seo-optimization', tier: 'toolkit', description: 'Technical SEO: meta tags, structured data, sitemap, and Core Web Vitals.' },
-                    { name: 'vercel-deploy', tier: 'ecosystem', description: 'Vercel deployment configuration with preview environments and edge functions.' },
-                    { name: 'stripe-integration', tier: 'ecosystem', description: 'Stripe payment integration: checkout, subscriptions, webhooks, and testing.' },
-                    { name: 'supabase-auth', tier: 'ecosystem', description: 'Supabase authentication with row-level security and social OAuth providers.' },
-                ],
-                directives: [
-                    { text: 'Dashboard v2 — add expandable role cards + skills tab + health chart', status: 'pending', source: 'GROWTH→BUILD', date: '2026-03-16' },
-                    { text: 'WebSocket support needed for real-time collab features', status: 'pending', source: 'STRATEGY→BUILD', date: '2026-03-15' },
-                    { text: 'Auth system MVP — JWT + OAuth + RBAC', status: 'done', source: 'STRATEGY→BUILD', date: '2026-03-13' },
-                    { text: 'QA v1.5.0 — 8/8 AC PASS, no issues', status: 'done', source: 'QA→BUILD', date: '2026-03-15' },
-                ],
-                skillCount: 56,
-                memoriesWords: 1240,
+            // Select folder (modern browsers)
+            btnFolder.addEventListener('click', async () => {
+                try {
+                    if (!('showDirectoryPicker' in window)) {
+                        alert('Your browser doesn\'t support folder selection. Please use Chrome, Edge, or paste the command output instead.');
+                        return;
+                    }
+                    const dirHandle = await window.showDirectoryPicker();
+                    const data = await readProjectFromDirectory(dirHandle);
+                    renderDashboard(data);
+                    startPolling(dirHandle);
+                } catch (e) {
+                    if (e.name !== 'AbortError') console.error(e);
+                }
             });
-        });
 
-        // ─── Read from Directory Handle (File System Access API) ───
-        async function readProjectFromDirectory(dirHandle) {
-            const data = { project: dirHandle.name, roles: [], memory: [], skills: [], directives: [], skillCount: 0, memoriesWords: 0 };
+            // Select individual files
+            btnFiles.addEventListener('click', () => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.multiple = true;
+                input.accept = '.md';
+                input.webkitdirectory = true;
+                input.addEventListener('change', async (e) => {
+                    const files = Array.from(e.target.files);
+                    const data = await readProjectFromFileList(files);
+                    stopPolling();
+                    renderDashboard(data);
+                });
+                input.click();
+            });
 
-            // Read .muse/ directory
-            try {
-                const museDir = await dirHandle.getDirectoryHandle('.muse');
-                for await (const [name, handle] of museDir.entries()) {
-                    if (handle.kind === 'file' && name.endsWith('.md')) {
-                        const file = await handle.getFile();
+            // Parse pasted content
+            btnParse.addEventListener('click', () => {
+                const text = pasteInput.value.trim();
+                if (!text) return;
+                try {
+                    const data = JSON.parse(text);
+                    stopPolling();
+                    renderDashboard(data);
+                } catch {
+                    // Try parsing as raw markdown content
+                    const data = parseRawContent(text);
+                    stopPolling();
+                    renderDashboard(data);
+                }
+            });
+
+            // Demo data
+            btnDemo.addEventListener('click', () => {
+                stopPolling();
+                renderDashboard({
+                    project: 'my-awesome-project',
+                    roles: [
+                        {
+                            name: 'STRATEGY', l0: 'Product Owner & Architect. Approves ACs, guides L0 protocol evolution, and manages the PRD.', lines: 145, modified: '2026-03-17',
+                            content: '## 🎯 Core Directive\n- You are the Product Manager and Strategy Architect.\n- Define the MVP scope and ensure alignment with the overarching goal.\n\n## 📋 Current Focus\n- [ ] Finalize the Dashboard v3 specs\n- [x] Review Auth module ACs\n- [ ] Plan Q2 roadmap'
+                        },
+                        {
+                            name: 'BUILD', l0: 'v1.5.0 | Auth system✅, Dashboard WIP, 12 API endpoints, PostgreSQL + Redis', lines: 890, modified: '2026-03-16',
+                            content: '## 📐 Responsibilities\n- Framework code development\n- Bug fixes & architecture\n- API endpoints\n\n## ⏳ TODO (by priority)\n- [x] Auth system (JWT + OAuth)\n- [/] Dashboard frontend\n- [ ] WebSocket real-time updates\n- [ ] Rate limiting middleware\n- [ ] E2E test suite'
+                        },
+                        {
+                            name: 'QA', l0: 'Latest QA: 8/8 PASS, 0 regressions, coverage 87%', lines: 130, modified: '2026-03-15',
+                            content: '## Latest QA Results\n✅ 8/8 AC PASS — Auth Module v1.5.0\nVerifier: QA identity\nBuild: v1.5.0 / main / commit abc1234\n\n## Coverage\n- Unit: 87%\n- Integration: 72%\n- E2E: 45%'
+                        },
+                        {
+                            name: 'GROWTH', l0: 'Launch week: 450 GitHub stars, 3 blog posts, Show HN drafted', lines: 198, modified: '2026-03-16',
+                            content: '## 📊 Metrics\n- GitHub Stars: 450 (+120 this week)\n- npm downloads: 1.2K/week\n- Blog views: 8.5K total\n\n## 📋 Content Pipeline\n- [x] "Why We Built This" blog post\n- [x] Show HN draft v3\n- [ ] Product Hunt launch prep\n- [ ] Dev.to cross-post'
+                        },
+                    ],
+                    memory: [
+                        {
+                            date: '2026-03-16', title: 'Auth Integration Session (10:00-14:00)', lines: 85, size: 4200,
+                            content: '## Auth Integration Session (10:00-14:00)\n\n### Completed\n- JWT refresh token rotation\n- OAuth2 Google + GitHub providers\n- Session middleware with Redis store\n- RBAC permission checks on 8 endpoints\n\n### Decisions\n- [DECISION] Use httpOnly cookies over localStorage'
+                        },
+                        {
+                            date: '2026-03-15', title: 'Dashboard UI Redesign', lines: 62, size: 3100,
+                            content: '## Dashboard UI Redesign\n\n### Completed\n- Dark theme with glassmorphism cards\n- Stat grid responsive layout\n- Chart.js integration for metrics\n- Skeleton loading states\n\n### Next\n- [ ] Mobile bottom nav\n- [ ] Notification bell'
+                        },
+                        {
+                            date: '2026-03-14', title: 'Database Migration + Redis Setup', lines: 94, size: 4800,
+                            content: '## Database Migration + Redis Setup\n\n### Completed\n- PostgreSQL 16 with pgvector extension\n- Redis 7.2 for sessions + caching\n- Drizzle ORM schema definitions\n- Migration scripts (up/down)\n\n### Issues\n- Connection pooling needed tuning (max 20→50)'
+                        },
+                        { date: '2026-03-13', title: 'API Endpoint Planning', lines: 45, size: 2200 },
+                        { date: '2026-03-12', title: 'Project Kickoff & Architecture', lines: 38, size: 1900 },
+                    ],
+                    skills: [
+                        { name: 'git-commit', tier: 'core', description: 'Enforces conventional commit messages with scope, type, and breaking change detection.' },
+                        { name: 'code-review', tier: 'core', description: 'Structured code review with severity levels, actionable suggestions, and approval criteria.' },
+                        { name: 'context-health-check', tier: 'core', description: 'Monitors context window usage and triggers session checkpoints to prevent overflow.' },
+                        { name: 'layered-context', tier: 'core', description: 'L0/L1/L2 progressive context loading — scan summaries first, deep-read on demand.' },
+                        { name: 'agent-protocol', tier: 'core', description: 'Machine-readable role file protocol for multi-agent communication and MCP integration.' },
+                        { name: 'react-components', tier: 'toolkit', description: 'Best practices for building reusable React components with TypeScript and testing.' },
+                        { name: 'api-design', tier: 'toolkit', description: 'RESTful API design patterns including versioning, pagination, and error handling.' },
+                        { name: 'database-schema', tier: 'toolkit', description: 'Database schema design with migrations, indexing strategies, and normalization.' },
+                        { name: 'testing-strategy', tier: 'toolkit', description: 'Testing pyramid approach: unit → integration → E2E with coverage targets.' },
+                        { name: 'error-handling', tier: 'toolkit', description: 'Structured error handling with custom error classes and user-friendly messages.' },
+                        { name: 'performance-audit', tier: 'toolkit', description: 'Web performance auditing: Core Web Vitals, bundle analysis, and optimization.' },
+                        { name: 'accessibility', tier: 'toolkit', description: 'WCAG 2.1 compliance checks, ARIA patterns, and screen reader testing.' },
+                        { name: 'docker-deploy', tier: 'toolkit', description: 'Dockerfile best practices, multi-stage builds, and container orchestration.' },
+                        { name: 'ci-cd-pipeline', tier: 'toolkit', description: 'CI/CD pipeline setup with GitHub Actions, testing gates, and auto-deployment.' },
+                        { name: 'seo-optimization', tier: 'toolkit', description: 'Technical SEO: meta tags, structured data, sitemap, and Core Web Vitals.' },
+                        { name: 'vercel-deploy', tier: 'ecosystem', description: 'Vercel deployment configuration with preview environments and edge functions.' },
+                        { name: 'stripe-integration', tier: 'ecosystem', description: 'Stripe payment integration: checkout, subscriptions, webhooks, and testing.' },
+                        { name: 'supabase-auth', tier: 'ecosystem', description: 'Supabase authentication with row-level security and social OAuth providers.' },
+                    ],
+                    directives: [
+                        { text: 'Dashboard v2 — add expandable role cards + skills tab + health chart', status: 'pending', source: 'GROWTH→BUILD', date: '2026-03-16' },
+                        { text: 'WebSocket support needed for real-time collab features', status: 'pending', source: 'STRATEGY→BUILD', date: '2026-03-15' },
+                        { text: 'Auth system MVP — JWT + OAuth + RBAC', status: 'done', source: 'STRATEGY→BUILD', date: '2026-03-13' },
+                        { text: 'QA v1.5.0 — 8/8 AC PASS, no issues', status: 'done', source: 'QA→BUILD', date: '2026-03-15' },
+                    ],
+                    skillCount: 56,
+                    memoriesWords: 1240,
+                    constellation: [
+                        { word: 'Architecture', count: 12 },
+                        { word: 'Optimization', count: 8 },
+                        { word: 'Governance', count: 15 },
+                        { word: 'Automation', count: 7 },
+                        { word: 'Security', count: 10 },
+                        { word: 'UX/UI', count: 9 },
+                        { word: 'Middleware', count: 5 },
+                        { word: 'PostgreSQL', count: 6 },
+                        { word: 'TypeScript', count: 11 },
+                        { word: 'Mermaid', count: 4 },
+                        { word: 'Deployment', count: 7 },
+                        { word: 'Refactoring', count: 6 },
+                        { word: 'Interaction', count: 8 },
+                        { word: 'Philosophy', count: 5 }
+                    ]
+                });
+            });
+
+            // ─── Read from Directory Handle (File System Access API) ───
+            async function readProjectFromDirectory(dirHandle) {
+                const data = { project: dirHandle.name, roles: [], memory: [], skills: [], directives: [], constellation: [], skillCount: 0, memoriesWords: 0 };
+
+                // Read .muse/ directory
+                try {
+                    const museDir = await dirHandle.getDirectoryHandle('.muse');
+                    for await (const [name, handle] of museDir.entries()) {
+                        if (handle.kind === 'file' && name.endsWith('.md')) {
+                            const file = await handle.getFile();
+                            const content = await file.text();
+                            const lines = content.split('\n');
+                            const l0 = lines[0]?.replace('<!-- L0: ', '').replace(' -->', '') || '';
+                            data.roles.push({
+                                name: name.replace('.md', ''),
+                                l0: l0.substring(0, 200),
+                                lines: lines.length,
+                                modified: new Date(file.lastModified).toISOString().split('T')[0],
+                                content: extractSections(content)
+                            });
+                            // Extract directives from 📡 sections
+                            extractDirectives(content, name.replace('.md', ''), data.directives);
+                        }
+                    }
+                } catch { }
+
+                // Read memory/ directory
+                try {
+                    const memDir = await dirHandle.getDirectoryHandle('memory');
+                    for await (const [name, handle] of memDir.entries()) {
+                        if (handle.kind === 'file' && name.endsWith('.md')) {
+                            const file = await handle.getFile();
+                            const content = await file.text();
+                            const firstHeading = content.split('\n').find(l => l.startsWith('#'))?.replace(/^#+\s*/, '') || '';
+                            data.memory.push({
+                                date: name.replace('.md', ''),
+                                title: firstHeading.substring(0, 80),
+                                lines: content.split('\n').length,
+                                size: file.size,
+                                content: content.split('\n').slice(0, 12).join('\n')
+                            });
+                        }
+                    }
+                    data.memory.sort((a, b) => b.date.localeCompare(a.date));
+                } catch { }
+
+                // Read skills with tiers + descriptions
+                const readSkillsFromDir = async (dir, tier) => {
+                    for await (const [name, handle] of dir.entries()) {
+                        if (handle.kind === 'directory') {
+                            try {
+                                const skillFile = await handle.getFileHandle('SKILL.md');
+                                const file = await skillFile.getFile();
+                                const content = await file.text();
+                                // Parse description from YAML frontmatter
+                                let desc = '';
+                                const fmMatch = content.match(/^---\s*\n([\s\S]*?)\n---/);
+                                if (fmMatch) {
+                                    const descLine = fmMatch[1].split('\n').find(l => l.startsWith('description:'));
+                                    if (descLine) desc = descLine.replace(/^description:\s*/, '').replace(/^['"]|['"]$/g, '');
+                                }
+                                if (!desc) {
+                                    // Fallback: first non-empty line after frontmatter
+                                    const afterFm = content.replace(/^---[\s\S]*?---\s*\n?/, '');
+                                    desc = afterFm.split('\n').find(l => l.trim() && !l.startsWith('#'))?.trim() || '';
+                                }
+                                data.skills.push({ name, tier, description: desc.substring(0, 150) });
+                                data.skillCount++;
+                            } catch {
+                                await readSkillsFromDir(handle, tier);
+                            }
+                        }
+                    }
+                };
+                try {
+                    const skillsDir = await dirHandle.getDirectoryHandle('skills');
+                    for await (const [name, handle] of skillsDir.entries()) {
+                        if (handle.kind === 'directory') {
+                            const tier = name === 'core' ? 'core' : name === 'ecosystem' ? 'ecosystem' : 'toolkit';
+                            await readSkillsFromDir(handle, tier);
+                        }
+                    }
+                } catch { }
+                try {
+                    const agentDir = await dirHandle.getDirectoryHandle('.agent');
+                    const agentSkillsDir = await agentDir.getDirectoryHandle('skills');
+                    await readSkillsFromDir(agentSkillsDir, 'toolkit');
+                } catch { }
+
+                // Read MEMORIES.md
+                try {
+                    const memFile = await (await dirHandle.getFileHandle('MEMORIES.md')).getFile();
+                    const content = await memFile.text();
+                    data.memoriesWords = content.split(/\s+/).length;
+                } catch { }
+
+                return data;
+            }
+
+            // ─── Read from File List (webkitdirectory) ───
+            async function readProjectFromFileList(files) {
+                const data = { project: '', roles: [], memory: [], skills: [], directives: [], constellation: [], skillCount: 0, memoriesWords: 0 };
+
+                for (const file of files) {
+                    const path = file.webkitRelativePath || file.name;
+                    if (!data.project) data.project = path.split('/')[0];
+
+                    if (path.includes('.muse/') && file.name.endsWith('.md')) {
                         const content = await file.text();
                         const lines = content.split('\n');
                         const l0 = lines[0]?.replace('<!-- L0: ', '').replace(' -->', '') || '';
                         data.roles.push({
-                            name: name.replace('.md', ''),
-                            l0: l0.substring(0, 200),
-                            lines: lines.length,
+                            name: file.name.replace('.md', ''),
+                            l0: l0.substring(0, 200), lines: lines.length,
                             modified: new Date(file.lastModified).toISOString().split('T')[0],
                             content: extractSections(content)
                         });
-                        // Extract directives from 📡 sections
-                        extractDirectives(content, name.replace('.md', ''), data.directives);
+                        extractDirectives(content, file.name.replace('.md', ''), data.directives);
                     }
-                }
-            } catch { }
 
-            // Read memory/ directory
-            try {
-                const memDir = await dirHandle.getDirectoryHandle('memory');
-                for await (const [name, handle] of memDir.entries()) {
-                    if (handle.kind === 'file' && name.endsWith('.md')) {
-                        const file = await handle.getFile();
+                    if (path.includes('memory/') && file.name.endsWith('.md') && !path.includes('.muse/')) {
                         const content = await file.text();
                         const firstHeading = content.split('\n').find(l => l.startsWith('#'))?.replace(/^#+\s*/, '') || '';
                         data.memory.push({
-                            date: name.replace('.md', ''),
-                            title: firstHeading.substring(0, 80),
-                            lines: content.split('\n').length,
-                            size: file.size,
+                            date: file.name.replace('.md', ''),
+                            title: firstHeading.substring(0, 80), lines: content.split('\n').length, size: file.size,
                             content: content.split('\n').slice(0, 12).join('\n')
                         });
                     }
-                }
-                data.memory.sort((a, b) => b.date.localeCompare(a.date));
-            } catch { }
 
-            // Read skills with tiers + descriptions
-            const readSkillsFromDir = async (dir, tier) => {
-                for await (const [name, handle] of dir.entries()) {
-                    if (handle.kind === 'directory') {
-                        try {
-                            const skillFile = await handle.getFileHandle('SKILL.md');
-                            const file = await skillFile.getFile();
-                            const content = await file.text();
-                            // Parse description from YAML frontmatter
-                            let desc = '';
-                            const fmMatch = content.match(/^---\s*\n([\s\S]*?)\n---/);
-                            if (fmMatch) {
-                                const descLine = fmMatch[1].split('\n').find(l => l.startsWith('description:'));
-                                if (descLine) desc = descLine.replace(/^description:\s*/, '').replace(/^['"]|['"]$/g, '');
-                            }
-                            if (!desc) {
-                                // Fallback: first non-empty line after frontmatter
-                                const afterFm = content.replace(/^---[\s\S]*?---\s*\n?/, '');
-                                desc = afterFm.split('\n').find(l => l.trim() && !l.startsWith('#'))?.trim() || '';
-                            }
-                            data.skills.push({ name, tier, description: desc.substring(0, 150) });
-                            data.skillCount++;
-                        } catch {
-                            await readSkillsFromDir(handle, tier);
+                    if (file.name === 'SKILL.md') {
+                        data.skillCount++;
+                        const tier = path.includes('/core/') ? 'core' : path.includes('/ecosystem/') ? 'ecosystem' : 'toolkit';
+                        const parts = path.split('/');
+                        const skillName = parts[parts.length - 2] || 'unknown';
+                        const content = await file.text();
+                        let desc = '';
+                        const fmMatch = content.match(/^---\s*\n([\s\S]*?)\n---/);
+                        if (fmMatch) {
+                            const descLine = fmMatch[1].split('\n').find(l => l.startsWith('description:'));
+                            if (descLine) desc = descLine.replace(/^description:\s*/, '').replace(/^['"]|['"]$/g, '');
+                        }
+                        data.skills.push({ name: skillName, tier, description: desc.substring(0, 150) });
+                    }
+
+                    if (file.name === 'MEMORIES.md' && !path.includes('.muse/')) {
+                        const content = await file.text();
+                        data.memoriesWords = content.split(/\s+/).length;
+                        data.constellation = extractConstellationNodes(content);
+                    }
+                }
+
+                data.memory.sort((a, b) => b.date.localeCompare(a.date));
+                return data;
+            }
+
+            // ─── Helper: Extract key sections from a role file ───
+            function extractSections(content) {
+                const lines = content.split('\n');
+                const sections = [];
+                let current = null;
+                for (const line of lines.slice(1)) { // skip L0
+                    if (line.startsWith('## ')) {
+                        if (current) sections.push(current);
+                        current = { title: line.replace(/^##\s*/, ''), lines: [] };
+                    } else if (current && current.lines.length < 8) {
+                        if (line.trim()) current.lines.push(line);
+                    }
+                }
+                if (current) sections.push(current);
+                // Return first 3 most interesting sections
+                return sections.slice(0, 4).map(s => s.title + '\n' + s.lines.join('\n')).join('\n\n');
+            }
+
+            // ─── Helper: Extract directives from 📡 sections ───
+            function extractDirectives(content, roleName, directives) {
+                const lines = content.split('\n');
+                for (const line of lines) {
+                    if (line.includes('📡') && (line.startsWith('#') || line.startsWith('>'))) {
+                        // Detect status icon
+                        let status = 'pending';
+                        if (line.includes('✅')) status = 'done';
+                        else if (line.includes('🔄') || line.includes('处理中')) status = 'active';
+
+                        const dateMatch = line.match(/\d{4}-\d{2}-\d{2}|\d{1,2}\/\d{1,2}/);
+                        const sourceMatch = line.match(/([a-zA-Z0-9_]+→[a-zA-Z0-9_]+)/);
+                        const textMatch = line.replace(/^[#>\s*]+/, '').replace(/📡|🟡|✅|🔄|待接收|已接收|已完成/g, '').trim();
+
+                        if (textMatch.length > 5) {
+                            directives.push({
+                                text: textMatch.substring(0, 140),
+                                status: status,
+                                source: sourceMatch ? sourceMatch[1].toUpperCase() : roleName.toUpperCase(),
+                                date: dateMatch ? dateMatch[0] : ''
+                            });
                         }
                     }
                 }
-            };
-            try {
-                const skillsDir = await dirHandle.getDirectoryHandle('skills');
-                for await (const [name, handle] of skillsDir.entries()) {
-                    if (handle.kind === 'directory') {
-                        const tier = name === 'core' ? 'core' : name === 'ecosystem' ? 'ecosystem' : 'toolkit';
-                        await readSkillsFromDir(handle, tier);
-                    }
-                }
-            } catch { }
-            try {
-                const agentDir = await dirHandle.getDirectoryHandle('.agent');
-                const agentSkillsDir = await agentDir.getDirectoryHandle('skills');
-                await readSkillsFromDir(agentSkillsDir, 'toolkit');
-            } catch { }
-
-            // Read MEMORIES.md
-            try {
-                const memFile = await (await dirHandle.getFileHandle('MEMORIES.md')).getFile();
-                const content = await memFile.text();
-                data.memoriesWords = content.split(/\s+/).length;
-            } catch { }
-
-            return data;
-        }
-
-        // ─── Read from File List (webkitdirectory) ───
-        async function readProjectFromFileList(files) {
-            const data = { project: '', roles: [], memory: [], skills: [], directives: [], skillCount: 0, memoriesWords: 0 };
-
-            for (const file of files) {
-                const path = file.webkitRelativePath || file.name;
-                if (!data.project) data.project = path.split('/')[0];
-
-                if (path.includes('.muse/') && file.name.endsWith('.md')) {
-                    const content = await file.text();
-                    const lines = content.split('\n');
-                    const l0 = lines[0]?.replace('<!-- L0: ', '').replace(' -->', '') || '';
-                    data.roles.push({
-                        name: file.name.replace('.md', ''),
-                        l0: l0.substring(0, 200), lines: lines.length,
-                        modified: new Date(file.lastModified).toISOString().split('T')[0],
-                        content: extractSections(content)
-                    });
-                    extractDirectives(content, file.name.replace('.md', ''), data.directives);
-                }
-
-                if (path.includes('memory/') && file.name.endsWith('.md') && !path.includes('.muse/')) {
-                    const content = await file.text();
-                    const firstHeading = content.split('\n').find(l => l.startsWith('#'))?.replace(/^#+\s*/, '') || '';
-                    data.memory.push({
-                        date: file.name.replace('.md', ''),
-                        title: firstHeading.substring(0, 80), lines: content.split('\n').length, size: file.size,
-                        content: content.split('\n').slice(0, 12).join('\n')
-                    });
-                }
-
-                if (file.name === 'SKILL.md') {
-                    data.skillCount++;
-                    const tier = path.includes('/core/') ? 'core' : path.includes('/ecosystem/') ? 'ecosystem' : 'toolkit';
-                    const parts = path.split('/');
-                    const skillName = parts[parts.length - 2] || 'unknown';
-                    const content = await file.text();
-                    let desc = '';
-                    const fmMatch = content.match(/^---\s*\n([\s\S]*?)\n---/);
-                    if (fmMatch) {
-                        const descLine = fmMatch[1].split('\n').find(l => l.startsWith('description:'));
-                        if (descLine) desc = descLine.replace(/^description:\s*/, '').replace(/^['"]|['"]$/g, '');
-                    }
-                    data.skills.push({ name: skillName, tier, description: desc.substring(0, 150) });
-                }
-
-                if (file.name === 'MEMORIES.md' && !path.includes('.muse/')) {
-                    const content = await file.text();
-                    data.memoriesWords = content.split(/\s+/).length;
-                }
             }
 
-            data.memory.sort((a, b) => b.date.localeCompare(a.date));
-            return data;
-        }
-
-        // ─── Helper: Extract key sections from a role file ───
-        function extractSections(content) {
-            const lines = content.split('\n');
-            const sections = [];
-            let current = null;
-            for (const line of lines.slice(1)) { // skip L0
-                if (line.startsWith('## ')) {
-                    if (current) sections.push(current);
-                    current = { title: line.replace(/^##\s*/, ''), lines: [] };
-                } else if (current && current.lines.length < 8) {
-                    if (line.trim()) current.lines.push(line);
-                }
+            // ─── Parse raw text content ───
+            function parseRawContent(text) {
+                return {
+                    project: 'My Project',
+                    roles: [{ name: 'pasted', l0: text.substring(0, 200), lines: text.split('\n').length, modified: new Date().toISOString().split('T')[0], content: text.substring(0, 500) }],
+                    memory: [], skills: [], directives: [], skillCount: 0, memoriesWords: text.split(/\s+/).length
+                };
             }
-            if (current) sections.push(current);
-            // Return first 3 most interesting sections
-            return sections.slice(0, 4).map(s => s.title + '\n' + s.lines.join('\n')).join('\n\n');
-        }
 
-        // ─── Helper: Extract directives from 📡 sections ───
-        function extractDirectives(content, roleName, directives) {
-            const lines = content.split('\n');
-            for (const line of lines) {
-                if (line.includes('📡') && (line.startsWith('#') || line.startsWith('>'))) {
-                    // Detect status icon
-                    let status = 'pending';
-                    if (line.includes('✅')) status = 'done';
-                    else if (line.includes('🔄') || line.includes('处理中')) status = 'active';
+            // ─── Render Dashboard ───
+            function renderDashboard(data, isSilent = false) {
+                document.getElementById('upload-section').style.display = 'none';
+                document.querySelector('.upload-zone').style.display = 'none';
+                document.querySelector('.or-divider').style.display = 'none';
+                document.querySelector('.paste-zone').style.display = 'none';
+                window.currentProjectData = null;
 
-                    const dateMatch = line.match(/\d{4}-\d{2}-\d{2}|\d{1,2}\/\d{1,2}/);
-                    const sourceMatch = line.match(/([a-zA-Z0-9_]+→[a-zA-Z0-9_]+)/);
-                    const textMatch = line.replace(/^[#>\s*]+/, '').replace(/📡|🟡|✅|🔄|待接收|已接收|已完成/g, '').trim();
-
-                    if (textMatch.length > 5) {
-                        directives.push({
-                            text: textMatch.substring(0, 140),
-                            status: status,
-                            source: sourceMatch ? sourceMatch[1].toUpperCase() : roleName.toUpperCase(),
-                            date: dateMatch ? dateMatch[0] : ''
-                        });
+                window.currentProjectData = data;
+                const dash = document.getElementById('dashboard');
+                if (dash.style.display !== 'block') {
+                    dash.style.display = 'block';
+                    if (!isSilent) {
+                        dash.scrollIntoView({ behavior: 'smooth' });
                     }
                 }
-            }
-        }
+                document.getElementById('dash-title').textContent = data.project || 'Dashboard';
+                document.getElementById('dash-project').textContent = data.project || '';
+                document.getElementById('dash-date').textContent = new Date().toLocaleDateString();
 
-        // ─── Parse raw text content ───
-        function parseRawContent(text) {
-            return {
-                project: 'My Project',
-                roles: [{ name: 'pasted', l0: text.substring(0, 200), lines: text.split('\n').length, modified: new Date().toISOString().split('T')[0], content: text.substring(0, 500) }],
-                memory: [], skills: [], directives: [], skillCount: 0, memoriesWords: text.split(/\s+/).length
-            };
-        }
+                // Compute last active
+                const lastActive = data.memory?.length ? timeAgo(data.memory[0].date) : 'N/A';
 
-        // ─── Render Dashboard ───
-        function renderDashboard(data) {
-            document.getElementById('upload-section').style.display = 'none';
-            document.querySelector('.upload-zone').style.display = 'none';
-            document.querySelector('.or-divider').style.display = 'none';
-            document.querySelector('.paste-zone').style.display = 'none';
-            document.getElementById('btn-demo').parentElement.style.display = 'none';
-
-            const dash = document.getElementById('dashboard');
-            dash.style.display = 'block';
-            dash.classList.add('active');
-
-            document.getElementById('dash-title').textContent = data.project || 'Dashboard';
-            document.getElementById('dash-project').textContent = data.project || '';
-            document.getElementById('dash-date').textContent = new Date().toLocaleDateString();
-
-            // Compute last active
-            const lastActive = data.memory?.length ? timeAgo(data.memory[0].date) : 'N/A';
-
-            // Stats (5 cards)
-            const stats = [
-                { icon: '🎭', value: data.roles?.length || 0, label: 'Active Roles' },
-                { icon: '🧠', value: data.memory?.length || 0, label: 'Memory Files' },
-                { icon: '⚡', value: data.skillCount || 0, label: 'Skills' },
-                { icon: '📚', value: data.memoriesWords || 0, label: 'Words (Long-term)' },
-                { icon: '🕐', value: lastActive, label: 'Last Active', isText: true },
-            ];
-            document.getElementById('stats-grid').innerHTML = stats.map(s => `
+                // Stats (5 cards)
+                const stats = [
+                    { icon: '🎭', value: data.roles?.length || 0, label: 'Active Roles' },
+                    { icon: '🧠', value: data.memory?.length || 0, label: 'Memory Files' },
+                    { icon: '⚡', value: data.skillCount || 0, label: 'Skills' },
+                    { icon: '📚', value: data.memoriesWords || 0, label: 'Words (Long-term)' },
+                    { icon: '🕐', value: lastActive, label: 'Last Active', isText: true },
+                ];
+                document.getElementById('stats-grid').innerHTML = stats.map(s => `
         <div class="stat-card animate">
           <div class="stat-icon">${s.icon}</div>
           <div class="stat-value" ${s.isText ? 'style="font-size:1.3rem"' : ''}>${s.isText ? s.value : s.value.toLocaleString()}</div>
@@ -1520,9 +1748,47 @@
         </div>
       `).join('');
 
-            // ─── Roles (expandable) ───
-            const chevronSvg = '<svg class="expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>';
-            document.getElementById('role-grid').innerHTML = (data.roles || []).map((r, i) => `
+                renderConstellation(data.constellation);
+
+
+                function renderConstellation(nodes) {
+                    const container = document.getElementById('constellation-viz');
+                    if (!nodes || nodes.length === 0) {
+                        container.innerHTML = '<p style="color:var(--text-muted)">No semantic data found in MEMORIES.md.</p>';
+                        return;
+                    }
+                    const maxCount = Math.max(...nodes.map(n => n.count));
+                    const minCount = Math.min(...nodes.map(n => n.count));
+                    container.innerHTML = nodes.map(n => {
+                        const size = 0.8 + (1.2 * (n.count - minCount) / (maxCount - minCount || 1));
+                        const opacity = 0.4 + (0.6 * (n.count - minCount) / (maxCount - minCount || 1));
+                        return `<span style="font-size:${size}rem; opacity:${opacity}; color:var(--accent); cursor:help;" title="Found ${n.count} times">${esc(n.word)}</span>`;
+                    }).join(' ');
+                }
+
+                function extractConstellationNodes(content) {
+                    const lines = content.split('\n');
+                    const keywords = new Map();
+                    lines.forEach(line => {
+                        const match = line.match(/\[(FACT|DECISION|LESSON)\]\s*(.*)/);
+                        if (match) {
+                            const text = match[2];
+                            const words = text.split(/[\s,.;:!?()]+/).filter(w => w.length > 4);
+                            words.forEach(word => {
+                                const clean = word.replace(/['"“”]/g, '').trim();
+                                if (clean && !['about', 'after', 'again', 'could', 'should', 'would', 'there', 'their', 'which'].includes(clean.toLowerCase())) {
+                                    keywords.set(clean, (keywords.get(clean) || 0) + 1);
+                                }
+                            });
+                        }
+                    });
+                    const sorted = Array.from(keywords.entries()).sort((a, b) => b[1] - a[1]).slice(0, 50);
+                    return sorted.map(([word, count]) => ({ word, count }));
+                }
+
+                // ─── Roles (expandable) ───
+                const chevronSvg = '<svg class="expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+                document.getElementById('role-grid').innerHTML = (data.roles || []).map((r, i) => `
         <div class="role-card animate" onclick="this.classList.toggle('expanded')" id="role-${i}">
           <div class="role-header">
             <span class="role-name">${esc(r.name)}</span>
@@ -1540,35 +1806,35 @@
         </div>
       `).join('') || '<p style="color:var(--text-muted)">No role files found</p>';
 
-            // ─── Skills (categorized) ───
-            const skillsByTier = { core: [], toolkit: [], ecosystem: [] };
-            (data.skills || []).forEach(s => {
-                if (skillsByTier[s.tier]) skillsByTier[s.tier].push(s);
-                else skillsByTier.toolkit.push(s);
-            });
-            const tierMeta = {
-                core: { emoji: '🔵', label: 'Core', cls: 'tier-core' },
-                toolkit: { emoji: '🟢', label: 'Toolkit', cls: 'tier-toolkit' },
-                ecosystem: { emoji: '🟠', label: 'Ecosystem', cls: 'tier-ecosystem' }
-            };
-            window._allSkillsData = skillsByTier;
-            renderSkills(skillsByTier);
+                // ─── Skills (categorized) ───
+                const skillsByTier = { core: [], toolkit: [], ecosystem: [] };
+                (data.skills || []).forEach(s => {
+                    if (skillsByTier[s.tier]) skillsByTier[s.tier].push(s);
+                    else skillsByTier.toolkit.push(s);
+                });
+                const tierMeta = {
+                    core: { emoji: '🔵', label: 'Core', cls: 'tier-core' },
+                    toolkit: { emoji: '🟢', label: 'Toolkit', cls: 'tier-toolkit' },
+                    ecosystem: { emoji: '🟠', label: 'Ecosystem', cls: 'tier-ecosystem' }
+                };
+                window._allSkillsData = skillsByTier;
+                renderSkills(skillsByTier);
 
-            document.getElementById('skills-search').addEventListener('input', (e) => {
-                const q = e.target.value.toLowerCase();
-                const filtered = {};
-                for (const [tier, skills] of Object.entries(window._allSkillsData)) {
-                    filtered[tier] = skills.filter(s => s.name.toLowerCase().includes(q));
-                }
-                renderSkills(filtered);
-            });
+                document.getElementById('skills-search').addEventListener('input', (e) => {
+                    const q = e.target.value.toLowerCase();
+                    const filtered = {};
+                    for (const [tier, skills] of Object.entries(window._allSkillsData)) {
+                        filtered[tier] = skills.filter(s => s.name.toLowerCase().includes(q));
+                    }
+                    renderSkills(filtered);
+                });
 
-            function renderSkills(byTier) {
-                let html = '';
-                for (const [tier, skills] of Object.entries(byTier)) {
-                    if (skills.length === 0) continue;
-                    const meta = tierMeta[tier];
-                    html += `<div class="skill-category">
+                function renderSkills(byTier) {
+                    let html = '';
+                    for (const [tier, skills] of Object.entries(byTier)) {
+                        if (skills.length === 0) continue;
+                        const meta = tierMeta[tier];
+                        html += `<div class="skill-category">
                     <div class="skill-category-header">
                         ${meta.emoji} ${meta.label}
                         <span class="skill-tier ${meta.cls}">${skills.length}</span>
@@ -1580,12 +1846,12 @@
                         </div>`).join('')}
                     </div>
                 </div>`;
+                    }
+                    document.getElementById('skills-container').innerHTML = html || '<p style="color:var(--text-muted)">No skills found</p>';
                 }
-                document.getElementById('skills-container').innerHTML = html || '<p style="color:var(--text-muted)">No skills found</p>';
-            }
 
-            // ─── Memory (expandable) ───
-            document.getElementById('timeline').innerHTML = (data.memory || []).map((m, i) => `
+                // ─── Memory (expandable) ───
+                document.getElementById('timeline').innerHTML = (data.memory || []).map((m, i) => `
         <div class="tl-item animate" onclick="this.classList.toggle('expanded')" id="mem-${i}">
           ${chevronSvg}
           <div class="tl-date">${esc(m.date)}</div>
@@ -1600,32 +1866,32 @@
         </div>
       `).join('') || '<p style="color:var(--text-muted)">No memory files found</p>';
 
-            // ─── Health ───
-            const memoryDates = (data.memory || []).map(m => ({ date: m.date, lines: m.lines }));
-            const last7 = memoryDates.slice(0, 7).reverse();
-            const maxLines = Math.max(...last7.map(m => m.lines), 1);
-            const totalLines = (data.memory || []).reduce((sum, m) => sum + m.lines, 0);
-            const avgLines = last7.length ? Math.round(totalLines / (data.memory?.length || 1)) : 0;
-            const totalKB = ((data.memory || []).reduce((sum, m) => sum + (m.size || 0), 0) / 1024).toFixed(1);
+                // ─── Health ───
+                const memoryDates = (data.memory || []).map(m => ({ date: m.date, lines: m.lines }));
+                const last7 = memoryDates.slice(0, 7).reverse();
+                const maxLines = Math.max(...last7.map(m => m.lines), 1);
+                const totalLines = (data.memory || []).reduce((sum, m) => sum + m.lines, 0);
+                const avgLines = last7.length ? Math.round(totalLines / (data.memory?.length || 1)) : 0;
+                const totalKB = ((data.memory || []).reduce((sum, m) => sum + (m.size || 0), 0) / 1024).toFixed(1);
 
-            // Streak: count consecutive days from most recent
-            let streak = 0;
-            if (data.memory?.length) {
-                const today = new Date(); today.setHours(0, 0, 0, 0);
-                for (let i = 0; i < data.memory.length; i++) {
-                    const d = new Date(data.memory[i].date + 'T00:00:00');
-                    const expected = new Date(today); expected.setDate(expected.getDate() - i);
-                    if (d.getTime() === expected.getTime()) streak++; else break;
+                // Streak: count consecutive days from most recent
+                let streak = 0;
+                if (data.memory?.length) {
+                    const today = new Date(); today.setHours(0, 0, 0, 0);
+                    for (let i = 0; i < data.memory.length; i++) {
+                        const d = new Date(data.memory[i].date + 'T00:00:00');
+                        const expected = new Date(today); expected.setDate(expected.getDate() - i);
+                        if (d.getTime() === expected.getTime()) streak++; else break;
+                    }
                 }
-            }
 
-            // Context Pressure Calculation (Token Burn)
-            const roleLines = (data.roles || []).reduce((sum, r) => sum + r.lines, 0);
-            const pressureLevel = roleLines < 400 ? 'Low' : roleLines < 800 ? 'Medium' : 'High';
-            const pressureColor = roleLines < 400 ? 'var(--success)' : roleLines < 800 ? 'var(--warning)' : 'var(--danger)';
-            const pressureDegree = Math.min((roleLines / 1000) * 360, 360);
+                // Context Pressure Calculation (Token Burn)
+                const roleLines = (data.roles || []).reduce((sum, r) => sum + r.lines, 0);
+                const pressureLevel = roleLines < 400 ? 'Low' : roleLines < 800 ? 'Medium' : 'High';
+                const pressureColor = roleLines < 400 ? 'var(--success)' : roleLines < 800 ? 'var(--warning)' : 'var(--danger)';
+                const pressureDegree = Math.min((roleLines / 1000) * 360, 360);
 
-            document.getElementById('health-section').innerHTML = `
+                document.getElementById('health-section').innerHTML = `
         <div style="margin-bottom:20px">
           <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:6px">Project Health Overview</h3>
           <p style="font-size:0.85rem;color:var(--text-dim);line-height:1.6">Track your AI-assisted development activity. Monitor your session streaks, memory pipeline, and context window pressure to prevent AI hallucinations.</p>
@@ -1669,13 +1935,13 @@
           </div>
         </div>`;
 
-            // ─── Directives Kanban Board ───
-            const directives = data.directives || [];
-            const pending = directives.filter(d => d.status === 'pending');
-            const active = directives.filter(d => d.status === 'active');
-            const done = directives.filter(d => d.status === 'done');
+                // ─── Directives Kanban Board ───
+                const directives = data.directives || [];
+                const pending = directives.filter(d => d.status === 'pending');
+                const active = directives.filter(d => d.status === 'active');
+                const done = directives.filter(d => d.status === 'done');
 
-            const renderCard = (d) => `
+                const renderCard = (d) => `
                 <div class="directive-item animate directive-${d.status}">
                   <div class="directive-header">
                     <span class="directive-source">${esc(d.source)}</span>
@@ -1685,7 +1951,7 @@
                 </div>
             `;
 
-            document.getElementById('directive-list').innerHTML = `
+                document.getElementById('directive-list').innerHTML = `
                 <p style="font-size:0.85rem;color:var(--text-dim);margin-bottom:16px;">Visual Kanban Board parsing 📡 directives directly from your role files.</p>
                 <div class="kanban-board">
                     <div class="kanban-col">
@@ -1714,162 +1980,240 @@
                 </div>
             `;
 
-            // Tabs
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.addEventListener('click', () => {
-                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                    tab.classList.add('active');
-                    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
-                });
-            });
-
-            // Scroll to dashboard
-            dash.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-            // ─── Render Topology DAG (P2 Mermaid) ───
-            renderTopology(data);
-        }
-
-        // Add dynamic loaded Mermaid
-        let mermaidLoaded = false;
-        async function renderTopology(data) {
-            const container = document.getElementById('topology-container');
-
-            // Extract relations from Directives
-            const edges = new Map();
-            const nodes = new Set();
-
-            (data.directives || []).forEach(d => {
-                const parts = d.source.split('→');
-                if (parts.length === 2) {
-                    const from = parts[0];
-                    const to = parts[1];
-                    nodes.add(from);
-                    nodes.add(to);
-                    const key = `${from}->${to}`;
-                    edges.set(key, (edges.get(key) || 0) + 1);
-                }
-            });
-
-            // Add roles as nodes even if no edges
-            (data.roles || []).forEach(r => nodes.add(r.name.toUpperCase()));
-
-            if (nodes.size === 0) {
-                container.innerHTML = '<p style="color:var(--text-muted)">Not enough role data to generate topology.</p>';
-                return;
-            }
-
-            // Build Mermaid syntax
-            let graphStr = 'graph TD\n';
-            graphStr += '    %% Theme configuration\n';
-            graphStr += '    classDef default fill:#1a1b26,stroke:#3b4054,stroke-width:2px,color:#a9b1d6,rx:8px,ry:8px;\n';
-            graphStr += '    classDef role fill:#1f2335,stroke:#c9a84c,stroke-width:2px,color:#c9a84c,font-weight:bold;\n';
-
-            nodes.forEach(n => {
-                graphStr += `    ${n}["🎭 ${n}"]:::role\n`;
-            });
-
-            edges.forEach((weight, key) => {
-                const [from, to] = key.split('->');
-                // The thicker the line, the more comms
-                const linkStyle = weight > 2 ? '==>' : '-->';
-                graphStr += `    ${from} ${linkStyle}|"${weight} directives"| ${to}\n`;
-            });
-
-            if (!mermaidLoaded) {
-                container.innerHTML = '<p style="color:var(--text-muted)">Loading Rendering Engine...</p>';
-                const script = document.createElement('script');
-                script.src = 'https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js';
-                script.onload = () => {
-                    mermaidLoaded = true;
-                    mermaid.initialize({
-                        startOnLoad: false,
-                        theme: 'dark',
-                        fontFamily: 'Inter, sans-serif',
-                        themeVariables: {
-                            edgeLabelBackground: 'transparent',
-                            textColor: '#a9b1d6'
-                        }
+                // Tabs
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                        tab.classList.add('active');
+                        document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
                     });
-                    renderMermaidGraph(graphStr, container);
-                };
-                document.body.appendChild(script);
-            } else {
-                renderMermaidGraph(graphStr, container);
+                });
+
+                // Scroll to dashboard
+                dash.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                // ─── Render Topology DAG (P2 Mermaid) ───
+                renderTopology(data);
             }
-        }
 
-        async function renderMermaidGraph(graphStr, container) {
-            try {
-                const { svg } = await mermaid.render('topology-svg', graphStr);
-                container.innerHTML = svg;
-                // Make the SVG responsive
-                const svgElement = container.querySelector('svg');
-                if (svgElement) {
-                    svgElement.style.maxWidth = '100%';
-                    svgElement.style.height = 'auto';
-                }
-            } catch (err) {
-                console.error("Mermaid parsing error:", err);
-                container.innerHTML = '<p style="color:var(--danger)">Failed to render topology graph.</p>';
-            }
-        }
+            // Add dynamic loaded Mermaid
+            let mermaidLoaded = false;
+            async function renderTopology(data) {
+                const container = document.getElementById('topology-container');
 
-        function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+                // Extract relations from Directives
+                const edges = new Map();
+                const nodes = new Set();
 
-        function timeAgo(dateStr) {
-            const d = new Date(dateStr + 'T12:00:00');
-            const now = new Date();
-            const diff = Math.floor((now - d) / 1000);
-            if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
-            if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
-            if (diff < 604800) return Math.floor(diff / 86400) + 'd ago';
-            return dateStr;
-        }
+                (data.directives || []).forEach(d => {
+                    const parts = d.source.split('→');
+                    if (parts.length === 2) {
+                        const from = parts[0];
+                        const to = parts[1];
+                        nodes.add(from);
+                        nodes.add(to);
+                        const key = `${from}->${to}`;
+                        edges.set(key, (edges.get(key) || 0) + 1);
+                    }
+                });
 
-        // ─── Drag & Drop ───
-        const zone = document.getElementById('upload-zone');
-        zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('drag-over'); });
-        zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
-        zone.addEventListener('drop', async (e) => {
-            e.preventDefault(); zone.classList.remove('drag-over');
-            const items = [...e.dataTransfer.items];
-            const dirItem = items.find(i => i.kind === 'file');
-            if (dirItem && dirItem.webkitGetAsEntry) {
-                // Try to read as directory entry
-                const entry = dirItem.webkitGetAsEntry();
-                if (entry?.isDirectory) {
-                    const files = await readDirectoryEntry(entry);
-                    const data = await readProjectFromFileList(files);
-                    renderDashboard(data);
+                // Add roles as nodes even if no edges
+                (data.roles || []).forEach(r => nodes.add(r.name.toUpperCase()));
+
+                if (nodes.size === 0) {
+                    container.innerHTML = '<p style="color:var(--text-muted)">Not enough role data to generate topology.</p>';
                     return;
                 }
-            }
-            // Fallback: read as files
-            const files = [...e.dataTransfer.files];
-            if (files.length) {
-                const data = await readProjectFromFileList(files);
-                renderDashboard(data);
-            }
-        });
 
-        async function readDirectoryEntry(entry, path = '') {
-            const files = [];
-            if (entry.isFile) {
-                const file = await new Promise(r => entry.file(r));
-                Object.defineProperty(file, 'webkitRelativePath', { value: path + file.name });
-                files.push(file);
-            } else if (entry.isDirectory) {
-                const reader = entry.createReader();
-                const entries = await new Promise(r => reader.readEntries(r));
-                for (const e of entries) {
-                    files.push(...await readDirectoryEntry(e, path + entry.name + '/'));
+                // Build Mermaid syntax
+                let graphStr = 'graph TD\n';
+                graphStr += '    %% Theme configuration\n';
+                graphStr += '    classDef default fill:#1a1b26,stroke:#3b4054,stroke-width:2px,color:#a9b1d6,rx:8px,ry:8px;\n';
+                graphStr += '    classDef role fill:#1f2335,stroke:#c9a84c,stroke-width:2px,color:#c9a84c,font-weight:bold;\n';
+
+                nodes.forEach(n => {
+                    graphStr += `    ${n}["🎭 ${n}"]:::role\n`;
+                });
+
+                edges.forEach((weight, key) => {
+                    const [from, to] = key.split('->');
+                    // The thicker the line, the more comms
+                    const linkStyle = weight > 2 ? '==>' : '-->';
+                    graphStr += `    ${from} ${linkStyle}|"${weight} directives"| ${to}\n`;
+                });
+
+                if (!mermaidLoaded) {
+                    container.innerHTML = '<p style="color:var(--text-muted)">Loading Rendering Engine...</p>';
+                    const script = document.createElement('script');
+                    script.src = 'https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js';
+                    script.onload = () => {
+                        mermaidLoaded = true;
+                        mermaid.initialize({
+                            startOnLoad: false,
+                            theme: 'dark',
+                            fontFamily: 'Inter, sans-serif',
+                            themeVariables: {
+                                edgeLabelBackground: 'transparent',
+                                textColor: '#a9b1d6'
+                            }
+                        });
+                        renderMermaidGraph(graphStr, container);
+                    };
+                    document.body.appendChild(script);
+                } else {
+                    renderMermaidGraph(graphStr, container);
                 }
             }
-            return files;
-        }
-    </script>
+
+            async function renderMermaidGraph(graphStr, container) {
+                try {
+                    const { svg } = await mermaid.render('topology-svg', graphStr);
+                    container.innerHTML = svg;
+                    // Make the SVG responsive
+                    const svgElement = container.querySelector('svg');
+                    if (svgElement) {
+                        svgElement.style.maxWidth = '100%';
+                        svgElement.style.height = 'auto';
+                    }
+
+                    // Add interactive drill-down clicks
+                    setTimeout(() => {
+                        const nodes = container.querySelectorAll('.node');
+                        nodes.forEach(node => {
+                            node.style.cursor = 'pointer';
+                            node.classList.add('animate');
+                            node.addEventListener('click', () => {
+                                // Mermaid node ids might be like flowchart-BUILD-xxxx
+                                // We can just rely on the text content if they are uniquely named e.g "🎭 BUILD"
+                                const text = node.textContent.replace('🎭', '').trim();
+                                showNodeDetails(text);
+                            });
+                        });
+                    }, 100);
+
+                } catch (err) {
+                    console.error("Mermaid parsing error:", err);
+                    container.innerHTML = '<p style="color:var(--danger)">Failed to render topology graph.</p>';
+                }
+            }
+
+            // Show detailed agent info in modal
+            function showNodeDetails(roleName) {
+                const data = window.currentProjectData;
+                if (!data) return;
+
+                const nameUpper = roleName.toUpperCase();
+
+                // Find role matching name
+                const roleMatch = (data.roles || []).find(r => r.name.toUpperCase() === nameUpper);
+                // Find active directives for this role
+                const activeDirectives = (data.directives || []).filter(d =>
+                    d.source.toUpperCase() === nameUpper || d.source.includes('→' + nameUpper)
+                );
+
+                document.getElementById('modal-title').innerHTML = `🎭 ${nameUpper}`;
+
+                let html = '';
+
+                // Section 1: Memory & State (L0)
+                if (roleMatch) {
+                    html += `
+                <div class="modal-section">
+                    <div class="modal-section-title">Constitutional State (L0)</div>
+                    <div style="background:rgba(255,255,255,0.05); padding:12px; border-radius:var(--radius-sm); font-family:var(--mono);">
+                        ${esc(roleMatch.l0 || 'No L0 summary found.')}
+                    </div>
+                </div>
+                <div class="modal-section">
+                    <div class="modal-section-title">Metrics</div>
+                    <div style="display:flex; gap:20px; color:var(--text-dim);">
+                        <div><span style="color:var(--text)">${roleMatch.lines}</span> lines parsed</div>
+                        <div>Last modified: <span style="color:var(--text)">${roleMatch.modified || 'Unknown'}</span></div>
+                    </div>
+                </div>`;
+                } else {
+                    html += `<p style="color:var(--warning)">Agent file not found.</p>`;
+                }
+
+                // Section 2: Active Pipeline
+                html += `<div class="modal-section">
+                <div class="modal-section-title">Active Pipeline Directives</div>`;
+
+                if (activeDirectives.length > 0) {
+                    html += `<div style="display:flex; flex-direction:column; gap:8px;">`;
+                    activeDirectives.forEach(d => {
+                        const icon = d.status === 'done' ? '✅' : d.status === 'active' ? '🔄' : '🟡';
+                        html += `
+                    <div style="background:var(--bg-card); border:1px solid var(--border); padding:10px; border-radius:4px;">
+                        <span style="font-size:0.7rem; font-weight:bold; color:var(--text-muted)">${d.source}</span>
+                        <div style="margin-top:4px;">${icon} ${esc(d.text)}</div>
+                    </div>`;
+                    });
+                    html += `</div>`;
+                } else {
+                    html += `<p style="color:var(--text-muted); font-size:0.85rem">No active directives linked to this agent.</p>`;
+                }
+                html += `</div>`;
+
+                document.getElementById('modal-content').innerHTML = html;
+                document.getElementById('node-modal').classList.add('active');
+            }
+
+            function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+            function timeAgo(dateStr) {
+                const d = new Date(dateStr + 'T12:00:00');
+                const now = new Date();
+                const diff = Math.floor((now - d) / 1000);
+                if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+                if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+                if (diff < 604800) return Math.floor(diff / 86400) + 'd ago';
+                return dateStr;
+            }
+
+            // ─── Drag & Drop ───
+            const zone = document.getElementById('upload-zone');
+            zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('drag-over'); });
+            zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+            zone.addEventListener('drop', async (e) => {
+                e.preventDefault(); zone.classList.remove('drag-over');
+                const items = [...e.dataTransfer.items];
+                const dirItem = items.find(i => i.kind === 'file');
+                if (dirItem && dirItem.webkitGetAsEntry) {
+                    // Try to read as directory entry
+                    const entry = dirItem.webkitGetAsEntry();
+                    if (entry?.isDirectory) {
+                        const files = await readDirectoryEntry(entry);
+                        const data = await readProjectFromFileList(files);
+                        renderDashboard(data);
+                        return;
+                    }
+                }
+                // Fallback: read as files
+                const files = [...e.dataTransfer.files];
+                if (files.length) {
+                    const data = await readProjectFromFileList(files);
+                    renderDashboard(data);
+                }
+            });
+
+            async function readDirectoryEntry(entry, path = '') {
+                const files = [];
+                if (entry.isFile) {
+                    const file = await new Promise(r => entry.file(r));
+                    Object.defineProperty(file, 'webkitRelativePath', { value: path + file.name });
+                    files.push(file);
+                } else if (entry.isDirectory) {
+                    const reader = entry.createReader();
+                    const entries = await new Promise(r => reader.readEntries(r));
+                    for (const e of entries) {
+                        files.push(...await readDirectoryEntry(e, path + entry.name + '/'));
+                    }
+                }
+                return files;
+            }
+        </script>
 </body>
 
 </html>
