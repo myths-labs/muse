@@ -1594,6 +1594,7 @@
                     const memFile = await (await dirHandle.getFileHandle('MEMORIES.md')).getFile();
                     const content = await memFile.text();
                     data.memoriesWords = content.split(/\s+/).length;
+                    data.constellation = extractConstellationNodes(content);
                 } catch { }
 
                 return data;
@@ -1769,14 +1770,21 @@
                 function extractConstellationNodes(content) {
                     const lines = content.split('\n');
                     const keywords = new Map();
+                    const stopwords = new Set(['about','after','again','could','should','would','there','their','which',
+                        'these','those','other','where','while','being','under','above','below','between',
+                        'through','before','during','without','within','along','inside','outside',
+                        'source','memory','auto-captured','auto','from','into','with','have','been',
+                        'that','this','what','when','only','also','more','most','than','just','very']);
                     lines.forEach(line => {
-                        const match = line.match(/\[(FACT|DECISION|LESSON)\]\s*(.*)/);
+                        // Match [FACT], [DECISION], [LESSON] with optional bold (**) and bullet (- ) prefix
+                        // Real format: - **[FACT] text** (source: memory/...)
+                        const match = line.match(/\*{0,2}\[(FACT|DECISION|LESSON)\]\s*(.*?)(?:\*{2})?\s*(?:\(source:.*)?$/);
                         if (match) {
                             const text = match[2];
-                            const words = text.split(/[\s,.;:!?()]+/).filter(w => w.length > 4);
+                            const words = text.split(/[\s,.;:!?()\[\]{}|/\\\u2192\u2190\u2194=+]+/).filter(w => w.length > 3);
                             words.forEach(word => {
-                                const clean = word.replace(/['"“”]/g, '').trim();
-                                if (clean && !['about', 'after', 'again', 'could', 'should', 'would', 'there', 'their', 'which'].includes(clean.toLowerCase())) {
+                                const clean = word.replace(/[\*\`\~\#'\u201c\u201d\u2014\u2013""]/g, '').trim();
+                                if (clean && clean.length > 3 && !stopwords.has(clean.toLowerCase())) {
                                     keywords.set(clean, (keywords.get(clean) || 0) + 1);
                                 }
                             });
@@ -2002,45 +2010,87 @@
             async function renderTopology(data) {
                 const container = document.getElementById('topology-container');
 
+                // Sanitize a string for use as a Mermaid node ID (letters, digits, underscore only)
+                function sanitizeMermaidId(name) {
+                    return name.replace(/[^a-zA-Z0-9_]/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '') || 'UNKNOWN';
+                }
+
+                // Normalize role names: strip project prefixes like MUSE/, take last segment
+                function normalizeRoleName(name) {
+                    const cleaned = name.trim().toUpperCase();
+                    const parts = cleaned.split('/');
+                    return parts[parts.length - 1] || cleaned;
+                }
+
                 // Extract relations from Directives
                 const edges = new Map();
-                const nodes = new Set();
+                const nodeNames = new Set();
 
                 (data.directives || []).forEach(d => {
-                    const parts = d.source.split('→');
+                    const parts = d.source.split('\u2192');
                     if (parts.length === 2) {
-                        const from = parts[0];
-                        const to = parts[1];
-                        nodes.add(from);
-                        nodes.add(to);
-                        const key = `${from}->${to}`;
-                        edges.set(key, (edges.get(key) || 0) + 1);
+                        const from = normalizeRoleName(parts[0]);
+                        const to = normalizeRoleName(parts[1]);
+                        if (from && to && from !== to) {
+                            nodeNames.add(from);
+                            nodeNames.add(to);
+                            const key = `${from}->${to}`;
+                            edges.set(key, (edges.get(key) || 0) + 1);
+                        }
+                    }
+                });
+
+                // Also scan role file content for cross-role \u2192 references to find additional edges
+                const roleNameList = (data.roles || []).map(r => r.name.toUpperCase());
+                (data.roles || []).forEach(r => {
+                    const roleName = r.name.toUpperCase();
+                    nodeNames.add(roleName);
+                    // Scan content for patterns like BUILD\u2192QA, GROWTH\u2192BUILD
+                    const content = r.content || '';
+                    const crossRefPattern = /([A-Z][A-Z0-9_\/]*)\u2192([A-Z][A-Z0-9_\/]*)/g;
+                    let m;
+                    while ((m = crossRefPattern.exec(content)) !== null) {
+                        const from = normalizeRoleName(m[1]);
+                        const to = normalizeRoleName(m[2]);
+                        if (from && to && from !== to) {
+                            nodeNames.add(from);
+                            nodeNames.add(to);
+                            const key = `${from}->${to}`;
+                            if (!edges.has(key)) {
+                                edges.set(key, 1);
+                            }
+                        }
                     }
                 });
 
                 // Add roles as nodes even if no edges
-                (data.roles || []).forEach(r => nodes.add(r.name.toUpperCase()));
+                roleNameList.forEach(n => nodeNames.add(n));
 
-                if (nodes.size === 0) {
+                if (nodeNames.size === 0) {
                     container.innerHTML = '<p style="color:var(--text-muted)">Not enough role data to generate topology.</p>';
                     return;
                 }
 
-                // Build Mermaid syntax
+                // Build Mermaid syntax with sanitized IDs
                 let graphStr = 'graph TD\n';
                 graphStr += '    %% Theme configuration\n';
                 graphStr += '    classDef default fill:#1a1b26,stroke:#3b4054,stroke-width:2px,color:#a9b1d6,rx:8px,ry:8px;\n';
                 graphStr += '    classDef role fill:#1f2335,stroke:#c9a84c,stroke-width:2px,color:#c9a84c,font-weight:bold;\n';
 
-                nodes.forEach(n => {
-                    graphStr += `    ${n}["🎭 ${n}"]:::role\n`;
+                const idMap = new Map();
+                nodeNames.forEach(n => {
+                    const id = sanitizeMermaidId(n);
+                    idMap.set(n, id);
+                    graphStr += `    ${id}["\ud83c\udfad ${n}"]:::role\n`;
                 });
 
                 edges.forEach((weight, key) => {
                     const [from, to] = key.split('->');
-                    // The thicker the line, the more comms
+                    const fromId = idMap.get(from) || sanitizeMermaidId(from);
+                    const toId = idMap.get(to) || sanitizeMermaidId(to);
+                    if (fromId === toId) return;
                     const linkStyle = weight > 2 ? '==>' : '-->';
-                    graphStr += `    ${from} ${linkStyle}|"${weight} directives"| ${to}\n`;
+                    graphStr += `    ${fromId} ${linkStyle}|"${weight} directives"| ${toId}\n`;
                 });
 
                 if (!mermaidLoaded) {
