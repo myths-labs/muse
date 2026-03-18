@@ -1,6 +1,6 @@
 ---
 name: systematic-debugging
-description: 4-phase root cause process (includes root-cause-tracing, defense-in-depth, condition-based-waiting techniques)
+description: 4-phase root cause process + passive behavior auto-detection + L1→L4 pressure escalation (includes root-cause-tracing, defense-in-depth, condition-based-waiting techniques)
 ---
 
 # Systematic Debugging
@@ -222,6 +222,90 @@ If you catch yourself thinking:
 
 **If 3+ fixes failed:** Question the architecture (see Phase 4.5)
 
+---
+
+## 🔍 Passive Behavior Detection (Auto-Trigger)
+
+> Inspired by PUA (8.5K⭐). The 4 phases above tell you HOW to debug.
+> This section makes sure you actually DO it — by detecting avoidance patterns.
+
+**This skill auto-activates when ANY of the following patterns are detected:**
+
+### Giving Up & Deflecting
+- About to say "I cannot" / "I'm unable to solve" / "This is beyond my capabilities"
+- Says "This is out of scope" / "Needs manual handling"
+- Pushes the problem to user: "Please check..." / "I suggest manually..." / "You might need to..."
+
+### Blame-Shifting Without Verification
+- Blames environment without verifying: "Probably a permissions issue" / "Probably a network issue"
+- Claims "This API doesn't support it" without reading docs
+- "This is beyond my knowledge cutoff" (you have search tools — use them)
+
+### Busywork Spinning
+- Repeatedly tweaking the same code/parameters without producing **new information**
+- Fixes surface issue and stops — doesn't check related issues
+- Skips verification, claims "done" without evidence
+
+### Passive Waiting
+- Stops after fixing, waits for user instructions instead of proactively investigating
+- Only answers questions without solving problems
+- Encounters auth/network/permission errors and gives up without trying alternatives
+- Gives advice instead of code/commands
+
+### User Frustration Signals (multi-language)
+- "why does this still not work" / "try harder" / "try again"
+- "you keep failing" / "stop giving up" / "figure it out"
+- "怎么还不行" / "再想想" / "你到底行不行" / "到底能不能搞" / "别给我说不行"
+
+**When detected → immediately enter Pressure Escalation below.**
+
+**Does NOT trigger:** First-attempt failures, known fix already executing.
+
+---
+
+## ⚡ Pressure Escalation (L1 → L4)
+
+The number of consecutive failures determines escalation level. Each level comes with **mandatory actions** — you MUST complete them before continuing.
+
+| Attempt | Level | Mandatory Actions |
+|:-------:|:-----:|-------------------|
+| 2nd | **L1 — Verbal Warning** | Stop current approach. Switch to a **fundamentally different** solution path. Do NOT tweak the same thing again. |
+| 3rd | **L2 — Written Feedback** | ① Search the complete error message with tools. ② Read relevant source code (not just the error line — 50 lines of context). ③ List **3 fundamentally different hypotheses** and test each. |
+| 4th | **L3 — Formal Rescue** | Complete ALL **7 items on the Rescue Checklist** below. List 3 entirely new hypotheses and verify each one. |
+| 5th+ | **L4 — Last Resort** | Desperation mode: minimal PoC in isolated environment. Consider completely different tech stack/approach. If still failing → **stop and escalate to human**. |
+
+### 7-Point Rescue Checklist (mandatory for L3+)
+
+When L3 or above is triggered, you MUST complete and report on **every** item:
+
+- [ ] **Read failure signals word by word** — Did you read the full error text? Not just the first line — the ENTIRE message, stack trace, and any warnings above it.
+- [ ] **Proactive search** — Did you use tools to search the exact error text? Multi-angle keywords? Official documentation?
+- [ ] **Read raw context** — Did you read 50+ lines of source around the failure point? Not just the error line.
+- [ ] **Verify underlying assumptions** — Did you confirm ALL assumptions with tools? (versions, paths, dependencies, API behavior, env vars)
+- [ ] **Invert assumptions** — Did you try the EXACT OPPOSITE hypothesis from your current direction?
+- [ ] **Minimal isolation** — Can you reproduce the problem in the smallest possible scope? (minimal repro script, single API call, one-line test)
+- [ ] **Change direction** — Did you switch tools, methods, angles, or frameworks? (Not switching parameters — switching your THINKING)
+
+### Anti-Rationalization Table
+
+These excuses are blocked. Using any of them triggers the corresponding escalation.
+
+| Your Excuse | Reality | Triggers |
+|-------------|---------|:--------:|
+| "This is beyond my capabilities" | You have search, file reading, and command execution tools. Exhaust them first. | L1 |
+| "I suggest the user handle this manually" | That's deflection, not a solution. This is your problem to solve. | L3 |
+| "I've already tried everything" | Did you search? Read source? Complete the checklist? "Everything" without evidence is feelings. | L2 |
+| "It's probably an environment issue" | Did you VERIFY that? Unverified attribution is blame-shifting. | L2 |
+| "I need more context" | You have tools. Investigate first, ask only what truly requires human knowledge. | L2 |
+| "This API doesn't support it" | Did you read the docs? Actually verify? | L2 |
+| Repeatedly tweaking same code | That's the definition of insanity. Switch to fundamentally different approach. | L1 |
+| "I cannot solve this problem" | Last chance. Complete the 7-Point Rescue Checklist before making that claim. | L4 |
+| Claims "done" without verification | Where's the evidence? Run build/test/curl yourself. Prove it. | L1 |
+| Waiting for user to tell next steps | Take initiative. What's the logical next step? Do it. | L1 |
+| Only giving advice, no code | Deliver solutions, not suggestions. Write the code, run the command. | L1 |
+
+---
+
 ## your human partner's Signals You're Doing It Wrong
 **Watch for these redirections:**
 - "Is that not happening?" - You assumed without verifying
@@ -251,6 +335,8 @@ If you catch yourself thinking:
 | **2. Pattern** | Find working examples, compare | Identify differences |
 | **3. Hypothesis** | Form theory, test minimally | Confirmed or new hypothesis |
 | **4. Implementation** | Create test, fix, verify | Bug resolved, tests pass |
+| **Auto-Trigger** | Detect giving-up / blame-shifting / spinning / passivity | Enter Pressure Escalation |
+| **Escalation L1→L4** | Progressive mandatory actions per failure count | Force new approaches |
 
 ## When Process Reveals "No Root Cause"
 If systematic investigation reveals issue is truly environmental, timing-dependent, or external:
@@ -271,10 +357,12 @@ These techniques are part of systematic debugging and available in this director
 
 **Related skills:**
 - **superpowers:test-driven-development** - For creating failing test case (Phase 4, Step 1)
-- **superpowers:verification-before-completion** - Verify fix worked before claiming success\n
+- **superpowers:verification-before-completion** - Verify fix worked before claiming success
+
 ## Real-World Impact
 From debugging sessions:
 - Systematic approach: 15-30 minutes to fix
 - Random fixes approach: 2-3 hours of thrashing
 - First-time fix rate: 95% vs 40%
 - New bugs introduced: Near zero vs common
+

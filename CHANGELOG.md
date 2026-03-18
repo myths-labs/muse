@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.25.0] - 2026-03-18
+
+### Added
+- **Systematic Debugging v2 — Passive Behavior Detection + Pressure Escalation** (`skills/toolkit/systematic-debugging/SKILL.md`):
+  - **Passive Behavior Auto-Detection**: Automatically triggers when detecting giving-up language ("I cannot"), blame-shifting without verification ("probably a permissions issue"), busywork spinning (same parameter tweaks), or passive waiting (stops after fixing, waits for instructions). Supports multi-language frustration signals (EN/CN).
+  - **L1→L4 Pressure Escalation**: Progressive mandatory actions based on consecutive failure count. L1 (2nd fail): switch approach. L2 (3rd): search + read source + 3 hypotheses. L3 (4th): complete 7-Point Rescue Checklist. L4 (5th+): desperation mode with isolated PoC.
+  - **7-Point Rescue Checklist**: Mandatory for L3+ — read errors word-by-word, proactive search, read 50+ lines of context, verify assumptions, invert assumptions, minimal isolation, change direction.
+  - **Anti-Rationalization Table**: 11 blocked excuses with auto-escalation triggers (e.g., "I suggest the user handle this manually" → L3).
+  - Inspired by [PUA](https://github.com/tanweai/pua) (8.5K⭐), adapted to MUSE's engineering-first methodology (no corporate rhetoric — mandatory actions instead).
+
+### Fixed
+- **Dashboard constellation and topology parsing** — Fixed parsing for real project data (non-demo) in Memory Constellation and Agent Topology views.
+
 ## [2.24.0] - 2026-03-18
 
 ### Added
