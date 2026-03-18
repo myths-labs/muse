@@ -2013,20 +2013,18 @@
             let mermaidLoaded = false;
             async function renderTopology(data) {
                 const container = document.getElementById('topology-container');
+                container.style.display = 'block';
+                container.style.position = 'relative';
+                container.style.overflow = 'hidden';
 
-                // Sanitize a string for use as a Mermaid node ID (letters, digits, underscore only)
-                function sanitizeMermaidId(name) {
-                    return name.replace(/[^a-zA-Z0-9_]/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '') || 'UNKNOWN';
-                }
-
-                // Normalize role names: strip project prefixes like MUSE/, take last segment
+                // Normalize role names
                 function normalizeRoleName(name) {
                     const cleaned = name.trim().toUpperCase();
                     const parts = cleaned.split('/');
                     return parts[parts.length - 1] || cleaned;
                 }
 
-                // Extract relations from Directives
+                // Extract edges from Directives
                 const edges = new Map();
                 const nodeNames = new Set();
 
@@ -2044,12 +2042,10 @@
                     }
                 });
 
-                // Also scan role file content for cross-role \u2192 references to find additional edges
-                const roleNameList = (data.roles || []).map(r => r.name.toUpperCase());
+                // Scan role content for cross-role → references
                 (data.roles || []).forEach(r => {
                     const roleName = r.name.toUpperCase();
                     nodeNames.add(roleName);
-                    // Scan content for patterns like BUILD\u2192QA, GROWTH\u2192BUILD
                     const content = r.content || '';
                     const crossRefPattern = /([A-Z][A-Z0-9_\/]*)\u2192([A-Z][A-Z0-9_\/]*)/g;
                     let m;
@@ -2060,14 +2056,12 @@
                             nodeNames.add(from);
                             nodeNames.add(to);
                             const key = `${from}->${to}`;
-                            if (!edges.has(key)) {
-                                edges.set(key, 1);
-                            }
+                            if (!edges.has(key)) edges.set(key, 1);
                         }
                     }
                 });
 
-                // Add roles as nodes even if no edges
+                const roleNameList = (data.roles || []).map(r => r.name.toUpperCase());
                 roleNameList.forEach(n => nodeNames.add(n));
 
                 if (nodeNames.size === 0) {
@@ -2075,97 +2069,129 @@
                     return;
                 }
 
-                // Build Mermaid syntax with sanitized IDs
-                let graphStr = 'graph LR\n';
+                // ─── Pure HTML/Canvas Topology ───
+                const nodes = Array.from(nodeNames);
+                const padding = 60;
+                const nodeW = 140;
+                const nodeH = 50;
+                const containerW = container.clientWidth || 700;
 
-                const idMap = new Map();
-                nodeNames.forEach(n => {
-                    const id = sanitizeMermaidId(n);
-                    idMap.set(n, id);
-                    graphStr += `    ${id}["${n}"]\n`;
+                // Arrange nodes in a circle-like layout
+                const cols = Math.min(nodes.length, 4);
+                const rows = Math.ceil(nodes.length / cols);
+                const spacingX = Math.max((containerW - padding * 2) / cols, nodeW + 40);
+                const spacingY = 120;
+                const totalH = rows * spacingY + padding * 2 + 40;
+
+                container.style.minHeight = totalH + 'px';
+                container.innerHTML = '';
+
+                // Create canvas for arrows
+                const canvas = document.createElement('canvas');
+                canvas.width = containerW;
+                canvas.height = totalH;
+                canvas.style.position = 'absolute';
+                canvas.style.top = '0';
+                canvas.style.left = '0';
+                canvas.style.pointerEvents = 'none';
+                container.appendChild(canvas);
+
+                const ctx = canvas.getContext('2d');
+
+                // Create node DOM elements & compute positions
+                const nodePositions = new Map();
+                nodes.forEach((name, i) => {
+                    const col = i % cols;
+                    const row = Math.floor(i / cols);
+                    const x = padding + col * spacingX + (spacingX - nodeW) / 2;
+                    const y = padding + row * spacingY;
+
+                    const el = document.createElement('div');
+                    el.style.cssText = `
+                        position:absolute; left:${x}px; top:${y}px; width:${nodeW}px; height:${nodeH}px;
+                        background:#1f2335; border:2px solid #c9a84c; border-radius:10px;
+                        display:flex; align-items:center; justify-content:center;
+                        color:#c9a84c; font-weight:700; font-size:15px; font-family:Inter,sans-serif;
+                        cursor:pointer; transition:all 0.2s; z-index:2;
+                        box-shadow: 0 2px 12px rgba(201,168,76,0.15);
+                    `;
+                    el.textContent = name;
+                    el.title = `Role: ${name}`;
+                    el.addEventListener('mouseenter', () => {
+                        el.style.borderColor = '#e0c872';
+                        el.style.boxShadow = '0 4px 20px rgba(201,168,76,0.35)';
+                        el.style.transform = 'scale(1.05)';
+                    });
+                    el.addEventListener('mouseleave', () => {
+                        el.style.borderColor = '#c9a84c';
+                        el.style.boxShadow = '0 2px 12px rgba(201,168,76,0.15)';
+                        el.style.transform = 'scale(1)';
+                    });
+                    el.addEventListener('click', () => showNodeDetails(name));
+                    container.appendChild(el);
+
+                    nodePositions.set(name, {
+                        x: x + nodeW / 2,
+                        y: y + nodeH / 2,
+                        left: x, top: y
+                    });
                 });
+
+                // Draw arrows on canvas
+                function drawArrow(fromPos, toPos, label, weight) {
+                    const dx = toPos.x - fromPos.x;
+                    const dy = toPos.y - fromPos.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist === 0) return;
+
+                    // Offset from node center to border
+                    const nx = dx / dist;
+                    const ny = dy / dist;
+                    const startX = fromPos.x + nx * (nodeW / 2 + 5);
+                    const startY = fromPos.y + ny * (nodeH / 2 + 5);
+                    const endX = toPos.x - nx * (nodeW / 2 + 12);
+                    const endY = toPos.y - ny * (nodeH / 2 + 12);
+
+                    // Line
+                    ctx.beginPath();
+                    ctx.moveTo(startX, startY);
+                    ctx.lineTo(endX, endY);
+                    ctx.strokeStyle = weight > 2 ? '#c9a84c' : '#555580';
+                    ctx.lineWidth = weight > 2 ? 2.5 : 1.5;
+                    ctx.stroke();
+
+                    // Arrowhead
+                    const headLen = 10;
+                    const angle = Math.atan2(endY - startY, endX - startX);
+                    ctx.beginPath();
+                    ctx.moveTo(endX, endY);
+                    ctx.lineTo(endX - headLen * Math.cos(angle - 0.4), endY - headLen * Math.sin(angle - 0.4));
+                    ctx.moveTo(endX, endY);
+                    ctx.lineTo(endX - headLen * Math.cos(angle + 0.4), endY - headLen * Math.sin(angle + 0.4));
+                    ctx.strokeStyle = weight > 2 ? '#c9a84c' : '#7777aa';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+
+                    // Label
+                    const midX = (startX + endX) / 2;
+                    const midY = (startY + endY) / 2;
+                    ctx.fillStyle = '#111119';
+                    ctx.fillRect(midX - 28, midY - 9, 56, 18);
+                    ctx.fillStyle = '#a9b1d6';
+                    ctx.font = '11px Inter, sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(label, midX, midY);
+                }
 
                 edges.forEach((weight, key) => {
                     const [from, to] = key.split('->');
-                    const fromId = idMap.get(from) || sanitizeMermaidId(from);
-                    const toId = idMap.get(to) || sanitizeMermaidId(to);
-                    if (fromId === toId) return;
-                    const linkStyle = weight > 2 ? '==>' : '-->';
-                    graphStr += `    ${fromId} ${linkStyle}|"${weight} directives"| ${toId}\n`;
-                });
-
-                if (!mermaidLoaded) {
-                    container.innerHTML = '<p style="color:var(--text-muted)">Loading Rendering Engine...</p>';
-                    const script = document.createElement('script');
-                    script.src = 'https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js';
-                    script.onload = () => {
-                        mermaidLoaded = true;
-                        mermaid.initialize({
-                            startOnLoad: false,
-                            theme: 'dark',
-                            fontFamily: 'Inter, sans-serif',
-                            themeVariables: {
-                                primaryColor: '#1f2335',
-                                primaryTextColor: '#c9a84c',
-                                primaryBorderColor: '#c9a84c',
-                                nodeTextColor: '#c9a84c',
-                                edgeLabelBackground: 'transparent',
-                                textColor: '#c9a84c',
-                                lineColor: '#555580',
-                                fontSize: '16px'
-                            }
-                        });
-                        renderMermaidGraph(graphStr, container);
-                    };
-                    document.body.appendChild(script);
-                } else {
-                    renderMermaidGraph(graphStr, container);
-                }
-            }
-
-            async function renderMermaidGraph(graphStr, container) {
-                try {
-                    const { svg } = await mermaid.render('topology-svg', graphStr);
-                    container.innerHTML = svg;
-                    // Make the SVG responsive
-                    const svgElement = container.querySelector('svg');
-                    if (svgElement) {
-                        svgElement.style.maxWidth = '100%';
-                        svgElement.style.height = 'auto';
-                        // Force node text visibility with injected CSS
-                        const styleEl = document.createElementNS('http://www.w3.org/2000/svg', 'style');
-                        styleEl.textContent = `
-                            .node .label { color: #c9a84c !important; }
-                            .node .label span, .node .label div { color: #c9a84c !important; font-size: 16px !important; font-weight: bold !important; }
-                            .node foreignObject span, .node foreignObject div { color: #c9a84c !important; font-size: 16px !important; font-weight: bold !important; }
-                            .node text, .node tspan { fill: #c9a84c !important; font-size: 16px !important; font-weight: bold !important; }
-                            .nodeLabel { color: #c9a84c !important; font-size: 16px !important; font-weight: bold !important; }
-                            .node rect, .node .label-container { fill: #1f2335 !important; stroke: #c9a84c !important; stroke-width: 2px !important; rx: 8px; ry: 8px; }
-                            .edgeLabel .label span { color: #a9b1d6 !important; font-size: 13px !important; }
-                            .edgeLabel foreignObject span, .edgeLabel foreignObject div { color: #a9b1d6 !important; font-size: 13px !important; }
-                        `;
-                        svgElement.insertBefore(styleEl, svgElement.firstChild);
+                    const fromPos = nodePositions.get(from);
+                    const toPos = nodePositions.get(to);
+                    if (fromPos && toPos) {
+                        drawArrow(fromPos, toPos, `${weight} dir`, weight);
                     }
-
-                    // Add interactive drill-down clicks
-                    setTimeout(() => {
-                        const nodes = container.querySelectorAll('.node');
-                        nodes.forEach(node => {
-                            node.style.cursor = 'pointer';
-                            node.classList.add('animate');
-                            node.addEventListener('click', () => {
-                                // Mermaid node ids might be like flowchart-BUILD-xxxx
-                                // We can just rely on the text content if they are uniquely named e.g "🎭 BUILD"
-                                const text = node.textContent.replace('🎭', '').trim();
-                                showNodeDetails(text);
-                            });
-                        });
-                    }, 100);
-
-                } catch (err) {
-                    console.error("Mermaid parsing error:", err);
-                    container.innerHTML = '<p style="color:var(--danger)">Failed to render topology graph.</p>';
-                }
+                });
             }
 
             // Show detailed agent info in modal
