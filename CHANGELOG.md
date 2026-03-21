@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.27.0] - 2026-03-21
+
+### Added
+- **Onboarding Security** (`workflows/start.md`) — `/start` now generates a comprehensive `.gitignore` template with MUSE-specific entries (`.muse/`, `.agent/`, `.gemini/`, `CLAUDE.md`, `.env*`, private keys). All new MUSE users get secret leak protection from day one.
+
+### Fixed
+- **git-commit skill hardened** (`skills/toolkit/git-commit/SKILL.md`) — Expanded "NEVER commit" list with MUSE-specific sensitive patterns (`.muse/`, `.agent/`, `.env.local`, API key patterns). Added cross-reference to `git-security-guard` skill for comprehensive pre-commit security checks.
+
 ## [2.26.0] - 2026-03-21
 
 ### Added

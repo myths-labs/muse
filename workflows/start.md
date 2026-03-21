@@ -160,7 +160,32 @@ Create all necessary files:
 6. `.agent/skills/` + selected skills
 7. `.agent/workflows/` + all workflows
 8. `convo/` directory
-9. Append MUSE `.gitignore` entries if `.gitignore` exists
+9. Append MUSE `.gitignore` entries if `.gitignore` exists:
+
+```gitignore
+# MUSE internal files (NEVER commit to public repos)
+.muse/
+.agent/
+.gemini/
+memory/
+convo/
+CLAUDE.md
+USER.md
+MEMORIES.md
+
+# Env files (NEVER commit real API keys)
+.env
+.env.local
+.env.*.local
+.env.prod*
+.env.vercel*
+
+# Private keys
+*.pem
+*.p12
+*.jks
+*.key
+```
 
 Report what was created:
 

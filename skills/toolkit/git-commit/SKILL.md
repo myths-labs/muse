@@ -83,9 +83,14 @@ git add -A  # all changes
 ```
 
 **NEVER commit**:
-- `.env`, `credentials.json`, secrets
+- `.env`, `.env.local`, `.env.prod*`, `.env.vercel*`, `credentials.json`, secrets
+- `.muse/`, `.agent/`, `.gemini/`, `memory/`, `convo/` — internal files
+- `*.pem`, `*.p12`, `*.jks`, `*.key` — private keys/certificates
+- Files containing `sk-`, `AIzaSy`, `gsk_`, `sk_test_`, `eyJhbG` — API keys/JWT
 - `node_modules/`, `__pycache__/`, `.venv/`
 - Large binary files without explicit approval
+
+> 💡 See `git-security-guard` skill for comprehensive pre-commit security checks.
 
 ### 4. Create Commit
 
