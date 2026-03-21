@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.26.0] - 2026-03-21
+
+### Added
+- **Git Security Guard** (`skills/toolkit/git-security-guard/SKILL.md`) — Pre-commit/push secret leak prevention. Detects API keys (OpenAI, Google, Groq, Stripe, AWS, GitHub PAT), JWT tokens, private keys, wallet private keys, and sensitive files (.env, .muse/, .agent/) before they enter git history. Includes emergency response procedures for leaked secrets (filter-branch + force push + key rotation). Born from a real security incident on 2026-03-21.
+- **Particle Background** (`skills/toolkit/particle-background/SKILL.md`) — 3D particle background integration templates for web projects.
+
+### Fixed
+- **Topology rendering** — Replaced Mermaid with pure HTML/Canvas rendering for Agent Topology view. Fixed node text visibility with SVG style injection.
+- **3D particle background** — Fixed topology layout issues with particle backgrounds.
+
 ## [2.25.0] - 2026-03-18
 
 ### Added
