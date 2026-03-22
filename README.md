@@ -157,6 +157,7 @@ Your project should look like:
 ```
 your-project/
 ├── CLAUDE.md              # 📜 Constitution (AI iron rules)
+├── ETHOS.md               # 💡 Builder philosophy (5 principles)
 ├── USER.md                # 👤 Your preferences
 ├── MEMORIES.md            # 🧠 Long-term lessons
 ├── .muse/                 # 🎭 Role states
@@ -165,7 +166,7 @@ your-project/
 │   └── YYYY-MM-DD.md
 ├── .agent/
 │   ├── skills/            # Skills library
-│   └── workflows/         # resume/bye/sync/distill/ctx
+│   └── workflows/         # resume/bye/sync/distill/ctx/sprint/retro
 └── [your code]
 ```
 
@@ -191,6 +192,13 @@ You: /resume           ← AI reads constitution → reads memory → starts wor
 You: /ctx              ← Check if context is enough
      ... continue ...
 You: /bye              ← One-click wrap-up, auto-save
+```
+
+**Sprint workflow** (v2.29+):
+
+```
+You: /sprint           ← Think → Plan → Build → Review → Test → Ship → Reflect
+You: /retro             ← Weekly stats from git log + memory (commits, shipped, lessons)
 ```
 
 ---
@@ -243,6 +251,8 @@ graph TB
 |---------|------------|:-----:|
 | `/start` | First-time setup — configures project, roles, language | None (interactive) |
 | `/resume [scope]` | Boot — restore context & start work | `build`, `growth`, etc. |
+| `/sprint` | Feature sprint — Think → Plan → Build → Review → Test → Ship → Reflect | None (guided) |
+| `/retro` | Weekly retrospective — stats from git log + memory | None needed |
 | `/settings` | Change language, AI model, or preferences | Subcommand (optional) |
 | `/ctx` | Context health check (🟢🟡🔴) | None needed |
 | `/bye` | One-click wrap-up — save, sync, archive | None needed |

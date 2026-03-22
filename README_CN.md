@@ -4,7 +4,7 @@
 
 # 🎭 MUSE（缪斯）
 
-**Memory-Unified Skills & Execution**（记忆统一技能与执行）
+**The AI Coding Governance System — 角色、记忆、技能，纯 Markdown**
 
 <p align="center">
 
@@ -112,6 +112,13 @@ cat muse/templates/.gitignore-template >> 你的项目/.gitignore
 你: /bye              ← 一键收尾，自动保存
 ```
 
+**Sprint 工作流** (v2.29+)：
+
+```
+你: /sprint           ← Think → Plan → Build → Review → Test → Ship → Reflect
+你: /retro             ← 从 git log + memory 自动生成周报（commits、shipped、lessons）
+```
+
 ---
 
 ## 🏗 架构
@@ -162,10 +169,13 @@ graph TB
 |------|------|:----:|
 | `/start` | 首次配置 — 设置项目、角色、语言 | 无需（交互式） |
 | `/resume [scope]` | 启动 — 恢复上下文 | `build`、`growth` 等 |
+| `/sprint` | 功能冲刺 — Think → Plan → Build → Review → Test → Ship → Reflect | 无需（引导式） |
+| `/retro` | 周复盘 — 从 git log + memory 生成统计 | 无需输入 |
 | `/settings` | 切换语言、模型、偏好设置 | 子命令（可选） |
 | `/ctx` | 上下文健康检查（🟢🟡🔴） | 无需输入 |
 | `/bye` | 零输入一键收尾 | 无需输入 |
 | `/distill` | 蒸馏 memory/ → MEMORIES.md | 无需输入 |
+| `/search` | TF-IDF 搜索记忆、角色、技能 | 查询字符串 |
 | `/sync [方向]` | 多角色跨文件同步 | 方向（可选） |
 | `/sync receive` | 对话中拉取其他角色的更新 | 无需输入 |
 | `/resume [项目] qa` | 启动 QA 验证（独立于 build） | 项目名（可选） |
@@ -226,6 +236,7 @@ memory/ 教训反复出现 → /distill 发现模式 → 写入 MEMORIES.md
 ```
 project/
 ├── CLAUDE.md              # 📜 宪法
+├── ETHOS.md               # 💡 Builder 哲学（5 条原则）
 ├── USER.md                # 偏好（私密）
 ├── MEMORIES.md            # 长期记忆（私密）
 ├── assets/                # 🎨 项目资产
@@ -238,7 +249,7 @@ project/
 ├── convo/                 # 对话存档（私密）
 │   └── YYMMDD/
 ├── .agent/                # 技能 + 工作流（私密）
-│   ├── skills/ / workflows/
+│   ├── skills/ / workflows/  # 含 sprint/retro
 └── src/                   # 源代码
 ```
 
