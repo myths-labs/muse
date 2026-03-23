@@ -31,7 +31,7 @@ L0  Format Specs            AGENTS.md · .cursorrules       ← MUSE is compatib
 - **Role Isolation**: Build, QA, Growth, Strategy — each role reads only its own state file
 - **Directive Queue**: Async cross-role messaging with 🟡/✅ status protocol
 - **MCP Server**: Built-in Bash MCP server with 6 JSON-RPC tools, zero dependencies
-- **59 Skills**: Core (5) + Toolkit (45) + Ecosystem (9) reusable skill packs
+- **59 Skills**: Core (7) + Toolkit (39) + Ecosystem (13) reusable skill packs
 - **Builder Ethos**: 5 core principles for AI-governed development (Boil the Lake, Search Before Building, Ship the Narrowest Wedge, Memory Over Momentum, Governance Is Speed)
 - **Sprint Pipeline**: `/sprint` — 7-phase feature development workflow (Think→Plan→Build→Review→Test→Ship→Reflect)
 - **Weekly Retro**: `/retro` — automated retrospective from memory logs + git history
