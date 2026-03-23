@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.30.0] - 2026-03-23
+
+### Added
+- **Conversation Summaries Cross-Validation** (`workflows/resume.md`) — New Boot Step ②.3 detects memory gaps caused by `/bye` not being executed. Cross-references system conversation summaries against `memory/` files to identify unrecorded sessions. Reports them as `⚠️ No memory record (possible /bye skip)` with inferred key completions.
+- **Confidence Tagging for Pending Items** (`workflows/resume.md`) — Step ②.5 now tags each "next step" item with confidence level: 🟢 confirmed pending (role file), 🟡 possibly completed (memory-only, no role file match), 🔴 likely completed (conversation summary shows follow-up). Prevents falsely reporting completed work as pending.
+- **Previous Session Carryover Tracking** (`workflows/bye.md`) — New `✅ 上轮遗留:` field in memory template. When completing a task listed as "下一步" in a previous session, agents must explicitly mark it, creating a completion chain across conversations.
+- **Sync Up Strategy Enforcement** (`workflows/bye.md`, `workflows/sync.md`) — All `sync [project] [role] up` operations now explicitly require propagation to `strategy.md`. Routing table updated to show strategy.md as implicit target for all up operations. Prevents cross-project build progress from being silently lost.
+
+### Fixed
+- **MUSE build sync missing strategy** — `bye.md` routing table for MUSE build only listed `build.md` as target, omitting `strategy.md`. Strategy conversations would miss MUSE progress entirely. Now explicitly listed + enforcement rule added.
+- **`/resume` Step 5 unsync detection incomplete** — Only checked `memory/` files for strategy-relevant events. Now also checks conversation summaries for unrecorded sessions that may contain strategy-relevant completions (deployments, submissions, releases).
+
 ## [2.29.0] - 2026-03-22
 
 ### Added

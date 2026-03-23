@@ -11,12 +11,14 @@ description: 新对话开始时恢复项目上下文的标准流程
 ```
 ① CLAUDE.md + MEMORIES.md  → 宪法 + 长期教训（自动注入）
 ② memory/今天.md + 昨天.md → 短期记忆（最近发生了什么）
-②.5 扫描 memory `➡️ 下一步` 中的 🔲 项 → 有未完成项则主动提醒
+②.3 🆕 Conversation Summaries 交叉验证 → 防 /bye 未执行导致的记忆黑洞
+②.5 扫描 memory `➡️ 下一步` 中的 🟨 项 → 有未完成项则主动提醒（标注可信度）
 ③ 跨天任务? grep_search memory/ 搜索任务关键词 → 定位更早的相关记忆
 ④ USER.md                  → 用户偏好
-④.5 🆕 grep "<!-- L0:" .muse/*.md → 一行扫描所有角色状态（~400 tokens）
-⑤ 对应 .muse/ 角色文件     → 深读当前角色完整进度（L1）
+⑤ 对应 .muse/ 角色文件     → 完整进度（按指令决定读哪个）
 ⑥ 🚨 strategy.md 指令拉取  → 非 strategy 角色自动 grep 活跃指令（→BUILD / →GROWTH 等）
+   ⚠️ **跨项目铁律**: strategy.md **始终位于 `DYA/.muse/strategy.md`**，无论当前项目是 DYA/Prometheus/MUSE
+   → 路径由 CLAUDE.md 中的跨项目配置指定
 ⑦ 项目部署事实表        → strategy.md 的 🌐 项目部署事实表（快查网址/域名/版本）
    ⚠️ 所有角色（含 Strategy 本身）恢复报告必须列出当前项目的活跃网址
 ```
@@ -56,39 +58,59 @@ description: 新对话开始时恢复项目上下文的标准流程
 我会：
 1. 读 `memory/YYYY-MM-DD.md`（今天+昨天）快速恢复上下文
 2. 再读指定的 .muse/ 角色文件确认待办和完整进度
+2.3 🆕 **Conversation Summaries 交叉验证**（防 /bye 未执行导致的记忆黑洞）：
+   - 读取系统提供的 conversation summaries（最近 10 条）
+   - 与 memory/ 文件交叉对比：每个 conversation summary 是否有对应的 memory session 记录？
+   - **没有 memory 记录的对话** = 可能 /bye 未执行 = 潜在记忆黑洞
+   - 如发现未记录的对话：
+     - 从 conversation summary 的 title + objective 提取关键事实
+     - 在恢复报告中标注「⚠️ 以下对话无 memory 记录（/bye 可能未执行）」
+     - 列出对话标题和推断的关键完成事项
+   - ⚠️ conversation summary 是**推断性信息**，精度低于 memory，仅用于填补空白
+   - 如果某个 summary 提示「下一步」中的某项已完成 → 标注为 🟡 可能已完成
 2.5 **扫描 memory 未完成项** → 搜索 memory 最近 2 天文件中的 **所有** 未完成项格式：
    - `🔲` 项
    - `- [ ]` 项
    - `➡️ 下一步` section 下的所有非 `[x]`/非 `✅` 项
    
+   🚨 **可信度标注（RC-2 修复·防止已完成项被误报为待做）**：
+   对每个「下一步」未完成项，标注来源可信度：
+   - 🟢 **角色文件确认未完成** → high confidence，直接列入未完成项
+   - 🟡 **仅 memory 记录为下一步，角色文件无对应项** → medium，可能已在后续对话完成
+   - 🔴 **memory 记录为下一步 + conversation summary 显示有后续对话处理该主题** → 很可能已完成，需向用户确认
+   恢复报告中 🟡/🔴 项用括号标注 `(⚠️ 可能已完成·需确认)` 而非直接列为待办
+
    🚨 **角色过滤（防混入）**：
-   - **Step A**: 根据当前 `/resume [xxx]` 指令确定当前角色（如 build/growth/strategy/qa）和当前项目
+   - **Step A**: 根据当前 `/resume [xxx]` 指令确定当前角色（如 build/growth/strategy/qa）和当前项目（DYA/Prometheus/MUSE）
    - **Step B**: 将未完成项按角色/项目分类：
      - ✅ **当前角色的项目内待办** → 放在恢复报告「📋 未完成项」中，直接融入建议
      - ⚠️ **其他角色/项目的待办** → 放在恢复报告单独的「⚠️ 其他角色/项目待提醒」区块，仅做提醒，**不混入当前角色的建议列表**
    - **分类方法**:
      - memory 条目有「角色:」或「> 角色:」标注 → 直接用
-     - memory 的 section header 含项目名 → 用 header 判断
-     - 关键词推断: 代码/Bug/commit → build | 发帖/视频 → growth | PMF/融资/加速器 → strategy | AC/PASS/FAIL → qa
+     - memory 的 section header 含项目名（如 "Prometheus QA"、"MUSE BUILD"）→ 用 header 判断
+     - 关键词推断: 代码/Bug/commit → build | 发帖/视频/小红书 → growth | PMF/融资/加速器 → strategy | AC/PASS/FAIL → qa
    - **输出格式示例**:
      ```
-     📋 未完成项（Build 范围）:
-     - 🔲 修复登录 Bug
+     📋 未完成项（Strategy 范围）:
+     - 🔲 Alliance DAO 申请 (3/25 截止)
      
      ⚠️ 其他角色/项目待提醒（非本轮范围，仅供知悉）:
-     - 🔲 [GROWTH] 小红书帖子待发
-     - 🔲 [STRATEGY] 加速器申请
+     - 🔲 [BUILD] resume.md 角色过滤修复
+     - 🔲 [MUSE/GROWTH] S033 执行
      ```
 2.7 **角色文件膨胀检查**：`wc -l` 目标 .muse/ 文件，**>800 行 → 先执行归档再开始工作**（移动已完成工作记录/已传递指令到 `.muse/archive/`，目标 ≤500 行）
 3. **🚨 自动拉取战略指令（所有非 strategy 角色必须执行）**：
-   - 🚨 **先检查 CLAUDE.md** 是否指定了 strategy.md 的绝对路径（跨项目用户）
-     - 有 → 用 CLAUDE.md 指定的绝对路径
-     - 没有 → 默认搜索本地 `.muse/strategy.md`
-   - `grep_search` 扫描 strategy.md 中的「📡 战略指令队列 → 活跃指令」
+   - `grep_search` 扫描 strategy.md（路径从 CLAUDE.md 跨项目配置获取） 中的「📡 战略指令队列 → 活跃指令」
    - **⚠️ 精确匹配规则**（防止跨项目误拉取）：
-     - `/resume build` → 搜 `→BUILD`（不带任何项目前缀的）
-     - `/resume growth` → 搜 `→GROWTH`（不带任何项目前缀的）
-     - 如有多项目，搜本项目前缀指令（如 `→MYPROJECT/BUILD`）
+     - `/resume build` → 搜 `→DYA/BUILD` 或 `→BUILD`（不带任何项目前缀的）
+     - `/resume growth` → 搜 `→DYA/GROWTH` 或 `→GROWTH`（不带任何项目前缀的）
+     - **必须排除**: `→MUSE/GROWTH`、`→PROMETHEUS/GROWTH` 等其他项目前缀的指令
+     - 判断方法: 如果 `→` 前面有 `/`（如 `→MUSE/GROWTH`），检查项目名是否匹配当前对话的项目
+   - ⚠️ **跨项目搜索路径铁律**:
+     - **所有项目**（DYA/Prometheus/MUSE）的指令拉取都搜索 **同一个文件**: `DYA/.muse/strategy.md`
+     - 路径由 CLAUDE.md 跨项目配置指定
+     - ❌ **禁止**搜索项目本地的 strategy.md（如 `MUSE/.muse/strategy.md` 或 `Prometheus/.muse/strategy.md`）
+     - 原因: DYA strategy.md 是全局战略中枢，所有项目的指令都从这里发出
    - 🚨 **✅/🟡 过滤规则（必读·防止漏拉取）**:
      - **🟡 = 待传递**（还没被目标角色的 /resume 拉取过）→ **必须拉取**
      - **✅ = 已确认接收**（目标角色的 /resume 已拉取并写入角色文件）→ **跳过**
@@ -98,6 +120,8 @@ description: 新对话开始时恢复项目上下文的标准流程
      - 找到 🟡 指令 → **在恢复报告中高亮显示「📡 新战略指令」**，并写入对应角色文件的「📡 已接收战略指令」区块
      - 回到 strategy.md 将该指令的 🟡 标记改为「✅ 已传递」
      - 没找到 🟡 指令 → 跳过（静默）
+   - ⚡ **Prometheus 角色同理**：`/resume prometheus` → 只搜 `→PROMETHEUS/BUILD`（不搜裸 `→BUILD`）
+   - ⚡ **MUSE 角色同理**：`/resume muse growth` → 只搜 `→MUSE/GROWTH`
 4. **如果是 `/resume build`：双重检查 QA 通知**
    - ① 检查 `.muse/qa.md` 有没有未处理的 ❌ FAIL → 有则先修复
    - ② 🚨 **检查 build.md 自身** 中的 QA→BUILD 通知（`grep_search build.md "待 BUILD 处理"`）
@@ -108,10 +132,19 @@ description: 新对话开始时恢复项目上下文的标准流程
    - 用户会在指令中说明 AC 来源（如 "执行 S028 QA"）
    - 如没说明 → 检查 qa.md「最近 QA 结果」是否有待复验的 FAIL 项
    - 输出恢复报告时包含：上次 QA 状态 + 有无待执行的 QA 指令
+4.6 🚨 **如果是 `/resume [project] qa`：检查 BUILD 修复通知**
+   - `grep_search qa.md "BUILD 声称已修复"` → 有未复验的修复通知 → 恢复报告高亮 `⚡ BUILD 有 N 项修复待复验`
+   - `grep_search build.md "BUILD→QA 指派"` → 有新的 QA 指派 → 恢复报告高亮 `📡 BUILD 新增 QA 指派 S0XX`
+   - 两个都查，确保不遗漏
+4.7 🚨 **防 Phantom Features 检查**（QA 验证前必做）
+   - QA 验证任何 BUILD 声称 `[x]` 完成的功能前 → 先 `grep_search` 代码库确认关键代码文件/函数存在
+   - 如果 grep = 0 results → **直接 FAIL**，不需要进浏览器/curl 验证
+   - 在 QA Report 中标注「🔴 P0: 代码不存在（grep 验证失败）」
 5. **如果是 `/resume strategy`：检查 memory/ 中是否有未同步到 strategy.md 的重大事件**（grep 关键词：被拒/通过/审核/定稿/部署/融资/resubmit/rejected/approved/MUSE/开源/repo/安全/security/泄露/轮换/filter-branch/Skill/instinct/预装/发布/release/宪法/CLAUDE\.md/推荐人/已发送）→ 有则提醒用户需要 sync
+   🆕 **同时检查 conversation summaries**：memory 之外，也用 ②.3 中识别出的"无 memory 对话"交叉验证——这些对话的 summary 中是否含有 strategy 相关的重大事件（融资/提交/部署/决策等）？如有 → 也提醒用户需要 sync
 5.1 **冲突解决**：memory 和角色文件数据冲突时，**以角色文件为准**（memory 是写入时的快照，角色文件持续更新）。恢复报告只引用角色文件中的数据，memory 仅用于发现遗漏
 5.2 **内部一致性校验**：输出恢复报告前，交叉检查角色文件内的同一事实是否在多处一致（如融资表/决策表/待办/指令队列中同一事项的状态是否矛盾）
-5.3 **项目部署事实表校验**（全角色必做）：扫描 strategy.md 的 `🌐 项目部署事实表`，交叉验证：
+5.3 **项目部署事实表校验**（全角色必做）：扫描 `🌐 项目部署事实表`，交叉验证：
    - 有无新上线/新部署未更新到事实表（检查 memory 中的 "部署/上线/deploy/发布" 关键词）
    - 事实表中的版本号是否与角色文件一致
    - **恢复报告必须包含** `🌐 项目活跃部署` section，列出当前项目的 URL + 状态

@@ -26,6 +26,7 @@ description: MUSE 角色文件之间的指令传递和数据回传
 | `/sync prometheus build down` | GM/strategy 指令 → Prometheus build |
 | `/sync dya build to growth` | DYA build → DYA growth（横向） |
 | `/sync dya qa broadcast` | DYA QA → DYA build + GM（广播） |
+| `/sync dya build to qa` | DYA build 修复通知 → DYA QA（反向） |
 
 ### 批量同步
 
@@ -98,6 +99,11 @@ description: MUSE 角色文件之间的指令传递和数据回传
 2. 用「📡 数据回传 @STRATEGY (PROMETHEUS/BUILD)」格式写入 `.muse/strategy.md`
 3. 在 build.md 标记已回传
 
+> 🚨 **跨项目 sync up 铁律**: 所有 `sync [project] [role] up` **必须回传到 strategy.md（路径从 CLAUDE.md 跨项目配置获取）**。
+> MUSE build up / Prometheus build up / 任何角色的 up 操作，如果涉及版本发布、里程碑、
+> 架构变更或其他 strategy 对话恢复时需要的信息，都必须写入 strategy.md。
+> ❌ 只写角色文件不写 strategy = sync up 执行不完整。
+
 ### 3. 横向同步（to）
 
 ```
@@ -127,6 +133,24 @@ QA 验证完成后，将 QA Report 同时写入多个角色文件：
 4. 如果影响 growth → 也写入 growth.md
 
 ⚠️ **QA 铁律**: QA 只报不修。发现 bug 只写 QA Report，**不直接改代码**。需要代码修复 → 写入 build.md 由 BUILD 处理。
+
+### 4b. BUILD→QA 修复通知（reverse）
+
+```
+/sync [project] build to qa
+```
+
+当 BUILD 修复了 QA 报告的 FAIL 项后，必须通知 QA：
+1. 读取 build.md 中本轮修复的 QA FAIL 项
+2. 在 qa.md 对应的 ❌ FAIL 报告**下方追加**修复通知：
+   ```markdown
+   ⚡ BUILD 声称已修复 (YYYY-MM-DD HH:MM) — [修复摘要 + commit hash]
+   → 待 QA 复验（BUILD→QA 指派 S0XX）
+   ```
+3. **不修改 FAIL 判定**（只有 QA 复验通过后才能改为 PASS）
+4. 如有 BUILD→QA 指派（S038/S039 等），确认已写入 qa.md 的「待验证」section
+
+⚠️ **铁律**: FAIL 判定只有 QA 能改。BUILD 只负责通知 "已修复"，不能自行将 FAIL 改为 PASS。
 
 ### 5. 接收（receive）
 
@@ -234,6 +258,7 @@ GM 回传格式：
 | Strategy→角色 指令 | strategy.md → 角色文件 | `→BUILD` / `→GROWTH` | `grep_search strategy.md "→BUILD"` |
 | QA→BUILD 通知 | build.md 内 | `待 BUILD 处理` | `grep_search build.md "待 BUILD 处理"` |
 | QA FAIL 报告 | qa.md 内 | `❌ FAIL` | `grep_search qa.md "FAIL"` |
+| BUILD→QA 修复通知 | qa.md 内 | `BUILD 声称已修复` | `grep_search qa.md "BUILD 声称已修复"` |
 | 角色→Strategy 回传 | strategy.md 内 | `数据回传 @STRATEGY` | `grep_search strategy.md "数据回传"` |
 
 ### QA→BUILD 通知标准格式

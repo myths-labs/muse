@@ -27,7 +27,7 @@ description: 结束对话的一键收尾指令。自动汇总工作、同步 .mu
 ### 🚨 跨项目 strategy.md 路径
 
 > **strategy.md 始终位于 `DYA/.muse/strategy.md`**，无论当前项目是 DYA/Prometheus/MUSE。
-> 绝对路径: `/Users/jj/Desktop/DYA/.muse/strategy.md`
+> 路径由 CLAUDE.md 中的跨项目配置指定
 > Step 3 的 sync 操作中，所有项目的回传都写入这个文件。
 
 ## 用法
@@ -81,7 +81,7 @@ description: 结束对话的一键收尾指令。自动汇总工作、同步 .mu
 #### 项目-角色路由表
 
 | 对话类型 | 同步目标文件 | sync 方向 |
-|---------|-----------|-----------|
+|---------|-----------|-----------| 
 | DYA Strategy | `.muse/strategy.md` | sync strategy down（有新决策时） |
 | DYA 开发/Build | `.muse/build.md` | sync build up |
 | DYA 增长/Growth | `.muse/growth.md` | sync growth up |
@@ -92,11 +92,17 @@ description: 结束对话的一键收尾指令。自动汇总工作、同步 .mu
 | Prometheus 开发 | `.muse/build.md`（Prometheus 数据已合并回 DYA build.md） | sync prometheus build up |
 | Prometheus QA | `.muse/qa.md`（同上） | sync prometheus qa broadcast* |
 | Prometheus 增长 | `.muse/growth.md`（同上） | sync prometheus growth up |
-| MUSE 开发 | **`/Users/jj/Desktop/MUSE/.muse/build.md`** | sync muse build up |
-| MUSE QA | **`/Users/jj/Desktop/MUSE/.muse/qa.md`** | sync muse qa broadcast* |
-| MUSE 增长 | **`/Users/jj/Desktop/MUSE/.muse/growth.md`** | sync muse growth up |
+| MUSE 开发 | **`.muse/build.md`** + **strategy.md** | sync muse build up |
+| MUSE QA | **`.muse/qa.md`** | sync muse qa broadcast* |
+| MUSE 增长 | **`.muse/growth.md`** | sync muse growth up |
 
-> ⚠️ **MUSE 路径铁律**: MUSE 的 `.muse/` 文件在 `/Users/jj/Desktop/MUSE/.muse/`，不在 DYA 目录下。
+> 🚨 **sync up 必须回传 strategy 规则**:
+> **任何** `sync [project] [role] up` 操作，如果涉及重大事件（版本发布、里程碑、架构变更），
+> **必须同时**回传到 `DYA/.muse/strategy.md`。路由表中的「同步目标文件」是主文件，
+> strategy.md 是**所有 up 操作的隐含目标**。不是只有 checklist 中的事件才需要回传——
+> 任何 strategy 对话恢复时需要知道的进展都应该回传。
+
+> ⚠️ **MUSE 路径铁律**: MUSE 的 `.muse/` 文件在项目根目录的 `.muse/` 下。跨项目路径在 CLAUDE.md 中配置。
 > Prometheus 已无独立 `.muse/` 目录，数据合并回 DYA 的 `.muse/build.md`。
 
 \* broadcast = 写 QA 报告 + 通知 BUILD + 通知 STRATEGY
@@ -162,6 +168,7 @@ description: 结束对话的一键收尾指令。自动汇总工作、同步 .mu
 更新 `memory/YYYY-MM-DD.md`（追加，不覆盖之前轮次的内容）：
 ```markdown
 ## [角色] Session [N] (HH:MM-HH:MM)
+- ✅ 上轮遗留: [完成的上一轮"下一步"任务]（如有）
 - 完成: [要点]
 - 决策: [决策内容 + 为什么]
 - ❌ 否决: [讨论过但否决的方案 + 原因]（如有）
@@ -170,6 +177,12 @@ description: 结束对话的一键收尾指令。自动汇总工作、同步 .mu
 - 📡 跨对话上下文: [下一轮 Agent 恢复工作必须知道的架构决策/技术选型/讨论结论]（如有）
 - ➡️ 下一步: [具体可执行项]
 ```
+
+> 🚨 **上轮遗留回写规则（RC-2 修复）**:
+> 读取当天 memory 文件中前几个 Session 的「➡️ 下一步」条目，如果本轮完成了其中任何一项:
+> 1. 在本轮 memory 的第一行用 `✅ 上轮遗留: [任务名]` 明确标注
+> 2. **不需要**回去修改旧 Session 的内容（避免并发冲突）
+> 3. 如果 memory 文件中无前置 Session（本轮是当天第一个），跳过此步
 
 > ⚠️ **「如有」≠「可省略」**：如果本轮有否决/纠正/URL 但你没写 → 等于你制造了记忆黑洞。
 > 🔴 **最常见遗漏**: 用户纠正了 Agent 的理解但 Agent 没记录 → 下轮 Agent 重犯同样错误。
