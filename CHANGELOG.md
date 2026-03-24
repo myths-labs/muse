@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.31.0] - 2026-03-24
+
+### Added
+- **Unexecuted Directive Scan** (`workflows/resume.md`) — New Boot Step 2.8: after reading the role file, `/resume` now `grep_search`es for all `🟡` markers to surface received-but-unexecuted directives. Reports them as `📡 N received directives pending execution` in the recovery report.
+  - **Root cause fixed**: When Strategy marks a directive `✅ delivered` in `strategy.md`, new `/resume` sessions skip it (Step ③ filter). But the directive may still be `🟡 received` in the role file, buried in a 500+ line document. Without this step, new conversations completely miss pending work.
+  - Output format: lists each `🟡` directive with ID and summary, flagged as `🚨 priority for this session`.
+
 ## [2.30.0] - 2026-03-23
 
 ### Added
