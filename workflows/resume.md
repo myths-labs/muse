@@ -17,7 +17,10 @@ description: 新对话开始时恢复项目上下文的标准流程
 ②.3 🆕 Conversation Summaries 交叉验证 → 防 /bye 未执行导致的记忆黑洞
 ②.5 扫描 memory `➡️ 下一步` 中的 🟨 项 → 有未完成项则主动提醒（标注可信度）
 ③ 跨天任务? grep_search memory/ 搜索任务关键词 → 定位更早的相关记忆
-④ USER.md                  → 用户偏好
+④ USER.md                  → 用户画像（分层加载）
+   ④.a Static Profile       → 永久偏好（语言/模型/代码风格）— 全量注入
+   ④.b 🆕 Dynamic Profile   → 近期活跃焦点 — 仅加载 7 天窗口内的条目
+      过滤规则: 比对每条 `(updated: YYYY-MM-DD)` 日期，>7天前的条目跳过不加载
 ⑤ 对应 .muse/ 角色文件     → 完整进度（按指令决定读哪个）
 ⑥ 🚨 strategy.md 指令拉取  → 非 strategy 角色自动 grep 活跃指令（→BUILD / →GROWTH 等）
    ⚠️ **跨项目铁律**: strategy.md **始终位于 `DYA/.muse/strategy.md`**，无论当前项目是 DYA/Prometheus/MUSE

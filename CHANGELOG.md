@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.33.0] - 2026-03-25
+
+### Added
+- **Static/Dynamic User Profile Split** (`USER.md`, `workflows/bye.md`, `workflows/resume.md`) — S060 P2: User context now separated into two layers:
+  - **Static Profile**: Permanent facts and preferences (language, model, code style). Always loaded in full by `/resume` Step ④.a. Only modifiable via `/settings` or manual edit.
+  - **Dynamic Profile**: Recent active work focus areas (auto-updated). `/bye` Step 4.9 infers 1-3 focus topics from the session and writes dated entries. `/resume` Step ④.b only loads entries within a 7-day window — older entries are silently skipped, preventing stale project context from polluting new sessions.
+  - Dedup on update: same topic → update content + date (no duplicates). Capacity cap: max 10 entries.
+  - Template updated: `templates/USER.md` restructured with `## Static Profile` and `## Dynamic Profile` sections.
+
+### Changed
+- **`/bye` Step 6 checklist** — New compliance line: `Step 4.9: Dynamic Profile=[N updates/no change]`
+- **`/resume` Boot Step ④** — Now shows `④.a Static Profile` (full inject) + `④.b Dynamic Profile` (7-day window filter)
+
 ## [2.32.0] - 2026-03-24
 
 ### Added

@@ -218,6 +218,27 @@ description: 结束对话的一键收尾指令。自动汇总工作、同步 .mu
 
 > 详细关系检测规则见 `distill.md` Step 3a。
 
+### 4.9 Dynamic Profile 自动更新 (v2.33.0)
+
+> 🆕 **S060 — Static/Dynamic Profile 分层**: `/bye` 自动从本轮会话中推断用户当前工作焦点并更新 `USER.md` 的 `Dynamic Profile` 区。
+
+**执行步骤**:
+1. **读取 USER.md** 的 `## Dynamic Profile` → `### Active Focus (auto-updated)` section
+2. **从本轮工作摘要中推断 1-3 个活跃焦点**:
+   - 格式: `- **[topic]**: [brief context] (updated: YYYY-MM-DD)`
+   - 主题粒度 = 功能/项目/任务级（如 "Prometheus Live Voice" / "MUSE v2.33.0" / "Alliance DAO 申请"）
+   - 描述简洁 ≤15 词
+3. **Dedup 更新**:
+   - 如果 Dynamic Profile 已有同主题条目 → **更新**内容和日期（不新增）
+   - 如果无同主题 → **追加**
+   - ⚠️ **不要在 /bye 时删除旧条目**（由 /resume 的 7 天窗口过滤负责）
+4. **容量上限**: Dynamic Profile 最多 **10 条**。超出时删最旧的
+
+**Guardrails**:
+- ❌ 不修改 `Static Profile` section（只有 `/settings` 和人工编辑可以改）
+- ❌ 不捕获一次性调试细节（那属于 memory/，不属于 profile）
+- ✅ 只捕获「下次对话恢复时需要快速理解的工作焦点」
+
 ### 4.5 角色文件膨胀检查（静默）
 **每次 /bye 都检查**，不需要用户触发：
 1. 运行 `wc -l .muse/*.md`
@@ -305,6 +326,7 @@ description: 结束对话的一键收尾指令。自动汇总工作、同步 .mu
 - [x] Step 4: memory/YYYY-MM-DD.md 已更新
 - [x] Step 4.5: 角色文件膨胀=[N行/无需归档]
 - [x] Step 4.6: Distill=[无需/建议执行]
+- [x] Step 4.9: Dynamic Profile=[N条更新/无变化]
 - [x] Step 5: 导出 → convo/YYMMDD/YYMMDD-NN-desc.md
 ```
 
