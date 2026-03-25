@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.34.0] - 2026-03-25
+
+### Added
+- **BUILD→QA AC Dual-Write Protocol** (`workflows/bye.md` Step 3.6) — S064: Prevents cross-conversation AC sync failures between BUILD and QA roles:
+  - **Root cause**: BUILD writes AC to `build.md`, but QA conversation may have already cached the old version → doesn't see new AC → wastes time in back-and-forth confirmation. Happened 3/25 with Prometheus, wasting ~15 minutes.
+  - **Dual-write**: BUILD now writes AC simultaneously to both `build.md` (`## 🎯 BUILD→QA`) AND `qa.md` (`## 📡 BUILD→QA 待验证`), with a `⚡` sticky notification at the top of `qa.md`.
+  - **Unified AC numbering**: `AC-SXXX-NN` format (S=strategy decision, NN=sequence). Eliminates numbering divergence between files.
+  - **QA force re-read**: `/resume [project] qa` Step 4.5b now force-reads `build.md`'s latest AC section (not relying on conversation cache) and cross-validates against `qa.md` entries.
+  - **QA cleanup flow**: After verification, QA removes sticky `⚡` notification and marks each AC as `✅ PASS` or `❌ FAIL` in both files.
+
+### Changed
+- **`/resume [project] qa`** (`workflows/resume.md`) — New Step 4.5b: mandatory `build.md` AC re-read + cross-validation before starting verification
+- **AC Standard** (`workflows/sync.md`) — New "AC 编号规范" section documenting the `AC-SXXX-NN` naming convention, dual-write rules, and QA cleanup flow
+
 ## [2.33.0] - 2026-03-25
 
 ### Added

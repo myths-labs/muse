@@ -151,6 +151,24 @@ description: 新对话开始时恢复项目上下文的标准流程
    - 用户会在指令中说明 AC 来源（如 "执行 S028 QA"）
    - 如没说明 → 检查 qa.md「最近 QA 结果」是否有待复验的 FAIL 项
    - 输出恢复报告时包含：上次 QA 状态 + 有无待执行的 QA 指令
+4.5b 🚨 **如果是 `/resume [project] qa`：强制 re-read BUILD AC（v2.34.0 S064 防 AC 同步断裂）**
+   > **根因**: BUILD 和 QA 在不同对话中运行。BUILD 写完 AC 后，QA 的对话缓存仍是旧版本 → 看不到新 AC。
+   - **Step A**: 检查 `qa.md` 文件头部是否有 `⚡ BUILD 新增 AC 待验证` 置顶通知
+     - 有 → 恢复报告高亮 `🚨 BUILD 有新 AC 待验证`，并读取对应的 `📡 BUILD→QA 待验证` section
+     - 无 → 继续 Step B
+   - **Step B**: **强制 re-read** `build.md` 中最新的 `## 🎯 BUILD→QA` section（不依赖对话缓存）
+     - `grep_search build.md "BUILD→QA"` 定位 section
+     - 读取该 section 的 AC 列表
+   - **Step C**: 交叉比对 `qa.md` 和 `build.md` 中的 AC 编号
+     - 如 build.md 有 AC 但 qa.md 没有对应编号 → 恢复报告标注 `⚠️ build.md 有 N 条 AC 未同步到 qa.md`
+     - 如两份 AC 编号/内容不一致 → 恢复报告标注 `⚠️ AC 编号不一致，以 build.md 为准`
+   - **输出格式**:
+     ```
+     📡 BUILD→QA AC 同步状态:
+     - qa.md 置顶通知: [有/无]
+     - build.md 最新 AC: [AC-SXXX-01~NN / 无新 AC]
+     - 一致性: [✅ 一致 / ⚠️ 偏差 N 条]
+     ```
 4.6 🚨 **如果是 `/resume [project] qa`：检查 BUILD 修复通知**
    - `grep_search qa.md "BUILD 声称已修复"` → 有未复验的修复通知 → 恢复报告高亮 `⚡ BUILD 有 N 项修复待复验`
    - `grep_search build.md "BUILD→QA 指派"` → 有新的 QA 指派 → 恢复报告高亮 `📡 BUILD 新增 QA 指派 S0XX`
