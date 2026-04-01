@@ -1,3 +1,26 @@
+## [3.0.0] - 2026-04-01
+
+### 🔴 Major Version — SOP Evolution
+
+MUSE v3.0 represents a paradigm shift from "skill collection" to "governed agent framework":
+- **v2.37.0**: Coordinator architecture absorption (Anthropic patterns)
+- **v2.38.0**: Skill quality upgrades (AC-first verification, advanced frontmatter, iterative retrieval)
+- **v2.39.0**: SOP layer evolution (memory taxonomy, drift detection, coordinator iron law)
+
+Total: 65 skills (Core 7 + Toolkit 45 + Ecosystem 13)
+
+### Core v2 → v3 Paradigm Shifts
+
+| v2 | v3 |
+|----|-----|
+| Delegate tasks | Synthesize understanding first, then delegate |
+| Workers share context | Workers must receive self-contained specs |
+| Verify = check existence | Verify = prove it works |
+| Single `description` | `description` (WHAT) + `when_to_use` (WHEN) |
+| Unclassified memories | 4-category taxonomy + structured body |
+| Trust all memories | Drift detection + verify before use |
+| Save everything | Forbidden-store list + derivable info excluded |
+
 ## [2.39.0] - 2026-04-01
 
 ### Added
