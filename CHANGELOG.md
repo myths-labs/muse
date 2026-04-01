@@ -1,3 +1,12 @@
+## [3.0.1] - 2026-04-02
+
+### Added
+- **`release.sh` v2** — Automated pre-flight release script: old version remnant scanning, physical skill count verification, auto-fix, abort-on-failure gates, one-command release pipeline.
+- **`bye.md` Step 3.4** — MUSE source repo sync check. Diffs `DYA/.agent/` vs `MUSE/skills/` on every `/bye` to prevent version drift between install copy and source repo.
+
+### Fixed
+- **Version refs cleanup** — README.md badge (v2.35.0→v3.0.0), README_CN.md badge/footer, docs/index.html meta+footer, docs/llms.txt skill count (62→65). All missed during v3.0.0 release.
+
 ## [3.0.0] - 2026-04-01
 
 ### 🔴 Major Version — SOP Evolution
