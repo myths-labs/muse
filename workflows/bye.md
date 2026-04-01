@@ -150,6 +150,42 @@ description: 结束对话的一键收尾指令。自动汇总工作、同步 .mu
     - 否 → 静默跳过
 - 格式严格遵守 `/sync` workflow 的规范
 
+### 3.4 🔴 MUSE 源码仓库同步检查（v3.0 新增 — 防版本断裂）
+
+> **根因**: v2.37→v3.0 期间，skill/workflow 升级做在 DYA 安装副本中，未同步回 MUSE 源码仓库 (`/Users/jj/Desktop/MUSE/`)。下轮 /resume 读到的 MUSE git tag 与实际改动不一致 → 版本号虚报 → 灾难级 bug。
+
+**触发条件**: 本轮改动涉及以下任何文件:
+- `DYA/.agent/skills/*/SKILL.md`
+- `DYA/.agent/workflows/*.md`
+- `DYA/CLAUDE.md`
+
+**必须执行**:
+```bash
+# 1. 检查哪些 skill 在 DYA 和 MUSE 之间有 diff
+for skill in $(ls /Users/jj/Desktop/DYA/.agent/skills/); do
+  muse_file=$(find /Users/jj/Desktop/MUSE/skills/ -path "*/$skill/SKILL.md" 2>/dev/null | head -1)
+  dya_file="/Users/jj/Desktop/DYA/.agent/skills/$skill/SKILL.md"
+  if [ -n "$muse_file" ] && [ -f "$dya_file" ]; then
+    if ! diff -q "$muse_file" "$dya_file" > /dev/null 2>&1; then
+      echo "🔴 DIFF: $skill (MUSE ≠ DYA)"
+    fi
+  fi
+done
+
+# 2. 检查 workflow diff
+for wf in bye.md resume.md sync.md; do
+  if ! diff -q "/Users/jj/Desktop/MUSE/workflows/$wf" "/Users/jj/Desktop/DYA/.agent/workflows/$wf" > /dev/null 2>&1; then
+    echo "🔴 DIFF: workflows/$wf (MUSE ≠ DYA)"
+  fi
+done
+```
+
+**处理**:
+- 有 diff → 在 memory 中标注 `🔴 MUSE 源码未同步: [文件列表]`，提醒下轮执行 `/release`
+- 无 diff → 静默跳过
+
+**🔴 铁律**: 此步不可跳过。上轮 /bye 跳过此步导致 4 个版本断裂。
+
 ### 3.5 🚨 角色文件待办更新（防止待办 stale）
 
 > **根因**: 之前 sync 只写工作摘要/回传，但不更新角色文件的 `[ ]` 待办项 → 下次 `/resume` 看到的待办仍是旧状态。
