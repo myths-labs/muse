@@ -99,7 +99,7 @@ description: MUSE 角色文件之间的指令传递和数据回传
 2. 用「📡 数据回传 @STRATEGY (PROMETHEUS/BUILD)」格式写入 `.muse/strategy.md`
 3. 在 build.md 标记已回传
 
-> 🚨 **跨项目 sync up 铁律**: 所有 `sync [project] [role] up` **必须回传到 strategy.md（路径从 CLAUDE.md 跨项目配置获取）**。
+> 🚨 **跨项目 sync up 铁律**: 所有 `sync [project] [role] up` **必须回传到 `DYA/.muse/strategy.md`**。
 > MUSE build up / Prometheus build up / 任何角色的 up 操作，如果涉及版本发布、里程碑、
 > 架构变更或其他 strategy 对话恢复时需要的信息，都必须写入 strategy.md。
 > ❌ 只写角色文件不写 strategy = sync up 执行不完整。
@@ -281,26 +281,3 @@ BUILD 处理后：
 ```markdown
 ✅ BUILD 已处理 (2026-03-13 15:00) — [采纳/重写/回退]
 ```
-
-### AC 编号规范 (v2.34.0 S064)
-
-> **根因**: BUILD 和 QA 在不同对话中运行，AC 在两个文件之间同步失败。统一编号 + 双写机制确保一致性。
-
-**AC 编号格式**: `AC-SXXX-NN`
-- `SXXX` = 对应战略决策编号（如 S059, S064）
-- `NN` = 该决策下的 AC 序号（01, 02, ...）
-- 无对应 S 编号时使用 `AC-vX.Y.Z-NN` 格式（如 `AC-v2.34.0-01`）
-- ❌ **禁止**: 两文件使用不同编号（如 build.md 用 `AC1-AC10` 而 qa.md 用 `EQ1-EQ10`）
-
-**AC 双写规则**（详见 `bye.md` Step 3.6）:
-| 写入位置 | 格式 | 何时写入 |
-|---------|------|---------|
-| `build.md` `## 🎯 BUILD→QA` | 完整 AC 表格 + 错误路径 | BUILD 完成功能时 |
-| `qa.md` `## 📡 BUILD→QA 待验证` | 同上（AC 编号必须一致）| **同时写入**（bye.md Step 3.6） |
-| `qa.md` 置顶通知 | `⚡ [日期] BUILD 新增 AC 待验证` | **同时写入**（QA 处理后删除） |
-
-**QA 处理后清理**:
-1. 移除 `qa.md` 置顶 `⚡` 通知行
-2. 在 `📡 BUILD→QA 待验证` section 中将每条 AC 标记为 `✅ PASS` 或 `❌ FAIL`
-3. 同时在 `build.md` 的对应 AC 表格中更新状态
-

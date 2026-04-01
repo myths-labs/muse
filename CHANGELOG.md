@@ -1,3 +1,20 @@
+## [2.39.0] - 2026-04-01
+
+### Added
+- **Memory Taxonomy (v3.0)** — 4-category classification: user / feedback / project / reference. Every memory entry must be tagged.
+- **Forbidden-Store List (v3.0)** — Explicit list of what NOT to save to memory (derivable info, git history, debug solutions, CLAUDE.md duplicates).
+- **Memory Drift Detection (v3.0)** — Memories >7 days flagged with warnings. File/function references verified via grep. Conflicts resolved: trust current code > old memory.
+- **Multi-Agent Coordination Iron Law (v3.0)** — Synthesis before delegation. Self-contained prompts only. Continue/Spawn decision matrix.
+- **Skill Three-Layer Classification (v3.0)** — Iron Law Layer (always active) / Trigger Layer (task match) / Lifecycle Layer (event-triggered).
+- **Feedback records both positive and negative (v3.0)** — Record corrections AND confirmations from user. Structured format: Rule → Why → How to apply.
+- **Absolute date enforcement (v3.0)** — All dates must be absolute (2026-04-01), never relative ("Thursday").
+
+### Changed
+- **`bye.md` Workflow** — v3.0 upgrade: Step 4.0 forbidden-store pre-filter, feedback template (Rule/Why/How), confirmation recording, absolute dates.
+- **`resume.md` Workflow** — v3.0 upgrade: Step ②.1 memory drift detection (>7 day warning, file reference verification, conflict annotation).
+- **`sync.md` Workflow** — v3.0 upgrade: Enhanced cross-role sync rules.
+- **`templates/CLAUDE.md`** — v3.0 upgrade: Added Memory Rules, Multi-Agent Coordination, Skill classification sections.
+
 ## [2.38.0] - 2026-04-01
 
 ### Added

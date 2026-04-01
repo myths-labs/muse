@@ -10,26 +10,42 @@ description: 新对话开始时恢复项目上下文的标准流程
 
 ```
 ① CLAUDE.md + MEMORIES.md  → 宪法 + 长期教训（自动注入）
-   ①.1 🆕 Temporal Filter: 跳过 ~~删除线~~ historical 条目 + 已过期 [TEMPORAL:past-date]
 ② memory/今天.md + 昨天.md → 短期记忆（最近发生了什么）
-   ②.1 🆕 [EPISODIC] 条目 >3天 → 只保留 section headers, 不加载细节
-   ②.2 🆕 [TEMPORAL:past-date] 条目 → 完全跳过（已过期事件/截止日期）
+②.1 🆕v3.0 记忆漂移检测 → 超 7 天的记忆附过时警告，文件/函数引用须验证
 ②.3 🆕 Conversation Summaries 交叉验证 → 防 /bye 未执行导致的记忆黑洞
 ②.5 扫描 memory `➡️ 下一步` 中的 🟨 项 → 有未完成项则主动提醒（标注可信度）
 ③ 跨天任务? grep_search memory/ 搜索任务关键词 → 定位更早的相关记忆
-④ USER.md                  → 用户画像（分层加载）
-   ④.a Static Profile       → 永久偏好（语言/模型/代码风格）— 全量注入
-   ④.b 🆕 Dynamic Profile   → 近期活跃焦点 — 仅加载 7 天窗口内的条目
-      过滤规则: 比对每条 `(updated: YYYY-MM-DD)` 日期，>7天前的条目跳过不加载
+④ USER.md                  → 用户偏好
 ⑤ 对应 .muse/ 角色文件     → 完整进度（按指令决定读哪个）
 ⑥ 🚨 strategy.md 指令拉取  → 非 strategy 角色自动 grep 活跃指令（→BUILD / →GROWTH 等）
    ⚠️ **跨项目铁律**: strategy.md **始终位于 `DYA/.muse/strategy.md`**，无论当前项目是 DYA/Prometheus/MUSE
-   → 路径由 CLAUDE.md 中的跨项目配置指定
+   → 绝对路径: `/Users/jj/Desktop/DYA/.muse/strategy.md`
 ⑦ 项目部署事实表        → strategy.md 的 🌐 项目部署事实表（快查网址/域名/版本）
    ⚠️ 所有角色（含 Strategy 本身）恢复报告必须列出当前项目的活跃网址
 ```
 
 > ③ 只在任务跨度 > 2 天时执行（≈ LCM lcm_grep 深度检索）
+
+### ②.1 记忆漂移检测（v3.0 新增·防过时记忆导致错误决策）
+
+> 来源: Anthropic 内部 `memoryAge.ts` + `memoryTypes.ts` — "The memory says X exists" ≠ "X exists now"
+
+**读取 memory 时执行：**
+1. 计算每条 memory 的天龄（文件修改时间 vs 当前时间）
+2. **>7 天** 的记忆 → 恢复报告中标注 `⚠️ N 天前` + 过时警告
+3. **包含文件路径/函数名** 的旧记忆 → 先 `grep_search` 确认仍存在，再使用
+4. **记忆与当前代码冲突** → 信任当前代码，在报告中标注 `🔴 漂移: memory 说 X，但当前代码显示 Y`
+5. 冲突的旧记忆 → 更新或标记为过时（不删除，保留历史）
+
+```
+# 示例: 恢复报告中的漂移警告
+📋 记忆健康检查:
+- ✅ memory/2026-04-01.md (0 天前) — 新鲜
+- ⚠️ memory/2026-03-20.md (12 天前) — 较旧，引用了 src/auth/validate.ts:42
+  → grep 确认: ✅ 文件仍存在，但行号已变 (现在是 :58)
+- 🔴 memory/2026-03-10.md (22 天前) — 记录 "Voice 功能可用"
+  → 当前状态: Voice LB-3 已降级为 Post-Launch P1 (connection loss)
+```
 
 ### DYA 项目
 
@@ -119,7 +135,7 @@ description: 新对话开始时恢复项目上下文的标准流程
      🚨 以上指令已写入角色文件但尚未执行，本轮应优先处理
      ```
 3. **🚨 自动拉取战略指令（所有非 strategy 角色必须执行）**：
-   - `grep_search` 扫描 strategy.md（路径从 CLAUDE.md 跨项目配置获取） 中的「📡 战略指令队列 → 活跃指令」
+   - `grep_search` 扫描 `/Users/jj/Desktop/DYA/.muse/strategy.md` 中的「📡 战略指令队列 → 活跃指令」
    - **⚠️ 精确匹配规则**（防止跨项目误拉取）：
      - `/resume build` → 搜 `→DYA/BUILD` 或 `→BUILD`（不带任何项目前缀的）
      - `/resume growth` → 搜 `→DYA/GROWTH` 或 `→GROWTH`（不带任何项目前缀的）
@@ -127,7 +143,7 @@ description: 新对话开始时恢复项目上下文的标准流程
      - 判断方法: 如果 `→` 前面有 `/`（如 `→MUSE/GROWTH`），检查项目名是否匹配当前对话的项目
    - ⚠️ **跨项目搜索路径铁律**:
      - **所有项目**（DYA/Prometheus/MUSE）的指令拉取都搜索 **同一个文件**: `DYA/.muse/strategy.md`
-     - 路径由 CLAUDE.md 跨项目配置指定
+     - 绝对路径: `/Users/jj/Desktop/DYA/.muse/strategy.md`
      - ❌ **禁止**搜索项目本地的 strategy.md（如 `MUSE/.muse/strategy.md` 或 `Prometheus/.muse/strategy.md`）
      - 原因: DYA strategy.md 是全局战略中枢，所有项目的指令都从这里发出
    - 🚨 **✅/🟡 过滤规则（必读·防止漏拉取）**:
@@ -151,24 +167,6 @@ description: 新对话开始时恢复项目上下文的标准流程
    - 用户会在指令中说明 AC 来源（如 "执行 S028 QA"）
    - 如没说明 → 检查 qa.md「最近 QA 结果」是否有待复验的 FAIL 项
    - 输出恢复报告时包含：上次 QA 状态 + 有无待执行的 QA 指令
-4.5b 🚨 **如果是 `/resume [project] qa`：强制 re-read BUILD AC（v2.34.0 S064 防 AC 同步断裂）**
-   > **根因**: BUILD 和 QA 在不同对话中运行。BUILD 写完 AC 后，QA 的对话缓存仍是旧版本 → 看不到新 AC。
-   - **Step A**: 检查 `qa.md` 文件头部是否有 `⚡ BUILD 新增 AC 待验证` 置顶通知
-     - 有 → 恢复报告高亮 `🚨 BUILD 有新 AC 待验证`，并读取对应的 `📡 BUILD→QA 待验证` section
-     - 无 → 继续 Step B
-   - **Step B**: **强制 re-read** `build.md` 中最新的 `## 🎯 BUILD→QA` section（不依赖对话缓存）
-     - `grep_search build.md "BUILD→QA"` 定位 section
-     - 读取该 section 的 AC 列表
-   - **Step C**: 交叉比对 `qa.md` 和 `build.md` 中的 AC 编号
-     - 如 build.md 有 AC 但 qa.md 没有对应编号 → 恢复报告标注 `⚠️ build.md 有 N 条 AC 未同步到 qa.md`
-     - 如两份 AC 编号/内容不一致 → 恢复报告标注 `⚠️ AC 编号不一致，以 build.md 为准`
-   - **输出格式**:
-     ```
-     📡 BUILD→QA AC 同步状态:
-     - qa.md 置顶通知: [有/无]
-     - build.md 最新 AC: [AC-SXXX-01~NN / 无新 AC]
-     - 一致性: [✅ 一致 / ⚠️ 偏差 N 条]
-     ```
 4.6 🚨 **如果是 `/resume [project] qa`：检查 BUILD 修复通知**
    - `grep_search qa.md "BUILD 声称已修复"` → 有未复验的修复通知 → 恢复报告高亮 `⚡ BUILD 有 N 项修复待复验`
    - `grep_search build.md "BUILD→QA 指派"` → 有新的 QA 指派 → 恢复报告高亮 `📡 BUILD 新增 QA 指派 S0XX`
@@ -205,6 +203,7 @@ description: 新对话开始时恢复项目上下文的标准流程
 - `/resume muse build` → `MUSE/.muse/build.md`
 - `/resume muse growth` → `MUSE/.muse/growth.md`（MUSE 推广）
 - `/resume muse qa` → `MUSE/.muse/qa.md`（MUSE QA）
+- `/resume airachne` → `Airachne/.muse/build.md`（Airachne 开发）
 
 **向后兼容**（旧指令自动映射）：
 - `/resume status` → `/resume build`
@@ -275,3 +274,10 @@ description: 新对话开始时恢复项目上下文的标准流程
 3. **短对话、高密度** — 每次对话聚焦一个主题
 4. **结束即存档** — 更新 .muse/ 角色文件 + 写入 memory/
 5. **跨项目路径明确** — DYA / Prometheus / MUSE 各有独立的 .muse/ 目录，不能混读
+6. 🆕 **Memory ≠ Plan ≠ Tasks**（v3.0 三分法）：
+   - **Memory** (`memory/`) = 跨对话持久信息（未来对话有用的教训/反馈/决策）
+   - **Plan** (`.muse/strategy.md`) = 当前战略方案（达成共识用）
+   - **Tasks** (`.muse/build.md`) = 当前工作分解（追踪进度用）
+   - ❌ 不把临时任务进度写入 memory | ❌ 不把长期教训写入 build.md
+7. 🆕 **记忆漂移防护**（v3.0）：旧记忆 ≠ 当前事实。先验证后使用。
+8. 🆕 **合成优于委派**（v3.0）：coordinator 理解后再派工，不说 "based on your findings"
