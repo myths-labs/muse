@@ -11,7 +11,7 @@ AGENTS.md defines the format. MUSE builds the system.
 MUSE wraps AI coding assistants with a governance protocol that enables:
 - Role-based context isolation (build, qa, growth, strategy)
 - Dual-layer memory persistence (short-term + long-term)
-- 58 reusable skills loaded on demand
+- 65 reusable skills loaded on demand
 - Cross-role async directive queue with delivery tracking
 - TF-IDF search across all project context
 - Web Dashboard + VS Code Extension for visualization
@@ -31,7 +31,7 @@ L0  Format Specs            AGENTS.md · .cursorrules       ← MUSE is compatib
 - **Role Isolation**: Build, QA, Growth, Strategy — each role reads only its own state file
 - **Directive Queue**: Async cross-role messaging with 🟡/✅ status protocol
 - **MCP Server**: Built-in Bash MCP server with 6 JSON-RPC tools, zero dependencies
-- **58 Skills**: Core (7) + Toolkit (38) + Ecosystem (13) reusable skill packs
+- **65 Skills**: Core (7) + Toolkit (45) + Ecosystem (13) reusable skill packs
 - **Builder Ethos**: 5 core principles for AI-governed development (Boil the Lake, Search Before Building, Ship the Narrowest Wedge, Memory Over Momentum, Governance Is Speed)
 - **Sprint Pipeline**: `/sprint` — 7-phase feature development workflow (Think→Plan→Build→Review→Test→Ship→Reflect)
 - **Weekly Retro**: `/retro` — automated retrospective from memory logs + git history
@@ -42,6 +42,9 @@ L0  Format Specs            AGENTS.md · .cursorrules       ← MUSE is compatib
 - **Unexecuted Directive Scan**: `/resume` Step 2.8 surfaces buried 🟡 received-but-unexecuted directives in role files, preventing lost work in long documents.
 - **Static/Dynamic User Profile**: `USER.md` split into Static Profile (permanent preferences, always loaded) and Dynamic Profile (recent work focus, auto-updated by `/bye`, `/resume` loads only 7-day window).
 - **BUILD→QA AC Dual-Write Protocol**: Acceptance Criteria simultaneously written to both `build.md` and `qa.md` with unified `AC-SXXX-NN` numbering. QA force re-reads latest AC on resume. Prevents cross-conversation AC sync failures.
+- **Coordinator Mode**: Multi-agent coordination SOP — understand first, then write self-contained specs. Never forward raw chat history. Extracted from Claude Code internal architecture.
+- **Iterative Retrieval**: Progressive context refinement replacing single-pass search. Search→refine→search until confident.
+- **SOP Layer Evolution**: Memory 4-category taxonomy (user_preference/feedback/project_knowledge/reference), drift detection (>7 days warning), coordinator iron law, absolute dates enforcement.
 - **TF-IDF Search**: Zero-dependency ranked search across memory, roles, and skills
 - **Auto Memory Capture**: Automatic LESSON/DECISION/FACT extraction on session end
 - **Semantic Compression**: 3-tier context compression based on session length
