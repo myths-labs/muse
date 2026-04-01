@@ -1,27 +1,110 @@
-cd ../MUSE || exit
+#!/bin/bash
+# MUSE Release Script — Pre-flight checks + version bump + commit + tag + push + GitHub Release
+# Usage: ./release.sh <new_version> "<release_title>" "<release_notes>"
+# Example: ./release.sh 3.1.0 "Memory Compression" "### Added\n- Semantic compression engine"
 
-sed -i '' 's/version-2\.[0-9]*\.[0-9]*-blue/version-2.35.0-blue/g' README.md README_CN.md
-sed -i '' 's/MUSE v2\.[0-9]*\.[0-9]*/MUSE v2.35.0/g' README.md README_CN.md
+set -euo pipefail
 
-cat << 'INNEREOF' > changelog_temp.md
-## [2.35.0] - 2026-03-28
+# ─── Args ───
+NEW_VERSION="${1:?Usage: ./release.sh <version> <title> <notes>}"
+RELEASE_TITLE="${2:?Missing release title}"
+RELEASE_NOTES="${3:?Missing release notes}"
 
-### Added
-- **Digital Twin Profiling** — The `/bye` workflow now actively extracts the user's communication style, decision-making logic, and vocabulary, and continuously writes it into a "Digital Twin Profile". This enables the system to increasingly mimic the user's native "Founder's Voice" over time, mirroring the OpenClaw passive adaptation loop.
+# Strip leading 'v' if user passes v3.1.0
+NEW_VERSION="${NEW_VERSION#v}"
 
-INNEREOF
-cat CHANGELOG.md >> changelog_temp.md
-mv changelog_temp.md CHANGELOG.md
+cd "$(dirname "$0")" || exit 1
 
+# ─── Step 0: Detect old version ───
+OLD_VERSION=$(git tag --sort=-creatordate | head -1 | sed 's/^v//')
+if [ -z "$OLD_VERSION" ]; then
+  echo "❌ No existing tags found"
+  exit 1
+fi
+echo "📦 Upgrading: v${OLD_VERSION} → v${NEW_VERSION}"
+
+# ─── Step 1: Physical skill count ───
+SKILL_COUNT=$(find skills/ -name "SKILL.md" | wc -l | tr -d ' ')
+echo "🔢 Physical skill count: ${SKILL_COUNT}"
+
+# ─── Step 2: Pre-flight — scan for OLD version remnants ───
+echo ""
+echo "🔍 Pre-flight: scanning for old version remnants..."
+REMNANTS=$(grep -rn "v${OLD_VERSION}\|version-${OLD_VERSION}" \
+  README.md README_CN.md SKILL_INDEX.md docs/llms.txt docs/index.html 2>/dev/null || true)
+
+if [ -n "$REMNANTS" ]; then
+  echo "⚠️  Found old version references (will be auto-fixed):"
+  echo "$REMNANTS"
+  echo ""
+fi
+
+# ─── Step 3: Auto-fix version references ───
+echo "🔧 Fixing version references..."
+
+# Badges
+sed -i '' "s/version-[0-9]*\.[0-9]*\.[0-9]*-blue/version-${NEW_VERSION}-blue/g" README.md README_CN.md
+
+# Footer / inline version strings
+sed -i '' "s/MUSE v[0-9]*\.[0-9]*\.[0-9]*/MUSE v${NEW_VERSION}/g" README.md README_CN.md docs/index.html 2>/dev/null || true
+
+# Skill count in prose (e.g. "62 skills" → "65 skills")
+OLD_SKILL_REFS=$(grep -rn "[0-9]* skills" README.md docs/llms.txt docs/index.html 2>/dev/null | grep -oP '\d+ skills' | sort -u || true)
+for old_ref in $OLD_SKILL_REFS; do
+  old_num=$(echo "$old_ref" | grep -oP '\d+')
+  if [ "$old_num" != "$SKILL_COUNT" ]; then
+    echo "  Fixing: ${old_num} skills → ${SKILL_COUNT} skills"
+    sed -i '' "s/${old_num} skills/${SKILL_COUNT} skills/g" README.md README_CN.md docs/llms.txt docs/index.html 2>/dev/null || true
+  fi
+done
+
+# ─── Step 4: Post-fix verification ───
+echo ""
+echo "🔍 Post-fix verification..."
+STILL_OLD=$(grep -rn "v${OLD_VERSION}\|version-${OLD_VERSION}\|${OLD_VERSION}-blue" \
+  README.md README_CN.md SKILL_INDEX.md docs/llms.txt docs/index.html 2>/dev/null || true)
+
+if [ -n "$STILL_OLD" ]; then
+  echo "❌ ABORT: Old version still found after fix:"
+  echo "$STILL_OLD"
+  echo ""
+  echo "Fix manually, then re-run."
+  exit 1
+fi
+echo "✅ No old version remnants found"
+
+# ─── Step 5: Summary before commit ───
+echo ""
+echo "┌─────────────────────────────────────┐"
+echo "│ Release Summary                     │"
+echo "├─────────────────────────────────────┤"
+echo "│ Version:  v${NEW_VERSION}"
+echo "│ Skills:   ${SKILL_COUNT}"
+echo "│ Title:    ${RELEASE_TITLE}"
+echo "│ Old ver:  v${OLD_VERSION}"
+echo "└─────────────────────────────────────┘"
+echo ""
+read -p "Proceed? (y/N) " confirm
+if [ "$confirm" != "y" ] && [ "$confirm" != "Y" ]; then
+  echo "Aborted."
+  exit 0
+fi
+
+# ─── Step 6: Commit + Tag + Push ───
 git add .
-git commit -m "feat(v2.35.0): Digital Twin Profiling SOP"
-git push origin main
+git commit -m "feat(v${NEW_VERSION}): ${RELEASE_TITLE}
 
-gh release create v2.35.0 --title "v2.35.0 — Digital Twin Evolution" --notes "## What's New
+Skills: ${SKILL_COUNT} (Core $(find skills/core -name 'SKILL.md' | wc -l | tr -d ' ') + Toolkit $(find skills/toolkit -name 'SKILL.md' | wc -l | tr -d ' ') + Ecosystem $(find skills/ecosystem -name 'SKILL.md' | wc -l | tr -d ' '))"
 
-### 🧠 Digital Twin Profiling in \`/bye\`
-The core \`/bye\` wrap-up workflow has been fundamentally upgraded to support passive personality learning. Instead of just saving memory logs, MUSE will now analyze your communication style, decision patterns, and vocabulary in every session to continuously evolve your **Digital Twin Profile**. Your AI coding agent will grow closer to your native Founder's Voice the longer you pair program together.
+git tag "v${NEW_VERSION}"
+git push origin main --tags
 
-### ✨ New Features
-- Added Step 3.8 to \`/bye\` SOP for passive personality extraction
-- Aligned memory behaviors with OpenClaw's passive adaptation model"
+# ─── Step 7: GitHub Release ───
+gh release create "v${NEW_VERSION}" \
+  --title "v${NEW_VERSION} — ${RELEASE_TITLE}" \
+  --notes "${RELEASE_NOTES}" \
+  --latest
+
+echo ""
+echo "✅ v${NEW_VERSION} released successfully!"
+echo "🔗 https://github.com/myths-labs/muse/releases/tag/v${NEW_VERSION}"
