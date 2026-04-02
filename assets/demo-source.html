@@ -1,164 +1,241 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<title>MUSE Demo</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    background: #0d1117;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
-  }
-  .window {
-    width: 960px;
-    background: #161b22;
-    border-radius: 12px;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.6);
-    overflow: hidden;
-  }
-  .titlebar {
-    background: #21262d;
-    height: 38px;
-    display: flex;
-    align-items: center;
-    padding: 0 14px;
-    gap: 8px;
-  }
-  .dot { width: 12px; height: 12px; border-radius: 50%; }
-  .dot.r { background: #ff5f57; }
-  .dot.y { background: #febc2e; }
-  .dot.g { background: #28c840; }
-  .titlebar-text {
-    flex: 1;
-    text-align: center;
-    color: #8b949e;
-    font-size: 13px;
-    margin-right: 56px;
-  }
-  .terminal {
-    padding: 16px 20px;
-    min-height: 500px;
-    color: #c9d1d9;
-    font-size: 14px;
-    line-height: 1.7;
-    overflow: hidden;
-  }
-  .prompt { color: #7ee787; }
-  .cmd { color: #f0f6fc; font-weight: bold; }
-  .muted { color: #8b949e; }
-  .accent { color: #58a6ff; }
-  .warn { color: #d29922; }
-  .success { color: #3fb950; }
-  .fail { color: #f85149; }
-  .emoji { font-family: 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif; }
-  .highlight { color: #ff7b72; font-weight: bold; }
-  .line { opacity: 0; transform: translateY(4px); transition: opacity 0.25s, transform 0.25s; white-space: pre-wrap; }
-  .line.show { opacity: 1; transform: translateY(0); }
-  .cursor-blink::after {
-    content: '▊';
-    color: #58a6ff;
-    animation: blink 1s step-end infinite;
-  }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-  .progress-bar { display: inline-block; }
-  .section-gap { height: 10px; }
-</style>
+  <meta charset="UTF-8">
+  <title>MUSE Demo</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #0d1117;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+    }
+
+    .window {
+      width: 960px;
+      background: #161b22;
+      border-radius: 12px;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+      overflow: hidden;
+    }
+
+    .titlebar {
+      background: #21262d;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .dot.r {
+      background: #ff5f57;
+    }
+
+    .dot.y {
+      background: #febc2e;
+    }
+
+    .dot.g {
+      background: #28c840;
+    }
+
+    .titlebar-text {
+      flex: 1;
+      text-align: center;
+      color: #8b949e;
+      font-size: 13px;
+      margin-right: 56px;
+    }
+
+    .terminal {
+      padding: 16px 20px;
+      min-height: 520px;
+      color: #c9d1d9;
+      font-size: 14px;
+      line-height: 1.7;
+      overflow: hidden;
+    }
+
+    .prompt {
+      color: #7ee787;
+    }
+
+    .cmd {
+      color: #f0f6fc;
+      font-weight: bold;
+    }
+
+    .muted {
+      color: #8b949e;
+    }
+
+    .accent {
+      color: #58a6ff;
+    }
+
+    .warn {
+      color: #d29922;
+    }
+
+    .success {
+      color: #3fb950;
+    }
+
+    .fail {
+      color: #f85149;
+    }
+
+    .gold {
+      color: #C9A84C;
+    }
+
+    .emoji {
+      font-family: 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;
+    }
+
+    .highlight {
+      color: #ff7b72;
+      font-weight: bold;
+    }
+
+    .line {
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.25s, transform 0.25s;
+      white-space: pre-wrap;
+    }
+
+    .line.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .cursor-blink::after {
+      content: '▊';
+      color: #58a6ff;
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: 0
+      }
+    }
+  </style>
 </head>
+
 <body>
-<div class="window">
-  <div class="titlebar">
-    <div class="dot r"></div>
-    <div class="dot y"></div>
-    <div class="dot g"></div>
-    <div class="titlebar-text">my-startup — Claude Code + MUSE v2.9</div>
+  <div class="window">
+    <div class="titlebar">
+      <div class="dot r"></div>
+      <div class="dot y"></div>
+      <div class="dot g"></div>
+      <div class="titlebar-text">my-startup — Claude Code + MUSE v3.0</div>
+    </div>
+    <div class="terminal" id="term"></div>
   </div>
-  <div class="terminal" id="term"></div>
-</div>
-<script>
-const lines = [
-  // Phase 1: /resume command
-  { t: 'html', html: '<span class="prompt">❯</span> <span class="cmd">/resume build</span>', delay: 800 },
-  { t: 'html', html: '', delay: 400 },
+  <script>
+    const lines = [
+      // Phase 1: /resume command
+      { t: 'html', html: '<span class="prompt">❯</span> <span class="cmd">/resume build</span>', delay: 800 },
+      { t: 'html', html: '', delay: 400 },
 
-  // Phase 2: Boot sequence
-  { t: 'html', html: '<span class="accent">🔄 MUSE Boot Sequence</span>', delay: 500 },
-  { t: 'html', html: '<span class="muted">  ① CLAUDE.md + MEMORIES.md</span>  <span class="success">✓ loaded</span>', delay: 350 },
-  { t: 'html', html: '<span class="muted">  ② memory/2026-03-14.md</span>     <span class="success">✓ 6 pending items found</span>', delay: 350 },
-  { t: 'html', html: '<span class="muted">  ③ USER.md</span>                 <span class="success">✓ Claude Opus 4 · 200K</span>', delay: 350 },
-  { t: 'html', html: '<span class="muted">  ④ .muse/build.md</span>          <span class="success">✓ 342 lines · last update: 2h ago</span>', delay: 350 },
-  { t: 'html', html: '<span class="muted">  ⑤ Strategy directives</span>     <span class="success">✓ no new directives</span>', delay: 350 },
-  { t: 'html', html: '', delay: 300 },
+      // Phase 2: Boot sequence (v3.0)
+      { t: 'html', html: '<span class="accent">🔄 MUSE Boot Sequence</span> <span class="muted">v3.0</span>', delay: 500 },
+      { t: 'html', html: '<span class="muted">  ① CLAUDE.md + MEMORIES.md</span>   <span class="success">✓ loaded</span>', delay: 350 },
+      { t: 'html', html: '<span class="muted">  ② memory/2026-04-02.md</span>      <span class="success">✓ 4 pending items</span>', delay: 350 },
+      { t: 'html', html: '<span class="muted">  ②.1 Memory drift detection</span>  <span class="success">✓ 0 stale (all &lt;7d)</span>', delay: 350 },
+      { t: 'html', html: '<span class="muted">  ③ USER.md</span>                  <span class="success">✓ Static + Dynamic profile</span>', delay: 350 },
+      { t: 'html', html: '<span class="muted">  ④ .muse/build.md</span>           <span class="success">✓ L0 scanned · 65 skills</span>', delay: 350 },
+      { t: 'html', html: '<span class="muted">  ⑤ Strategy directives</span>      <span class="gold">✓ 1 new directive (S087)</span>', delay: 350 },
+      { t: 'html', html: '', delay: 300 },
 
-  // Phase 3: Resume report
-  { t: 'html', html: '<span class="success">━━━ Resume Report ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>', delay: 400 },
-  { t: 'html', html: '<span class="emoji">📍</span> <span class="accent">Current:</span> Payment API integration (P0)', delay: 300 },
-  { t: 'html', html: '<span class="emoji">🚨</span> <span class="warn">Pending:</span> 2 items from yesterday', delay: 300 },
-  { t: 'html', html: '<span class="emoji">💡</span> <span class="accent">Next:</span> Fix Stripe webhook handler → run tests', delay: 300 },
-  { t: 'html', html: '<span class="success">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>', delay: 500 },
-  { t: 'html', html: '', delay: 600 },
+      // Phase 3: Resume report
+      { t: 'html', html: '<span class="success">━━━ Resume Report ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>', delay: 400 },
+      { t: 'html', html: '<span class="emoji">📍</span> <span class="accent">Current:</span> Payment API integration (P0)', delay: 300 },
+      { t: 'html', html: '<span class="emoji">📡</span> <span class="gold">New directive:</span> S087 → Coordinator mode upgrade', delay: 300 },
+      { t: 'html', html: '<span class="emoji">💡</span> <span class="accent">Next:</span> Fix Stripe webhook → run tests', delay: 300 },
+      { t: 'html', html: '<span class="success">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>', delay: 500 },
+      { t: 'html', html: '', delay: 600 },
 
-  // Phase 4: Work session
-  { t: 'html', html: '<span class="prompt">❯</span> <span class="cmd">Fix the Stripe webhook 400 error</span>', delay: 900 },
-  { t: 'html', html: '', delay: 400 },
-  { t: 'html', html: '<span class="muted">  Reading src/api/webhooks.ts...</span>', delay: 350 },
-  { t: 'html', html: '<span class="muted">  Found: missing signature verification on line 47</span>', delay: 400 },
-  { t: 'html', html: '<span class="success">  ✓ Fixed — added Stripe.webhooks.constructEvent()</span>', delay: 350 },
-  { t: 'html', html: '<span class="success">  ✓ Tests passing: 12/12</span>', delay: 350 },
-  { t: 'html', html: '', delay: 600 },
+      // Phase 4: Work session
+      { t: 'html', html: '<span class="prompt">❯</span> <span class="cmd">Fix the Stripe webhook 400 error</span>', delay: 900 },
+      { t: 'html', html: '', delay: 400 },
+      { t: 'html', html: '<span class="muted">  Reading src/api/webhooks.ts...</span>', delay: 350 },
+      { t: 'html', html: '<span class="muted">  Found: missing signature verification on line 47</span>', delay: 400 },
+      { t: 'html', html: '<span class="success">  ✓ Fixed — added Stripe.webhooks.constructEvent()</span>', delay: 350 },
+      { t: 'html', html: '<span class="success">  ✓ Tests passing: 12/12</span>', delay: 350 },
+      { t: 'html', html: '', delay: 600 },
 
-  // Phase 5: /ctx check
-  { t: 'html', html: '<span class="prompt">❯</span> <span class="cmd">/ctx</span>', delay: 700 },
-  { t: 'html', html: '<span class="warn">  🟡 Context: ~65% — 8-10 rounds remaining</span>', delay: 400 },
-  { t: 'html', html: '', delay: 600 },
+      // Phase 5: /ctx check
+      { t: 'html', html: '<span class="prompt">❯</span> <span class="cmd">/ctx</span>', delay: 700 },
+      { t: 'html', html: '<span class="warn">  🟡 Context: ~65% — 8-10 rounds remaining</span>', delay: 400 },
+      { t: 'html', html: '', delay: 600 },
 
-  // Phase 6: /bye
-  { t: 'html', html: '<span class="prompt">❯</span> <span class="cmd">/bye</span>', delay: 800 },
-  { t: 'html', html: '', delay: 400 },
-  { t: 'html', html: '<span class="accent">📝 Auto-saving session...</span>', delay: 400 },
-  { t: 'html', html: '<span class="muted">  ① .muse/build.md</span>      <span class="success">✓ synced</span>', delay: 300 },
-  { t: 'html', html: '<span class="muted">  ② memory/2026-03-14.md</span> <span class="success">✓ written</span>', delay: 300 },
-  { t: 'html', html: '<span class="muted">  ③ Distill check</span>        <span class="success">✓ 3 files — not yet needed</span>', delay: 300 },
-  { t: 'html', html: '', delay: 300 },
-  { t: 'html', html: '<span class="success">✅ Session saved. See you next /resume!</span>', delay: 500 },
-  { t: 'html', html: '<span class="prompt cursor-blink">❯</span>', delay: 2000 },
-];
+      // Phase 6: /bye
+      { t: 'html', html: '<span class="prompt">❯</span> <span class="cmd">/bye</span>', delay: 800 },
+      { t: 'html', html: '', delay: 400 },
+      { t: 'html', html: '<span class="accent">📝 Auto-saving session...</span>', delay: 400 },
+      { t: 'html', html: '<span class="muted">  ① .muse/build.md</span>       <span class="success">✓ synced</span>', delay: 300 },
+      { t: 'html', html: '<span class="muted">  ② memory/2026-04-02.md</span>  <span class="success">✓ written (4 categories)</span>', delay: 300 },
+      { t: 'html', html: '<span class="muted">  ③ Digital Twin profile</span>  <span class="success">✓ updated</span>', delay: 300 },
+      { t: 'html', html: '<span class="muted">  ④ Distill check</span>         <span class="success">✓ 5 files — /distill recommended</span>', delay: 300 },
+      { t: 'html', html: '', delay: 300 },
+      { t: 'html', html: '<span class="success">✅ Session saved. See you next /resume!</span>', delay: 500 },
+      { t: 'html', html: '<span class="prompt cursor-blink">❯</span>', delay: 2000 },
+    ];
 
-const term = document.getElementById('term');
-let i = 0;
+    const term = document.getElementById('term');
+    let i = 0;
 
-function showNext() {
-  if (i >= lines.length) {
-    // Loop after pause
-    setTimeout(() => {
-      term.innerHTML = '';
-      i = 0;
-      showNext();
-    }, 3000);
-    return;
-  }
-  const l = lines[i];
-  const div = document.createElement('div');
-  div.className = 'line';
-  div.innerHTML = l.html;
-  term.appendChild(div);
+    function showNext() {
+      if (i >= lines.length) {
+        setTimeout(() => {
+          term.innerHTML = '';
+          i = 0;
+          showNext();
+        }, 3000);
+        return;
+      }
+      const l = lines[i];
+      const div = document.createElement('div');
+      div.className = 'line';
+      div.innerHTML = l.html;
+      term.appendChild(div);
+      term.scrollTop = term.scrollHeight;
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => { div.classList.add('show'); });
+      });
+      i++;
+      setTimeout(showNext, l.delay);
+    }
 
-  // Auto-scroll
-  term.scrollTop = term.scrollHeight;
-
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => { div.classList.add('show'); });
-  });
-
-  i++;
-  setTimeout(showNext, l.delay);
-}
-
-setTimeout(showNext, 600);
-</script>
+    setTimeout(showNext, 600);
+  </script>
 </body>
+
 </html>
