@@ -1,10 +1,16 @@
+## [3.0.3] - 2026-04-02
+
+### Fixed
+- **OpenCode slash commands**: Corrected wrong claim that OpenCode doesn't support native slash commands. OpenCode supports custom commands via `.opencode/commands/*.md`.
+- **`install.sh`**: Workflows now installed to `.opencode/commands/` for native slash command support (in addition to `.agents/workflows/`).
+
 ## [3.0.2] - 2026-04-02
 
 ### Added
 - **OpenCode (oh-my-opencode) Support** — MUSE's first community feature request ([#1](https://github.com/myths-labs/muse/issues/1) by [@imwxc](https://github.com/imwxc)):
   - **`install.sh`**: New `--tool opencode` option. Installs skills to `.agents/skills/` (plural, OpenCode convention) instead of `.agent/skills/` (singular, Claude Code). Auto-detects OpenCode via `opencode` command or `.agents/` directory.
   - **`convert-skills.sh`**: New `--tool opencode` export format. Copies SKILL.md files directly to `.agents/skills/<name>/SKILL.md`.
-  - **Compatibility**: All 65 skills, CLAUDE.md constitution, and MCP Server work out of the box. Workflows installed as reference (OpenCode lacks native slash commands).
+  - **Compatibility**: All 65 skills, CLAUDE.md constitution, and MCP Server work out of the box.
   - **Tool count**: 6 → 7 supported tools (Claude Code, OpenClaw, OpenCode, Cursor, Windsurf, Gemini CLI, Codex CLI)
 
 ## [3.0.1] - 2026-04-02
