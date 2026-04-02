@@ -3,7 +3,7 @@
 # Convert MUSE skills to/from other AI coding tool formats.
 #
 # Supports:
-#   Export: cursor, windsurf, copilot, openclaw, aider, antigravity
+#   Export: cursor, windsurf, copilot, openclaw, opencode, aider, antigravity
 #   Import: agency-agents repo → MUSE skill format
 #
 # Usage:
@@ -145,6 +145,21 @@ ${body}
 HEREDOC
 }
 
+convert_opencode() {
+  local file="$1" target_dir="$2"
+  local name
+
+  name="$(get_field "name" "$file")"
+  [[ -z "$name" ]] && return
+  local slug
+  slug=$(slugify "$name")
+
+  # OpenCode uses .agents/skills/<name>/SKILL.md (same format, plural dir)
+  local outdir="$target_dir/.agents/skills/$slug"
+  mkdir -p "$outdir"
+  cp "$file" "$outdir/SKILL.md"
+}
+
 convert_aider() {
   local file="$1" target_dir="$2"
   # Aider uses a single CONVENTIONS.md — accumulate
@@ -284,6 +299,7 @@ run_export() {
       windsurf)     convert_windsurf     "$skill_file" "$target_dir" ;;
       copilot)      convert_copilot      "$skill_file" "$target_dir" ;;
       openclaw)     convert_openclaw     "$skill_file" "$target_dir" ;;
+      opencode)     convert_opencode     "$skill_file" "$target_dir" ;;
       aider)        convert_aider        "$skill_file" "$target_dir" ;;
       antigravity)  convert_antigravity  "$skill_file" "$target_dir" ;;
     esac
@@ -332,6 +348,7 @@ usage() {
   echo "  windsurf     → .windsurfrules (single combined file)"
   echo "  copilot      → .github/copilot-instructions.md (single file)"
   echo "  openclaw     → .openclaw/agents/*/SOUL.md + AGENTS.md"
+  echo "  opencode     → .agents/skills/*/SKILL.md (OpenCode native)"
   echo "  aider        → CONVENTIONS.md (single combined file)"
   echo "  antigravity  → .gemini/antigravity/skills/*/SKILL.md"
   echo "  all          → all formats at once"
@@ -468,7 +485,7 @@ echo "  Skills: $SKILL_COUNT"
 echo "  Target: $TARGET_DIR"
 
 if [[ "$TOOL" == "all" ]]; then
-  for t in cursor windsurf copilot openclaw aider antigravity; do
+  for t in cursor windsurf copilot openclaw opencode aider antigravity; do
     header "📤 Exporting → $t"
     run_export "$t" "$TARGET_DIR"
   done

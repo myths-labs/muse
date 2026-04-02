@@ -6,7 +6,7 @@
 ## Iron Rules
 
 1. **Language**: 🚨 YOU MUST communicate in **[Your preferred language for communication]**. Every response, explanation, question, and comment MUST be in this language. This is NON-NEGOTIABLE. Do NOT default to English unless this rule explicitly says English.
-2. **Skill-First**: Before ANY task, check if a relevant Skill exists in `.agent/skills/`
+2. **Skill-First**: Before ANY task, check if a relevant Skill exists in `.agent/skills/` (or `.agents/skills/` for OpenCode)
 3. **Large Files**: Only view ≤300 lines at a time. Never blindly read entire large files.
 4. **Context Protection**: When context ≥ 80%, immediately run `/bye`
 5. **Verify Before Claiming Done**: Run `verification-before-completion` skill before saying "done"

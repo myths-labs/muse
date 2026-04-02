@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/banner.png" alt="MUSE — Memory-Unified Skills & Execution" width="100%">
+  <img src="./assets/banner.png" alt="MUSE — The AI Coding Governance System" width="100%">
 </p>
 
 # 🎭 MUSE
@@ -9,7 +9,7 @@
 <p align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/myths-labs/muse/blob/main/LICENSE)
-[![Version](https://img.shields.io/badge/version-3.0.1-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-3.0.2-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
 [![Stars](https://img.shields.io/github/stars/myths-labs/muse?style=social)](https://github.com/myths-labs/muse)
 [![Pure Markdown](https://img.shields.io/badge/pure-markdown-green.svg)](#)
 [![Zero Dependencies](https://img.shields.io/badge/dependencies-zero-brightgreen.svg)](#)
@@ -57,7 +57,7 @@ Inspired by [LCM (Lossless Context Management)](https://papers.voltropy.com/LCM)
 
 **Problem**: AI coding assistants have context window limits. Format specs like `.cursorrules` or `AGENTS.md` give your AI instructions — but they can't manage **memory**, **roles**, or **cross-session knowledge**. Long conversations forget early content. New conversations start from scratch.
 
-**Solution**: MUSE wraps your AI with a **governance protocol** — role isolation, persistent dual-layer memory, 58 reusable skills, cross-role directive queue, and visual dashboards. All in plain Markdown.
+**Solution**: MUSE wraps your AI with a **governance protocol** — role isolation, persistent dual-layer memory, 65 reusable skills, cross-role directive queue, and visual dashboards. All in plain Markdown.
 
 | Without MUSE | With MUSE |
 |---------|---------|
@@ -89,11 +89,12 @@ Inspired by [LCM (Lossless Context Management)](https://papers.voltropy.com/LCM)
 - [Changelog](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
 - [Skill Index](https://github.com/myths-labs/muse/blob/main/SKILL_INDEX.md)
 
-**Works with**: Claude Code · OpenClaw · Cursor · Windsurf · Gemini CLI · Codex CLI — or any AI tool that supports system prompts.
+**Works with**: Claude Code · OpenClaw · OpenCode · Cursor · Windsurf · Gemini CLI · Codex CLI — or any AI tool that supports system prompts.
 
 | Tool | Install Command | Format |
 |------|----------------|--------|
 | Claude Code / OpenClaw | `./scripts/install.sh --tool claude` | `.agent/skills/` + `CLAUDE.md` |
+| OpenCode | `./scripts/install.sh --tool opencode` | `.agents/skills/` + `CLAUDE.md` |
 | Cursor | `./scripts/install.sh --tool cursor` | `.cursor/rules/*.mdc` |
 | Windsurf | `./scripts/install.sh --tool windsurf` | `.windsurf/rules/*.md` |
 | Gemini CLI | `./scripts/install.sh --tool gemini` | `.gemini/skills/` + `GEMINI.md` |
@@ -130,7 +131,7 @@ cd muse && ./scripts/install.sh --tool cursor --target /path/to/your-project
 ./scripts/install.sh --target /path/to/your-project
 ```
 
-Supported: `claude`, `openclaw`, `cursor`, `windsurf`, `gemini`, `codex`, or `all`.
+Supported: `claude`, `openclaw`, `opencode`, `cursor`, `windsurf`, `gemini`, `codex`, or `all`.
 
 ### Option C: Manual Setup
 
@@ -436,7 +437,7 @@ Add to your tool's MCP config (e.g., `~/.config/claude/claude_desktop_config.jso
 No. MUSE is pure Markdown files. Copy them to your project and you're ready. Zero dependencies.
 
 **Q: Which AI tools does it support?**
-Six tools with native install support: **Claude Code**, **OpenClaw**, **Cursor**, **Windsurf**, **Gemini CLI**, and **Codex CLI**. Run `./scripts/install.sh --tool <name>` to install in the correct format for each tool. Additionally, `./scripts/convert-skills.sh --tool <name>` exports all 65 skills to Cursor, Windsurf, Copilot, OpenClaw, Aider, or Antigravity formats. Import from [agency-agents](https://github.com/msitarzewski/agency-agents) (35K+ ⭐) with `--import agency-agents`.
+Seven tools with native install support: **Claude Code**, **OpenClaw**, **OpenCode**, **Cursor**, **Windsurf**, **Gemini CLI**, and **Codex CLI**. Run `./scripts/install.sh --tool <name>` to install in the correct format for each tool. Additionally, `./scripts/convert-skills.sh --tool <name>` exports all 65 skills to Cursor, Windsurf, Copilot, OpenClaw, OpenCode, Aider, or Antigravity formats. Import from [agency-agents](https://github.com/msitarzewski/agency-agents) (35K+ ⭐) with `--import agency-agents`.
 
 **Q: How is this different from lossless-claw?**
 lossless-claw is a code plugin (SQLite + DAG + sub-agents) that requires the OpenClaw runtime. MUSE is pure Markdown SOPs, works with any AI tool, zero dependencies. Same principles, different implementation.
@@ -485,6 +486,6 @@ MIT © [Myths Labs](https://github.com/myths-labs)
 </p>
 
 <p align="center">
-  <i>MUSE v3.0.1</i>
+  <i>MUSE v3.0.2</i>
 </p>
 

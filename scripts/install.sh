@@ -10,7 +10,7 @@
 #   ./scripts/install.sh --target /path       # Set target project directory
 #   ./scripts/install.sh --help               # Show usage
 #
-# Supported tools: claude, openclaw, cursor, windsurf, gemini, codex
+# Supported tools: claude, openclaw, opencode, cursor, windsurf, gemini, codex
 
 set -euo pipefail
 
@@ -37,7 +37,7 @@ TARGET_DIR="."
 SELECTED_TOOL=""
 SKILL_TIERS="core toolkit"  # default: install core + toolkit
 
-ALL_TOOLS=(claude openclaw cursor windsurf gemini codex)
+ALL_TOOLS=(claude openclaw opencode cursor windsurf gemini codex)
 
 # ── Usage ──
 usage() {
@@ -49,6 +49,7 @@ ${BOLD}USAGE${RESET}
 
 ${BOLD}OPTIONS${RESET}
   --tool TOOL      Install for a specific tool (${ALL_TOOLS[*]}, all)
+                   opencode installs to .agents/ (plural) for OpenCode compatibility
   --target DIR     Target project directory (default: current directory)
   --list           List detected tools and exit
   --core-only      Install core skills only (skip toolkit)
@@ -63,6 +64,7 @@ ${BOLD}EXAMPLES${RESET}
 ${BOLD}SUPPORTED TOOLS${RESET}
   claude     Claude Code (.agent/skills/ + CLAUDE.md)
   openclaw   OpenClaw (same as Claude Code)
+  opencode   OpenCode (.agents/skills/ + CLAUDE.md)
   cursor     Cursor IDE (.cursor/rules/*.mdc)
   windsurf   Windsurf IDE (.windsurf/rules/*.md)
   gemini     Gemini CLI (.gemini/ + GEMINI.md)
@@ -113,6 +115,11 @@ detect_tools() {
   # Gemini CLI: check for gemini command or .gemini/ dir
   if command -v gemini &>/dev/null || [[ -d "$TARGET_DIR/.gemini" ]]; then
     detected+=(gemini)
+  fi
+
+  # OpenCode: check for opencode command or .agents/ dir
+  if command -v opencode &>/dev/null || [[ -d "$TARGET_DIR/.agents" ]]; then
+    detected+=(opencode)
   fi
 
   # Codex CLI: check for codex command
@@ -215,6 +222,38 @@ install_claude() {
   fi
 
   info "Skills + Workflows → .agent/ ✅"
+}
+
+install_opencode() {
+  header "📦 Installing for OpenCode (oh-my-opencode)..."
+  local dest="$TARGET_DIR/.agents"
+  mkdir -p "$dest/skills" "$dest/workflows"
+
+  # Copy skills preserving directory structure
+  for tier in $SKILL_TIERS; do
+    if [[ -d "$SKILLS_DIR/$tier" ]]; then
+      cp -r "$SKILLS_DIR/$tier" "$dest/skills/"
+    fi
+  done
+  if [[ -d "$SKILLS_DIR/ecosystem" ]]; then
+    cp -r "$SKILLS_DIR/ecosystem" "$dest/skills/"
+  fi
+
+  # Copy workflows (OpenCode can't use them natively, but useful as reference)
+  cp "$WORKFLOWS_DIR/"*.md "$dest/workflows/" 2>/dev/null || true
+
+  # Copy constitution if not exists
+  if [[ ! -f "$TARGET_DIR/CLAUDE.md" ]]; then
+    cp "$TEMPLATES_DIR/CLAUDE.md" "$TARGET_DIR/CLAUDE.md"
+    info "CLAUDE.md created"
+  else
+    info "CLAUDE.md already exists (skipped)"
+  fi
+
+  info "Skills + Workflows → .agents/ ✅"
+  info "⚠️  OpenCode doesn't have native slash commands."
+  info "   Workflows (.agents/workflows/) are installed as reference only."
+  info "   Skills, CLAUDE.md, and MCP Server work fully."
 }
 
 install_cursor() {
@@ -527,10 +566,11 @@ main() {
   echo ""
   echo "Which tool(s) to install for?"
   echo "  [1] Claude Code / OpenClaw ${DIM}(.agent/skills/)${RESET}"
-  echo "  [2] Cursor ${DIM}(.cursor/rules/*.mdc)${RESET}"
-  echo "  [3] Windsurf ${DIM}(.windsurf/rules/*.md)${RESET}"
-  echo "  [4] Gemini CLI ${DIM}(.gemini/skills/)${RESET}"
-  echo "  [5] Codex CLI ${DIM}(AGENTS.md)${RESET}"
+  echo "  [2] OpenCode ${DIM}(.agents/skills/)${RESET}"
+  echo "  [3] Cursor ${DIM}(.cursor/rules/*.mdc)${RESET}"
+  echo "  [4] Windsurf ${DIM}(.windsurf/rules/*.md)${RESET}"
+  echo "  [5] Gemini CLI ${DIM}(.gemini/skills/)${RESET}"
+  echo "  [6] Codex CLI ${DIM}(AGENTS.md)${RESET}"
   echo "  [a] All detected tools"
   echo "  [q] Quit"
   echo ""
@@ -539,10 +579,11 @@ main() {
 
   case "$choice" in
     1) run_install "claude" ;;
-    2) run_install "cursor" ;;
-    3) run_install "windsurf" ;;
-    4) run_install "gemini" ;;
-    5) run_install "codex" ;;
+    2) run_install "opencode" ;;
+    3) run_install "cursor" ;;
+    4) run_install "windsurf" ;;
+    5) run_install "gemini" ;;
+    6) run_install "codex" ;;
     a|A)
       local tools_to_install=("${detected_arr[@]}")
       [[ ${#tools_to_install[@]} -eq 0 ]] && tools_to_install=("${ALL_TOOLS[@]}")
@@ -561,6 +602,7 @@ run_install() {
   local tool="$1"
   case "$tool" in
     claude|openclaw) install_claude ;;
+    opencode)        install_opencode ;;
     cursor)          install_cursor ;;
     windsurf)        install_windsurf ;;
     gemini)          install_gemini ;;
