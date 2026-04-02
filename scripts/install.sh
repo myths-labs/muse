@@ -239,8 +239,14 @@ install_opencode() {
     cp -r "$SKILLS_DIR/ecosystem" "$dest/skills/"
   fi
 
-  # Copy workflows (OpenCode can't use them natively, but useful as reference)
+  # Copy workflows to .agents/workflows/ (reference)
   cp "$WORKFLOWS_DIR/"*.md "$dest/workflows/" 2>/dev/null || true
+
+  # Copy workflows to .opencode/commands/ (native slash commands)
+  local cmd_dir="$TARGET_DIR/.opencode/commands"
+  mkdir -p "$cmd_dir"
+  cp "$WORKFLOWS_DIR/"*.md "$cmd_dir/" 2>/dev/null || true
+  info "Workflows → .opencode/commands/ (native slash commands) ✅"
 
   # Copy constitution if not exists
   if [[ ! -f "$TARGET_DIR/CLAUDE.md" ]]; then
@@ -250,10 +256,8 @@ install_opencode() {
     info "CLAUDE.md already exists (skipped)"
   fi
 
-  info "Skills + Workflows → .agents/ ✅"
-  info "⚠️  OpenCode doesn't have native slash commands."
-  info "   Workflows (.agents/workflows/) are installed as reference only."
-  info "   Skills, CLAUDE.md, and MCP Server work fully."
+  info "Skills → .agents/skills/ ✅"
+  info "Skills, CLAUDE.md, Workflows, and MCP Server work fully."
 }
 
 install_cursor() {
