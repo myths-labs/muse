@@ -210,24 +210,38 @@ You: /retro             ← Weekly stats from git log + memory (commits, shipped
 graph TB
     subgraph "🏛 Constitution Layer"
         A["CLAUDE.md"] --> B["Iron Rules + Safety"]
-        A --> C["Context Protection"]
+        A --> C["ETHOS.md<br/>Builder Philosophy"]
+    end
+    
+    subgraph "🎭 Role Layer"
+        R[".muse/*.md<br/>build · qa · growth"] --> S["Role Isolation"]
+        R --> T["📡 Directive Queue<br/>cross-role messaging"]
     end
     
     subgraph "🧠 Memory Layer"
         D["memory/*.md<br/>short-term"] -->|"/distill"| E["MEMORIES.md<br/>long-term"]
+        D --> D1["Drift Detection<br/>stale >7d auto-flag"]
+        E --> E1["4 Categories<br/>preference · feedback<br/>project · reference"]
     end
     
-    subgraph "⚡ Skills Layer"
+    subgraph "🤖 Coordinator"
+        CO["coordinator-mode"] --> CO1["Understand → Dispatch"]
+        CO --> CO2["Sub-agent Synthesis"]
+    end
+    
+    subgraph "⚡ Skills Layer (65)"
         G["Trigger Skills<br/>on-demand"]
         H["Lifecycle Skills<br/>strategic-compact"]
     end
     
     subgraph "🔄 Workflow Layer"
         I["/resume"] --> J["Work"]
+        J -->|"/sprint"| SP["Think→Plan→Build<br/>→Review→Test→Ship"]
         J -->|"/ctx"| K{"Healthy?"}
         K -->|"🟢"| J
         K -->|"🔴"| L["/bye"]
         L --> D
+        L --> L1["Digital Twin<br/>profile update"]
     end
 ```
 

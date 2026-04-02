@@ -126,26 +126,40 @@ cat muse/templates/.gitignore-template >> 你的项目/.gitignore
 
 ```mermaid
 graph TB
-    subgraph "📜 宪法层"
+    subgraph "🏛 宪法层"
         A["CLAUDE.md"] --> B["铁律 + 安全"]
-        A --> C["上下文保护"]
+        A --> C["ETHOS.md<br/>Builder 哲学"]
+    end
+    
+    subgraph "🎭 角色层"
+        R[".muse/*.md<br/>build · qa · growth"] --> S["角色隔离"]
+        R --> T["📡 指令队列<br/>跨角色通信"]
     end
     
     subgraph "🧠 记忆层"
         D["memory/*.md<br/>短期"] -->|"/distill"| E["MEMORIES.md<br/>长期"]
+        D --> D1["漂移检测<br/>超7天自动标记"]
+        E --> E1["四分类存储<br/>偏好 · 反馈<br/>项目 · 参考"]
     end
     
-    subgraph "⚡ 技能层"
+    subgraph "🤖 协调器"
+        CO["coordinator-mode"] --> CO1["理解 → 分派"]
+        CO --> CO2["子 Agent 综合"]
+    end
+    
+    subgraph "⚡ 技能层 (65)"
         G["触发型技能<br/>按需加载"]
         H["生命周期技能<br/>strategic-compact"]
     end
     
     subgraph "🔄 工作流层"
         I["/resume"] --> J["工作"]
+        J -->|"/sprint"| SP["Think→Plan→Build<br/>→Review→Test→Ship"]
         J -->|"/ctx"| K{"健康？"}
         K -->|"🟢"| J
         K -->|"🔴"| L["/bye"]
         L --> D
+        L --> L1["数字分身<br/>画像更新"]
     end
 ```
 
