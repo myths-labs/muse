@@ -25,6 +25,7 @@
   | **Parallel agents** | **`dispatching-parallel-agents`** |
   | **Verify completion** | **`verification-before-completion`** |
   | **GEO/SEO optimization** | **`geo-seo`** → `geo-audit` / `geo-citability` / `geo-schema` / `geo-report-pdf` |
+  | **Web Deck/PPT** | **`frontend-slides`** (zero-dep HTML slides + PPT conversion + 12 presets + Vercel deploy + PDF export) |
 
 - **Skill Three-Layer Classification** (v3.0):
   - **Iron Law Layer** (always active): Memory taxonomy + forbidden-store list + drift detection + coordinator iron law

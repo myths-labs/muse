@@ -120,6 +120,18 @@ description: 新对话开始时恢复项目上下文的标准流程
      - 🔲 [BUILD] resume.md 角色过滤修复
      - 🔲 [MUSE/GROWTH] S033 执行
      ```
+2.6 🔴 **跨项目 memory 扫描**（仅 `/resume strategy` 执行）:
+   > **根因**: Strategy 只读 DYA/memory/ — Prometheus/MUSE 的 memory 可能记录了
+   > 已完成的重大事件但 /bye 未回传到 strategy.md。4/3 S097/S094/BUG-12 全部因此丢失。
+   
+   **必须执行**:
+   1. 读取 `Prometheus/memory/YYYY-MM-DD.md`（今天+昨天）
+   2. 读取 `MUSE/memory/YYYY-MM-DD.md`（今天+昨天，如存在）
+   3. 扫描关键词: `deploy|发布|✅|完成|修复|S0[0-9]+|回传|Launch|上线`
+   4. 发现 strategy.md 未记录的重大事件 → 恢复报告中标 `🔴 跨项目事件未同步`
+   5. 立即在 strategy.md 中补同步
+   
+   **不执行的情况**: 非 `/resume strategy`（如 `/resume build`/`growth`/`qa`）→ 跳过
 2.7 **角色文件膨胀检查**：`wc -l` 目标 .muse/ 文件，**>800 行 → 先执行归档再开始工作**（移动已完成工作记录/已传递指令到 `.muse/archive/`，目标 ≤500 行）
 2.8 🆕 **🚨 角色文件内 🟡 未执行指令扫描（防止指令被埋没）**：
    - **读完角色文件后**，`grep_search` 该角色文件中所有 `🟡` 标记
@@ -157,6 +169,24 @@ description: 新对话开始时恢复项目上下文的标准流程
      - 没找到 🟡 指令 → 跳过（静默）
    - ⚡ **Prometheus 角色同理**：`/resume prometheus` → 只搜 `→PROMETHEUS/BUILD`（不搜裸 `→BUILD`）
    - ⚡ **MUSE 角色同理**：`/resume muse growth` → 只搜 `→MUSE/GROWTH`
+3.5 🔴 **跨项目回传主动拉取**（仅 `/resume strategy` 执行）:
+   > **根因**: /bye 的 sync up 可能不完整（context truncation/Agent 跳步）。
+   > Strategy 不能只依赖被动接收——必须主动检查 BUILD 有没有完成指令。
+   > 4/3 S097(Launch 时间表)/S094(Deck v4)/BUG-12(中国语音) 全部因此丢失。
+   
+   **必须执行**:
+   1. 读取 `Prometheus/.muse/build.md` 的前 30 行 + "已接收战略指令" section
+   2. 读取 `MUSE/.muse/build.md` 的前 30 行（如存在）
+   3. 对每个 BUILD 角色文件中标 ✅ 的指令:
+      - 检查 strategy.md 中对应指令是否也已标 ✅
+      - **不一致** → 恢复报告中标 `🔴 BUILD 已完成但 Strategy 未更新: S0XX`
+      - 立即在 strategy.md 中同步状态（指令队列 + 待办 + 状态快照 + Blocker 列表）
+   4. 特别检查: BUILD 的 "上轮已完成但 memory 未记录" section（如存在）
+      - 这类条目 = 上轮 /bye 数据丢失的补救，优先级最高
+   5. `grep -n "🟡\|待回传\|待执行\|BUILD 待\|BUILD 必须" strategy.md`，
+      对每个匹配项与 BUILD 角色文件交叉验证
+   
+   **不执行的情况**: 非 `/resume strategy`（如 `/resume build`/`growth`/`qa`）→ 跳过
 4. **如果是 `/resume build`：双重检查 QA 通知**
    - ① 检查 `.muse/qa.md` 有没有未处理的 ❌ FAIL → 有则先修复
    - ② 🚨 **检查 build.md 自身** 中的 QA→BUILD 通知（`grep_search build.md "待 BUILD 处理"`）
@@ -175,8 +205,11 @@ description: 新对话开始时恢复项目上下文的标准流程
    - QA 验证任何 BUILD 声称 `[x]` 完成的功能前 → 先 `grep_search` 代码库确认关键代码文件/函数存在
    - 如果 grep = 0 results → **直接 FAIL**，不需要进浏览器/curl 验证
    - 在 QA Report 中标注「🔴 P0: 代码不存在（grep 验证失败）」
-5. **如果是 `/resume strategy`：检查 memory/ 中是否有未同步到 strategy.md 的重大事件**（grep 关键词：被拒/通过/审核/定稿/部署/融资/resubmit/rejected/approved/MUSE/开源/repo/安全/security/泄露/轮换/filter-branch/Skill/instinct/预装/发布/release/宪法/CLAUDE\.md/推荐人/已发送）→ 有则提醒用户需要 sync
-   🆕 **同时检查 conversation summaries**：memory 之外，也用 ②.3 中识别出的"无 memory 对话"交叉验证——这些对话的 summary 中是否含有 strategy 相关的重大事件（融资/提交/部署/决策等）？如有 → 也提醒用户需要 sync
+5. **如果是 `/resume strategy`**:
+   5a. **检查 DYA memory/ 中是否有未同步到 strategy.md 的重大事件**（grep 关键词：被拒/通过/审核/定稿/部署/融资/resubmit/rejected/approved/MUSE/开源/repo/安全/security/泄露/轮换/filter-branch/Skill/instinct/预装/发布/release/宪法/CLAUDE\.md/推荐人/已发送）→ 有则提醒用户需要 sync
+   5b. 🔴 **跨项目角色文件扫描**（即 Step 3.5）— 结果已在 Step 3.5 处理，此处确认恢复报告已包含结果
+   5c. 🔴 **指令状态一致性校验**: `grep` strategy.md 中所有 🟡/待回传/待执行，与 BUILD 角色文件交叉验证。已完成但未更新的 → 立即同步 + 恢复报告中高亮
+   5d. 🆕 **同时检查 conversation summaries**：memory 之外，也用 ②.3 中识别出的"无 memory 对话"交叉验证——这些对话的 summary 中是否含有 strategy 相关的重大事件（融资/提交/部署/决策等）？如有 → 也提醒用户需要 sync
 5.1 **冲突解决**：memory 和角色文件数据冲突时，**以角色文件为准**（memory 是写入时的快照，角色文件持续更新）。恢复报告只引用角色文件中的数据，memory 仅用于发现遗漏
 5.2 **内部一致性校验**：输出恢复报告前，交叉检查角色文件内的同一事实是否在多处一致（如融资表/决策表/待办/指令队列中同一事项的状态是否矛盾）
 5.3 **项目部署事实表校验**（全角色必做）：扫描 `🌐 项目部署事实表`，交叉验证：

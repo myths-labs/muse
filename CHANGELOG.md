@@ -1,3 +1,13 @@
+## [3.0.4] - 2026-04-03
+
+### Fixed
+- **🔴 Cross-Project Memory Sync Failure (BUG-MEM-01)** — Critical SOP bug causing strategy conversations to lose BUILD progress across projects. Root cause: 5-layer fault chain where `/bye` didn't write back instruction completion status to `strategy.md`, and `/resume strategy` didn't pull from BUILD role files.
+  - **`bye.md` Step 3.3**: New mandatory "Instruction Status Write-Back" step. After completing any strategy directive (S0XX), agents must `grep` strategy.md for all 🟡/pending markers and flip completed ones to ✅ with dates. Silent skip = execution failure.
+  - **`resume.md` Step 2.6**: New "Cross-Project Memory Scan" for `/resume strategy`. Reads Prometheus and MUSE memory files (today + yesterday) to catch events that `/bye` failed to sync.
+  - **`resume.md` Step 3.5**: New "Cross-Project BUILD Pull" for `/resume strategy`. Actively reads BUILD role files and cross-validates instruction completion status against strategy.md. Detects and auto-fixes inconsistencies.
+  - **`resume.md` Step 5**: Expanded from single passive check to 4 structured sub-checks (5a-5d) with instruction status consistency verification.
+  - **Impact**: Prevented loss of S097 (Launch timeline), S094 (Deck deployment), BUG-12 (critical fix) across 3 conversations on 2026-04-03.
+
 ## [3.0.3] - 2026-04-02
 
 ### Fixed

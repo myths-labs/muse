@@ -133,6 +133,7 @@ description: 结束对话的一键收尾指令。自动汇总工作、同步 .mu
 
 ### 3. 执行同步
 - 按 Step 2 的路由表和 checklist 执行 sync
+- 🔴 **先执行 Step 3.3 指令状态反向回写**，再执行下方主动 Diff
 - 🆕 **主动 Diff（防遗漏·必须执行）**:
   - 写完 memory 后（或准备写 memory 时），**逐条对比**本轮 memory 新增条目与目标角色文件
   - 每条 memory 条目必须分类为:
@@ -149,6 +150,38 @@ description: 结束对话的一键收尾指令。自动汇总工作、同步 .mu
     - 是 → 必须执行 `/sync [project] build to qa`，在 qa.md 对应 FAIL 报告下方追加「⚡ BUILD 声称已修复」
     - 否 → 静默跳过
 - 格式严格遵守 `/sync` workflow 的规范
+
+### 3.3 🔴 指令状态反向回写（强制 — 不可跳过）
+
+> **根因**: BUILD/GROWTH/QA 完成 strategy 指令后只更新自己的角色文件，
+> 但不回 strategy.md 翻转指令状态 → /resume strategy 下轮仍看到"待回传/待执行"。
+> 这是 4/3 S097/S094/BUG-12 三重记忆丢失的直接根因。
+
+**触发条件**: 本轮完成了任何来自 strategy.md 的指令（S0XX）或其他重大任务
+
+**必须执行**:
+1. `grep -n "🟡\|待回传\|待执行\|BUILD 待\|BUILD 必须" /Users/jj/Desktop/DYA/.muse/strategy.md`
+2. 对每个匹配项，检查本轮是否已完成该指令
+3. 已完成 → **直接在 strategy.md 中**将状态改为 ✅ + 追加完成摘要和日期
+4. 未完成但有进展 → 更新进展描述
+5. 无关 → 跳过
+
+**示例**:
+```
+# 本轮完成 S097 回传
+# strategy.md 原文:
+📡 S097→BUILD: 🟡 待回传 Launch 时间表
+# 改为:
+📡 S097→BUILD: ✅ **已回传** (4/3 17:50) — 4/8 最早可 Launch
+```
+
+**覆盖范围**: 不只是指令队列 — strategy.md 的**待办、状态快照、Launch Blocker 列表**中
+引用的同一事项也必须一并更新。用 `grep` 搜索指令编号确保**全文一致**。
+
+🔴 **铁律**:
+- 如果 `grep` 搜到 🟡/待回传匹配项但你判断"不需要更新" → 必须在 memory 中说明原因
+- 静默跳过 = /bye 执行失败
+- 此步在**所有角色**的 /bye 中执行（BUILD/GROWTH/QA/OPS），不仅限于 Strategy
 
 ### 3.4 🔴 MUSE 源码仓库同步检查（v3.0 新增 — 防版本断裂）
 
