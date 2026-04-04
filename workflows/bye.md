@@ -103,7 +103,8 @@ description: 结束对话的一键收尾指令。自动汇总工作、同步 .mu
 > 任何 strategy 对话恢复时需要知道的进展都应该回传。
 
 > ⚠️ **MUSE 路径铁律**: MUSE 的 `.muse/` 文件在 `/Users/jj/Desktop/MUSE/.muse/`，不在 DYA 目录下。
-> Prometheus 已无独立 `.muse/` 目录，数据合并回 DYA 的 `.muse/build.md`。
+> 每个项目（DYA/Prometheus/MUSE）都有自己独立的 `.muse/` 目录（build.md/qa.md/growth.md 等）。
+> **strategy.md 是唯一的例外** — 始终位于 `DYA/.muse/strategy.md`，所有项目共用。
 
 \* broadcast = 写 QA 报告 + 通知 BUILD + 通知 STRATEGY
 

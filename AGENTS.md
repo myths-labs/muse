@@ -16,6 +16,7 @@
 4. **Context Protection**: When context ≥ 80%, immediately run `/bye`
 5. **Verify Before Claiming Done**: Run `verification-before-completion` skill before saying "done"
 6. **End Sessions Properly**: Always use `/bye` to end conversations
+7. **Research-First Development**: 🚨 When implementing unfamiliar technical patterns (e.g., SDK APIs, coordinate systems, rendering pipelines), **MUST search the web first** for proven solutions before writing code. Never reinvent what the community has already solved. Use `search_web` to find official docs, GitHub issues, and Stack Overflow answers. **闭门造车推导公式 = 浪费时间 + 架构错误。**
 
 ## Skill-Driven Execution
 

@@ -229,13 +229,21 @@ description: 新对话开始时恢复项目上下文的标准流程
 - `/resume research` → `DYA/.muse/research.md`
 - `/resume fundraise` → `DYA/.muse/fundraise.md`
 - `/resume prometheus gm` → `Prometheus/.muse/gm.md`（Prometheus GM · v2.0）
-- `/resume prometheus` → `Prometheus/.muse/build.md` + `Prometheus/PRD.md`
+- `/resume prometheus` → `Prometheus/.muse/build.md` + `Prometheus/PRD.md` + **⑥ 自动拉取 `DYA/.muse/strategy.md` 中 `→PROMETHEUS` 指令**
 - `/resume prometheus qa` → `Prometheus/.muse/qa.md`（QA 验证）
 - `/resume prometheus growth` → `Prometheus/.muse/growth.md`
-- `/resume muse` → `MUSE/.muse/build.md`（MUSE 开发）
+- `/resume muse` → `MUSE/.muse/build.md`（MUSE 开发）+ **⑥ 自动拉取 `→MUSE` 指令**
 - `/resume muse build` → `MUSE/.muse/build.md`
 - `/resume muse growth` → `MUSE/.muse/growth.md`（MUSE 推广）
 - `/resume muse qa` → `MUSE/.muse/qa.md`（MUSE QA）
+- `/resume airachne` → `Airachne/.muse/build.md`（Airachne 开发）
+
+> 🚨 **子项目 /resume 铁律（BUG-MUSE-01 修复）**:
+> **所有** `/resume [子项目]` 指令（Prometheus/MUSE/Airachne）**必须执行 Step ⑥**:
+> 自动 `grep` 搜索 `DYA/.muse/strategy.md` 中带 `→[子项目大写]` 的指令。
+> 之前此步骤只有 `/resume build`/`growth` 等 DYA 角色会做，子项目不做 = 指令传递链断裂。
+> **修复**: 子项目 /resume 也执行 Step ③ 的 `grep_search strategy.md "→PROMETHEUS"`，
+> 找到未传递指令 → 高亮 + 写入子项目角色文件。
 - `/resume airachne` → `Airachne/.muse/build.md`（Airachne 开发）
 
 **向后兼容**（旧指令自动映射）：
