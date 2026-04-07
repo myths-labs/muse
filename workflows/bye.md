@@ -242,6 +242,35 @@ description: 结束对话的一键收尾指令。自动汇总工作、同步 .mu
 - 如果判断某决策「不需要写入 strategy」→ 必须在 memory 中附理由
 - **不允许**整体判断「本轮无战略级决策」— 必须逐条过
 
+### 3.3c 🔴 Strategy 直接执行 → 下游角色文件推送（v3.1.1 新增 — BUG-MUSE-03 修复 - 不可跳过）
+
+> **根因**: Strategy 有时直接执行 BUILD 范围的工作（如 S109/S110/S112），结果只写入 strategy.md。
+> 下游 build.md 完全不知道 Launch Blocker 已解决、进度已更新、技术栈已变更。
+> 4/6-4/7 Prometheus build.md 过时 32h+：仍显示 LB-9 "待验证"、完成度 ~78%、TTS栈 "Fish Audio(主)"。
+> **这不是 BUILD 的问题 — 是 Strategy /bye 没有推送下游的 SOP 缺陷。**
+
+**触发条件**: Strategy 对话中直接执行了属于其他项目/角色的工作（代码部署、DB migration、配置变更等）
+
+**检测方法**:
+1. 回顾 Step 2 的角色检测结果 — 如果 Strategy 对话同时涉及了 Prometheus/MUSE/Airachne 的 BUILD 工作
+2. 检查本轮 strategy.md 中的指令状态变更 — 如果有指令从 🟡 变为 ✅（Strategy 直接完成）
+3. 检查本轮是否有 `vercel --prod` / `wrangler deploy` / DB migration 等部署操作
+
+**必须执行**:
+1. 对每个被 Strategy 直接执行的指令（S0XX→PROJECT/BUILD 标为 ✅ Strategy 直接完成）:
+   - 打开对应项目的 build.md（如 `Prometheus/.muse/build.md`）
+   - 更新「已接收战略指令」section：状态从 🟡 改为 ✅，追加完成摘要
+   - 更新「Launch Blockers」section：解决的 Blocker 标 ✅
+   - 更新「状态快照」：完成度、技术栈、Deploy 编号
+   - 更新「最后更新」时间戳
+2. 如果 Strategy 直接做了 DB migration → build.md 的 Schema section 也要更新
+3. 如果 Strategy 直接做了部署 → build.md 的 Deploy/版本记录也要更新
+
+🔴 **铁律**:
+- Strategy 直接执行了 BUILD 工作但没推送到 build.md → /bye 执行失败
+- 这不是「回传」（build→strategy），而是「推送」（strategy→build）— 方向相反
+- **Strategy 做了 BUILD 的工作 = Strategy 有义务更新 BUILD 的文件**，不能等 BUILD 自己发现
+
 ### 3.4 🔴 MUSE 源码仓库同步检查（v3.0 新增 — 防版本断裂）
 
 > **根因**: v2.37→v3.0 期间，skill/workflow 升级做在 DYA 安装副本中，未同步回 MUSE 源码仓库 (`/Users/jj/Desktop/MUSE/`)。下轮 /resume 读到的 MUSE git tag 与实际改动不一致 → 版本号虚报 → 灾难级 bug。
@@ -407,11 +436,14 @@ done
 
 1. **Daily Note** — 写入/追加 `MythsLabs/daily/YYYY-MM-DD.md`：
    ```markdown
-   ## Session N (HH:MM) — [项目] [角色]
+   ## Session N (HH:MM-HH:MM) — [Step 2 检测到的完整角色列表]
    - **完成**: [要点，1-3 行]
    - **决策**: [[decisions/YYYY-MM-DD-描述]]（如本轮有重大决策）
    - **下一步**: [具体可执行项]
    ```
+   - 🔴 **BUG-MUSE-03 修复**: `[项目] [角色]` 必须使用 **Step 2 多角色检测** 的完整结果
+     - ❌ 旧行为: 只写一个主角色 → Obsidian 丢失 Strategy 参与记录
+     - ✅ 新行为: 写 Step 2 的全部角色（如 "Strategy + Prometheus BUILD + MUSE BUILD"）
    - 如文件已存在 → **追加**新 session，不覆盖
    - 如文件不存在 → 创建，首行 `# YYYY-MM-DD`
 
@@ -424,8 +456,9 @@ done
 
 4. **更新 `_index.md`** 的「📅 最近活动」section — 追加一行：
    ```markdown
-   - YYYY-MM-DD: [项目] [角色] — [一句话摘要] → [[daily/YYYY-MM-DD]]
+   - YYYY-MM-DD: [Step 2 完整角色列表] — [一句话摘要] → [[daily/YYYY-MM-DD]]
    ```
+   - 🔴 同样使用 Step 2 完整角色列表，不丢角色
    - 保留最近 10 条，超过的移除（FIFO）
 
 **不存在 → 静默跳过**（不打印任何提示）

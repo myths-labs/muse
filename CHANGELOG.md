@@ -1,3 +1,15 @@
+## [3.1.1] - 2026-04-08
+
+### 🔴 Critical Fix — BUG-MUSE-03: Strategy Direct Execution → Downstream Role File Stale
+
+When Strategy directly executes BUILD-scope work (e.g., deploying code, running DB migrations, resolving Launch Blockers), results were only written to `strategy.md`. Downstream `build.md` files were never updated, causing them to become severely stale (32+ hours in the triggering incident).
+
+- **`bye.md` Step 3.3c**: New **"Strategy Direct Execution → Downstream Push"** step. When Strategy directly completes a BUILD directive (S0XX→PROJECT/BUILD marked ✅), `/bye` now also updates the target project's `build.md` — instruction status, Launch Blockers, completion percentage, tech stack, timestamps.
+- **`resume.md` Step 3.5**: Upgraded from **unidirectional** "Cross-Project Pull" to **bidirectional** "Cross-Project Sync Check". New downstream check (Steps 6-7): detects when `strategy.md` has completed directives that `build.md` doesn't know about. Flags staleness >24h and auto-syncs.
+- **`bye.md` Step 4.8**: Fixed **role list truncation** in Obsidian Daily Notes and `_index.md`. Previously wrote only the primary role (e.g., "Prometheus + MUSE Build"), dropping Strategy participation. Now uses the full role list from Step 2 multi-role detection.
+- **Impact**: Prevented Prometheus `build.md` from showing 78% completion (actual: 94%), LB-9 "pending" (actual: resolved), and outdated TTS stack (Fish Audio instead of Volcengine V3).
+- **Relationship to BUG-MUSE-02**: BUG-MUSE-02 fixed multi-role routing (write all role files). BUG-MUSE-03 fixes the reverse: when Strategy does another role's work, the other role's file must also be updated.
+
 ## [3.1.0] - 2026-04-07
 
 ### 🔴 Critical Fix — BUG-MUSE-02: Multi-Role Sync Gap

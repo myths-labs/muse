@@ -184,10 +184,12 @@ description: 新对话开始时恢复项目上下文的标准流程
      - 没找到 🟡 指令 → 跳过（静默）
    - ⚡ **Prometheus 角色同理**：`/resume prometheus` → 只搜 `→PROMETHEUS/BUILD`（不搜裸 `→BUILD`）
    - ⚡ **MUSE 角色同理**：`/resume muse growth` → 只搜 `→MUSE/GROWTH`
-3.5 🔴 **跨项目回传主动拉取**（仅 `/resume strategy` 执行）:
-   > **根因**: /bye 的 sync up 可能不完整（context truncation/Agent 跳步）。
+3.5 🔴 **跨项目双向同步检查**（仅 `/resume strategy` 执行）:
+   > **根因 A**: /bye 的 sync up 可能不完整（context truncation/Agent 跳步）。
    > Strategy 不能只依赖被动接收——必须主动检查 BUILD 有没有完成指令。
-   > 4/3 S097(Launch 时间表)/S094(Deck v4)/BUG-12(中国语音) 全部因此丢失。
+   > 
+   > **根因 B (BUG-MUSE-03)**: Strategy 直接执行 BUILD 工作时，
+   > 结果只写入 strategy.md，下游 build.md 未更新 → build.md 严重过时。
    
    **必须执行**:
    1. 读取 `Prometheus/.muse/build.md` 的前 30 行 + "已接收战略指令" section
@@ -201,6 +203,16 @@ description: 新对话开始时恢复项目上下文的标准流程
    5. `grep -n "🟡\|待回传\|待执行\|BUILD 待\|BUILD 必须" strategy.md`，
       对每个匹配项与 BUILD 角色文件交叉验证
    
+   **必须执行 — 下行检查 (STRATEGY→BUILD) [BUG-MUSE-03 新增]**:
+   6. 对 strategy.md 中标 **✅ Strategy 直接完成** 的指令（S0XX→PROJECT/BUILD）:
+      - 检查对应项目的 build.md 是否也已更新
+      - **不一致**（strategy 标 ✅ 但 build.md 仍标 🟡 或完全没有）→ 恢复报告中标:
+        `🔴 Strategy 已完成但 BUILD 未更新: S0XX — build.md 过时 [N]h`
+      - **立即在 build.md 中补同步**：更新指令状态、Launch Blockers、完成度、技术栈
+   7. 比较 build.md 的「最后更新」时间与 strategy.md 的「最后更新」时间:
+      - 如果 build.md 比 strategy.md 旧 **>24h** 且 strategy.md 有该项目的新进展 → 标 🔴
+      - 恢复报告输出: `🔴 [项目] build.md 过时 [N]h，Strategy 有 [数量] 项未推送的更新`
+
    **不执行的情况**: 非 `/resume strategy`（如 `/resume build`/`growth`/`qa`）→ 跳过
 4. **如果是 `/resume build`：双重检查 QA 通知**
    - ① 检查 `.muse/qa.md` 有没有未处理的 ❌ FAIL → 有则先修复

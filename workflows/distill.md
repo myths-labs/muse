@@ -44,61 +44,10 @@ description: 从 memory/ 日志和 STATUS 文件中蒸馏关键教训到 MEMORIE
    - ✅ 用户偏好的新发现（更新 USER.md）
    - ❌ 不保留：具体代码细节、临时调试过程、已解决的 bug 细节
 
-   > 🆕 **v2.32.0 — Temporal Classification**: 提取时按时效分类。
-
-   **时效标签处理规则**:
-   | memory/ 条目标签 | Distill 行为 |
-   |-----------------|-------------|
-   | `[PERMANENT]` | ✅ 始终提取，写入 MEMORIES.md 时默认 `[PERMANENT]` |
-   | `[TEMPORAL:past-date]` | ❌ 已过期，跳过不提取 |
-   | `[TEMPORAL:future-date]` | 🟡 提取但保留 `[TEMPORAL:date]` 标签 |
-   | `[EPISODIC]` | ⚠️ \>30 天标记衰减审查；\<30 天且有模式价值 → 提取升级为 `[PERMANENT]` |
-   | 无标签（旧格式） | 按内容判断，等同 `[EPISODIC]` 处理 |
-
-   **MEMORIES.md 条目默认时效**:
-   - `[FACT]` → `[PERMANENT]`
-   - `[LESSON]` → `[PERMANENT]`
-   - `[DECISION]` → `[PERMANENT]`（版本特定决策可标 `[TEMPORAL:下个大版本日期]`）
-
-3. **更新 MEMORIES.md（图关系感知）**
-
-   > 🆕 **v2.32.0 — Graph Memory Relations**: 写入前必须对比现有条目，检测关系。
-
-   **Step 3a. 关系检测（每条候选条目必须执行）**
-
-   对每条待写入的候选条目，逐一对比 MEMORIES.md 中**所有现有条目**，判断关系类型：
-
-   | 关系 | 含义 | 判断规则 | 操作 |
-   |------|------|---------|------|
-   | `UPDATES` | 新事实推翻/替代旧事实 | 同一主题的 `[FACT]`，结论不同 | 旧条目 `~~删除线~~` + `(historical: superseded by [TAG] YYYY-MM-DD)` |
-   | `EXTENDS` | 新信息补充现有条目 | 同一主题，增加细节/数据 | 在现有条目下追加 `↳ EXTENDS:` 子弹点 |
-   | `DERIVES` | 从已有数据推导出新洞察 | 结论基于已有条目 | 新条目添加 `(derived from: [EXISTING_TAG])` |
-   | `NEW` | 与现有条目无关 | 以上皆不适用 | 按主题分类正常追加 |
-
-   **关系检测提示（Agent 逐条自问）**：
-   ```
-   对候选条目 X:
-   1. MEMORIES.md 中有没有同一主题的 [FACT]？结论是否不同？→ UPDATES
-   2. 是否为现有条目增加了具体细节/数据/案例？→ EXTENDS
-   3. 是否从现有已知事实推导出的新结论？→ DERIVES
-   4. 以上皆否？→ NEW
-   ```
-
-   **Step 3b. 执行写入**
-
+3. **更新 MEMORIES.md**
    - 按主题分类追加（不是按日期）
-   - 去重：如果已有类似教训，合并而非重复（优先用 EXTENDS）
-   - **UPDATES 操作**: 旧条目加 `~~删除线~~`，**不删除**（保留历史链）
-   - **清理阈值**: 当 `~~删除线~~` 条目累积超过 **20 条**时，提醒用户执行归档清理
-
-   **Step 3c. 删除过时项**
-   - 如果某个教训不再适用，标记 `~~删除线~~` + `(historical: obsolete YYYY-MM-DD)`
-
-   **🚨 Strikethrough 规则**:
-   - ✅ `[FACT]` 可被 UPDATES（事实会过时）
-   - ✅ `[DECISION]` 可被 UPDATES（决策会被推翻）
-   - ⚠️ `[LESSON]` 一般不 UPDATES（教训是永恒的），如确实过时则标 `(superseded)` 但保留原文
-   - 格式: `~~**[FACT] 旧内容**~~ (historical: superseded by [FACT] 新主题 YYYY-MM-DD)`
+   - 去重：如果已有类似教训，合并而非重复
+   - 删除过时项：如果某个教训不再适用，标记删除
 
 4. **考虑是否升级 Skill 或宪法**
    - 如果某个教训反复出现 → 应该写入 CLAUDE.md 宪法
