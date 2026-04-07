@@ -1,3 +1,15 @@
+## [3.1.2] - 2026-04-08
+
+### 🔴 Critical Fix — BUG-MUSE-04/05: SOP Bloat Paradox + Stale Metric Recovery
+
+Each prior bug fix added 10-20 lines of new SOP instructions, pushing `bye.md` to 565 lines — far beyond the ~150-line threshold an AI agent can reliably execute. Result: basic tasks (accurate completion %, decision status updates) were crowded out by sophisticated checks (multi-role routing, downstream push, Obsidian sync).
+
+- **`bye.md`**: Radically simplified from **565 lines → 124 lines** (78% reduction). Core 6 actions preserved, all verbose commentary removed. Bug fix lessons moved to compact index table referencing `MEMORIES.md`.
+- **`bye.md` Step 3.4**: New **"Checklist Refresh"** — updates `Launch Readiness Checklist` items instead of writing hardcoded percentages. Completion = `[x]` count / total, no manual % needed.
+- **`resume.md` Step 3.6**: New **"Checklist Fact-Check"** — cross-validates `[x]`/`[ ]` items against memory and deploy records. Detects stale `[x]` (no evidence) and missed `[ ]` (actually completed). Decision entries (`D-XXX`) verified against memory.
+- **`strategy.md`**: Replaced hardcoded `~94%` with structured **Launch Readiness Checklist** (技术 Gate + 产品内容). Added structured decision lifecycle format (`D-001: Volcengine 迁移 → 状态: ✅ DECIDED`).
+- **Architecture principle**: "减法 > 加法" — fix bugs by changing data structures (computable checklist, structured decisions), not by adding more SOP instructions.
+
 ## [3.1.1] - 2026-04-08
 
 ### 🔴 Critical Fix — BUG-MUSE-03: Strategy Direct Execution → Downstream Role File Stale

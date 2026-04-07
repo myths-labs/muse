@@ -10,6 +10,7 @@ description: 新对话开始时恢复项目上下文的标准流程
 
 ```
 ① CLAUDE.md + MEMORIES.md  → 宪法 + 长期教训（自动注入）
+①.5 🆕v3.1 Obsidian Vault → _index.md + daily/今天.md（可选增强层）
 ② memory/今天.md + 昨天.md → 短期记忆（最近发生了什么）
 ②.1 🆕v3.0 记忆漂移检测 → 超 7 天的记忆附过时警告，文件/函数引用须验证
 ②.3 🆕 Conversation Summaries 交叉验证 → 防 /bye 未执行导致的记忆黑洞
@@ -25,6 +26,31 @@ description: 新对话开始时恢复项目上下文的标准流程
 ```
 
 > ③ 只在任务跨度 > 2 天时执行（≈ LCM lcm_grep 深度检索）
+
+### ①.5 Obsidian Vault 快速上下文（v3.1 新增·可选）
+
+> **MUSE v3.1 持久大脑层**：Obsidian Vault 提供人类视角的项目全局索引。
+> Agent 通过 Vault 可以快速了解「最近发生了什么 + 重要决策 + 已知 Bug」，
+> 比纯读 memory/ 更高效（memory 是 Agent 格式，Vault 是人类格式）。
+
+**检测**：`[ -d "/Users/jj/Desktop/MythsLabs" ]`
+
+**存在 → 执行**：
+1. 读取 `MythsLabs/_index.md`（<50 行的全局导航 + 最近活动）
+2. 读取 `MythsLabs/daily/YYYY-MM-DD.md`（今天，如有）
+3. 读取 `MythsLabs/daily/YYYY-MM-DD.md`（昨天，如有）
+4. 读取当前项目的 index：`MythsLabs/projects/[项目名]/index.md`
+5. 以上信息作为**补充上下文**，不替代 memory/ 和 .muse/
+
+**恢复报告新增 section**：
+```
+🔗 Obsidian Vault 上下文:
+- 最近决策: [[decisions/YYYY-MM-DD-描述]]（如有）
+- 最近 Bug: [[bugs/YYYY-MM-DD-描述]]（如有）
+- 架构图谱: 上次更新 [日期]（如有）
+```
+
+**不存在 → 静默跳过**（不影响任何后续步骤）
 
 ### ②.1 记忆漂移检测（v3.0 新增·防过时记忆导致错误决策）
 
@@ -50,10 +76,10 @@ description: 新对话开始时恢复项目上下文的标准流程
 ### ②.2 混合角色 sync 完整性警告（v3.1 新增 — BUG-MUSE-02 修复）
 
 > **根因**: 混合角色对话（如 Strategy + BUILD + MUSE BUILD 同时进行）的 /bye 可能只 sync
-> 了一个角色，导致其他角色的重大决策丢失。
+> 了一个角色，导致其他角色的重大决策丢失。4/7 Volcengine 迁移决策就是这样丢的。
 
 **读取 memory 时执行：**
-1. 检查 memory 的 session header（如 `## Strategy + BUILD + MUSE BUILD Session 1`）
+1. 检查 memory 的 session header（如 `## Strategy + Prometheus BUILD + MUSE BUILD Session 1`）
 2. 如果 header 中包含 **2 个或以上角色名**（Strategy/BUILD/GROWTH/QA/OPS）→ 标记为混合角色对话
 3. 混合角色对话 → 恢复报告中增加警告：
    ```
@@ -62,6 +88,7 @@ description: 新对话开始时恢复项目上下文的标准流程
    ```
 4. 同时交叉验证：memory 中记录的「决策」是否已同步到 strategy.md（grep 关键词）
 5. 发现未同步 → 恢复报告中标 `🔴 BUG-MUSE-02: 上轮 /bye 跨角色 sync 不完整`
+
 ### DYA 项目
 
 | 场景 | 指令 |
@@ -187,9 +214,11 @@ description: 新对话开始时恢复项目上下文的标准流程
 3.5 🔴 **跨项目双向同步检查**（仅 `/resume strategy` 执行）:
    > **根因 A**: /bye 的 sync up 可能不完整（context truncation/Agent 跳步）。
    > Strategy 不能只依赖被动接收——必须主动检查 BUILD 有没有完成指令。
+   > 4/3 S097(Launch 时间表)/S094(Deck v4)/BUG-12(中国语音) 全部因此丢失。
    > 
-   > **根因 B (BUG-MUSE-03)**: Strategy 直接执行 BUILD 工作时，
+   > **根因 B (BUG-MUSE-03 新增)**: Strategy 直接执行 BUILD 工作（如 S109/S110/S112），
    > 结果只写入 strategy.md，下游 build.md 未更新 → build.md 严重过时。
+   > 4/6-4/7 Prometheus build.md 过时 32h（仍写 ~78%、LB-9 "待验证"、TTS "Fish Audio主"）。
    
    **必须执行**:
    1. 读取 `Prometheus/.muse/build.md` 的前 30 行 + "已接收战略指令" section
@@ -214,6 +243,13 @@ description: 新对话开始时恢复项目上下文的标准流程
       - 恢复报告输出: `🔴 [项目] build.md 过时 [N]h，Strategy 有 [数量] 项未推送的更新`
 
    **不执行的情况**: 非 `/resume strategy`（如 `/resume build`/`growth`/`qa`）→ 跳过
+3.6 🔴 **Checklist 事实核查** (BUG-MUSE-04/05 新增):
+   > strategy.md 的 Launch Readiness Checklist 是**可计算的**，不盲信。
+   读完 strategy.md 后，找到 Launch Readiness Checklist:
+   - 对每个 `[x]` 项: 确认 memory/deploy 有对应证据。无证据 → 恢复报告标 `🔴 可疑 [x]`
+   - 对每个 `[ ]` 项: 确认确实未完成。如 memory 显示已完成 → 恢复报告标 `🔴 应翻 [x]`
+   - 找到 `### D-XXX` 决策条目: 验证状态字段是否与 memory 中的决策记录一致
+   - **不报告硬编码百分比**。完成度 = checklist 中 `[x]` 数 / 总数，自动计算
 4. **如果是 `/resume build`：双重检查 QA 通知**
    - ① 检查 `.muse/qa.md` 有没有未处理的 ❌ FAIL → 有则先修复
    - ② 🚨 **检查 build.md 自身** 中的 QA→BUILD 通知（`grep_search build.md "待 BUILD 处理"`）
