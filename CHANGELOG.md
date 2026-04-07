@@ -16,6 +16,7 @@ Mixed-role conversations (e.g., Strategy + Prometheus BUILD + MUSE BUILD in one 
   - **`resume.md` Step ①.5**: Reads Vault `_index.md` and daily notes for human-readable project context during boot. Supplements (not replaces) `memory/` files.
   - Daily Notes are human-readable (natural language), while `memory/` files remain agent-formatted. Two layers serve different audiences.
 - **Phantom Deploy Check** (`bye.md` Step 3.6) — Validates deployment claims against actual `vercel --prod` execution output. Flags "ghost deploys" where code was committed but never deployed.
+- **Graphify Integration** — Installed [Graphify](https://github.com/safishamsi/graphify) v0.3.7 as recommended MUSE skill. Turns any codebase into a queryable knowledge graph for architectural debugging. Requires Python 3.12+ (`/opt/homebrew/bin/python3.12`).
 
 ## [3.0.5] - 2026-04-04
 
