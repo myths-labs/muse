@@ -74,9 +74,14 @@ description: 结束对话的一键收尾指令。自动汇总工作、同步 .mu
    - "有没有用户纠正过我的理解？这个纠正会影响后续所有决策吗？"
    如果任何一问的答案是 "不能/有"，则必须在 memory 中补充 📡 跨对话上下文条目。
 
-### 2. 判断身份和同步方向
+### 2. 判断身份和同步方向（v3.1 多角色路由 — BUG-MUSE-02 修复）
 
 ⚠️ **必须使用下面的路由表确定同步目标文件，不能猜测。**
+
+🔴 **多角色路由铁律（v3.1 新增）**:
+> 一轮对话可能涉及**多个角色和多个项目**（如 Strategy + Prometheus BUILD + MUSE BUILD）。
+> Agent 必须检测**所有**涉及的角色，对**每个角色**都执行 sync，不能只挑一个。
+> **单角色假设 = BUG-MUSE-02 根因。** 4/7 混合对话丢失 Volcengine 迁移决策就是因为只 sync 了一个角色。
 
 #### 项目-角色路由表
 
@@ -108,12 +113,34 @@ description: 结束对话的一键收尾指令。自动汇总工作、同步 .mu
 
 \* broadcast = 写 QA 报告 + 通知 BUILD + 通知 STRATEGY
 
-**身份判断方法**（按优先级）：
-1. 对话中的 `/resume [xxx]` 指令 → 直接映射
-2. 对话中操作过的 `.muse/` 文件 → 用文件名确定角色
-3. 对话内容关键词（代码/Bug → build, 发帖/视频 → growth, 验证/AC → qa）
+#### 多角色检测方法（v3.1 — 必须执行）
 
-**Fallback**: 如果无法确定身份，列出本轮操作过的所有 `.muse/` 文件作为同步目标。
+**不再是"判断一个身份"，而是"列出所有涉及的角色"：**
+
+1. **项目路径扫描**: 回顾对话中操作过的**所有文件路径**，按项目归类：
+   - `/Users/jj/Desktop/DYA/` → DYA
+   - `/Users/jj/Desktop/Prometheus/` → Prometheus
+   - `/Users/jj/Desktop/MUSE/` → MUSE
+2. **角色关键词分类**: 对每个涉及的项目，按对话内容分类角色：
+   - 代码/Bug/部署/技术选型/架构变更 → **BUILD**
+   - 战略决策/融资/加速器/商业模型/PMF → **STRATEGY**
+   - 发帖/视频/营销/品牌 → **GROWTH**
+   - 验证/AC/测试 → **QA**
+   - SOP/工作流/技能/框架 → **BUILD** (if MUSE) or **STRATEGY** (if cross-project)
+3. **`/resume [xxx]` 指令**: 如果有 → 作为**主角色**，但不排除其他检测到的角色
+4. **战略决策自动追加 STRATEGY**: 如果对话中做出了任何**技术选型变更**（如 TTS 引擎迁移）、**架构决策**、或**产品方向决策** → 无论主角色是什么，**STRATEGY 必须为额外同步目标**
+
+**输出格式**:
+```
+本轮涉及 N 个角色:
+- [项目A] [角色1] → 同步 [文件路径]
+- [项目B] [角色2] → 同步 [文件路径]
+- strategy.md → 同步（新决策/重大事件）
+```
+
+**Fallback**: 如果无法确定，列出本轮操作过的所有 `.muse/` 文件 + strategy.md 作为同步目标。
+
+🔴 **铁律**: 检测到 >=2 个角色时，**每个角色都必须执行完整 sync**，不能只选一个。
 
 #### ⚠️ 重大事件强制回传 checklist
 以下任何一项发生时，**无论 Agent 是否认为"只是内部事"，都必须 sync up 到 strategy**：
@@ -184,6 +211,37 @@ description: 结束对话的一键收尾指令。自动汇总工作、同步 .mu
 - 静默跳过 = /bye 执行失败
 - 此步在**所有角色**的 /bye 中执行（BUILD/GROWTH/QA/OPS），不仅限于 Strategy
 
+### 3.3b 🔴 新决策正向写入（v3.1 新增 — BUG-MUSE-02 修复 - 不可跳过）
+
+> **根因**: Step 3.3 只覆盖「已完成指令的反向回写」，不覆盖「新决策的正向写入」。
+> 4/7 Volcengine 迁移是全新决策（非已有指令的完成），Step 3.3 的 grep 永远搜不到它。
+> 结果: strategy.md 完全不知道 Voice 技术栈正在发生根本性变化。
+
+**触发条件**: 本轮 memory 的「决策」section 中有任何条目
+
+**必须执行**:
+1. 扫描本轮 memory 中的所有**「决策」**条目
+2. 对每条决策，检查 strategy.md 中是否已有对应 S0XX 编号：
+   - `grep -n "[决策关键词]" /Users/jj/Desktop/DYA/.muse/strategy.md`
+3. **已有 S0XX** → 检查状态是否需要更新
+4. **没有 S0XX** → 这是一条**新决策未同步到 strategy**，必须：
+   - 在 strategy.md 的「关键战略决策记录」中创建新 S0XX 条目
+   - 在 strategy.md 的「最新状态快照」中更新相关状态
+   - 如果决策涉及技术栈/架构变更 → 更新「部署事实表」
+   - 如果决策需要下游执行 → 在「战略指令队列」中创建新指令
+5. 对每条决策，还要检查涉及的**项目角色文件**是否需要同步
+
+**分类方法**:
+- 技术选型变更（如 TTS 引擎更换）→ 必须写 strategy + 涉及项目 build.md
+- 产品方向决策（如功能封存/新增）→ 必须写 strategy
+- 架构变更（如数据库 schema 变更）→ 必须写 strategy + build.md
+- 纯执行细节（如代码重构方式）→ 只写 build.md
+
+🔴 **铁律**:
+- 本轮有「决策」但 strategy.md 没有对应条目 → /bye 执行失败
+- 如果判断某决策「不需要写入 strategy」→ 必须在 memory 中附理由
+- **不允许**整体判断「本轮无战略级决策」— 必须逐条过
+
 ### 3.4 🔴 MUSE 源码仓库同步检查（v3.0 新增 — 防版本断裂）
 
 > **根因**: v2.37→v3.0 期间，skill/workflow 升级做在 DYA 安装副本中，未同步回 MUSE 源码仓库 (`/Users/jj/Desktop/MUSE/`)。下轮 /resume 读到的 MUSE git tag 与实际改动不一致 → 版本号虚报 → 灾难级 bug。
@@ -233,6 +291,27 @@ done
 
 **规则**: `[ ]`→`[x]`(完成) 或 `[ ]`→`[/]`(进行中)。不删除待办项。
 ❌ 只写摘要不更新 checkbox = 执行失败 | ✅ 每项完成的工作在角色文件翻转 `[x]`
+
+### 3.6 🔴 部署声称验证（Prometheus BUILD 专用 — 防幽灵部署）
+
+> **根因**: BUILD 反复声称 "Vercel 自动部署已触发" / "已部署"，但 Prometheus 早已切为手动 `vercel --prod`。
+> 此问题从 Deploy #20 开始反复出现超过 10 次。每次教训写在 memory 里下轮就丢。
+> 现在写入 /bye SOP 强制检查。
+
+**触发条件**: 当前对话在 Prometheus 项目中执行（检测方法: 对话中操作了 `/Users/jj/Desktop/Prometheus/` 下的文件）
+
+**必须执行**:
+1. 搜索对话中是否出现了 "已部署" / "deploy" / "上线" / "production" 等声称
+2. 如果有声称:
+   - ✅ 对话中有 `vercel --prod` 的**实际执行输出**（含 Production URL `https://prometheus.mythslabs.ai`）→ 合法
+   - ❌ 对话中只有 `git push` / `git commit` 但无 `vercel --prod` 输出 → **幽灵部署**
+   - ❌ 声称 "Vercel 自动部署" → **直接违规**（Prometheus 没有自动部署）
+3. 幽灵部署处理:
+   - memory 中标注 `🔴 幽灵部署: 声称已部署但未执行 vercel --prod`
+   - Step 6 告知中加入: `⚠️ 本轮有代码变更但未实际部署到生产环境`
+4. 如果本轮**没有**声称部署 → 静默跳过
+
+**🔴 铁律**: Prometheus git push ≠ 部署。只有 `vercel --prod` 才是部署。
 
 ### 3.7 🚀 社交发帖（Airachne 网络）
 
@@ -317,6 +396,46 @@ done
    ```
 4. **不触发时**：静默跳过
 
+### 4.8 🧠 Obsidian Vault 同步（v3.1 新增·可选·静默）
+
+> **MUSE v3.1 持久大脑层**：当 MythsLabs Vault 存在时，自动将本轮工作写入 Obsidian。
+> 不存在时静默跳过，不影响任何其他步骤。
+
+**检测**：`[ -d "/Users/jj/Desktop/MythsLabs" ]`
+
+**存在 → 执行以下同步**：
+
+1. **Daily Note** — 写入/追加 `MythsLabs/daily/YYYY-MM-DD.md`：
+   ```markdown
+   ## Session N (HH:MM) — [项目] [角色]
+   - **完成**: [要点，1-3 行]
+   - **决策**: [[decisions/YYYY-MM-DD-描述]]（如本轮有重大决策）
+   - **下一步**: [具体可执行项]
+   ```
+   - 如文件已存在 → **追加**新 session，不覆盖
+   - 如文件不存在 → 创建，首行 `# YYYY-MM-DD`
+
+2. **决策日志**（仅当本轮有重大决策时）— 创建 `MythsLabs/decisions/YYYY-MM-DD-描述.md`：
+   - 包含：背景、选项对比、决定、原因、风险
+   - 使用 `[[]]` 双向链接关联项目
+
+3. **Bug 分析**（仅当本轮有 debug 根因分析时）— 创建 `MythsLabs/bugs/YYYY-MM-DD-描述.md`：
+   - 包含：症状、根因、修复方案、影响范围
+
+4. **更新 `_index.md`** 的「📅 最近活动」section — 追加一行：
+   ```markdown
+   - YYYY-MM-DD: [项目] [角色] — [一句话摘要] → [[daily/YYYY-MM-DD]]
+   ```
+   - 保留最近 10 条，超过的移除（FIFO）
+
+**不存在 → 静默跳过**（不打印任何提示）
+
+**🔴 铁律**：
+- Daily Note 是给**人读**的，memory/ 是给 **Agent 读**的 — 两者独立，不互相替代
+- 不要在 Daily Note 中写 Agent 格式的内容（如 `type: project | Why:`）
+- 使用自然语言、简洁描述
+
+
 ### 4.6 Distill 自动检测（静默）
 **每次 /bye 都检查**，不需要用户触发：
 
@@ -387,15 +506,17 @@ done
 
 📋 SOP 合规检查:
 - [x] Step 1: 工作摘要已提取
-- [x] Step 2: 身份=[角色], 同步目标=[文件名]
+- [x] Step 2: 涉及角色=[角色1, 角色2, ...], 同步目标=[文件1, 文件2, ...]
 - [x] Step 3: 同步已执行 → [列出同步了哪些 .muse/ 文件]
   - [x] 重大事件 checklist 已检查
   - [x] Cross-check 校验已执行
+  - [x] Step 3.3b: 新决策检测=[N 条新决策已同步/无新决策]
 - [x] Step 3.7: 社交发帖=[已发X/已跳过]
 - [x] Step 3.8: 认知镜像更新=[已更新 USER.md/无新特征]
 - [x] Step 4: memory/YYYY-MM-DD.md 已更新
 - [x] Step 4.5: 角色文件膨胀=[N行/无需归档]
 - [x] Step 4.6: Distill=[无需/建议执行]
+- [x] Step 4.8: Obsidian Vault=[已同步/Vault不存在]
 - [x] Step 5: 导出 → convo/YYMMDD/YYMMDD-NN-desc.md
 ```
 

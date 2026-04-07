@@ -47,6 +47,21 @@ description: 新对话开始时恢复项目上下文的标准流程
   → 当前状态: Voice LB-3 已降级为 Post-Launch P1 (connection loss)
 ```
 
+### ②.2 混合角色 sync 完整性警告（v3.1 新增 — BUG-MUSE-02 修复）
+
+> **根因**: 混合角色对话（如 Strategy + BUILD + MUSE BUILD 同时进行）的 /bye 可能只 sync
+> 了一个角色，导致其他角色的重大决策丢失。
+
+**读取 memory 时执行：**
+1. 检查 memory 的 session header（如 `## Strategy + BUILD + MUSE BUILD Session 1`）
+2. 如果 header 中包含 **2 个或以上角色名**（Strategy/BUILD/GROWTH/QA/OPS）→ 标记为混合角色对话
+3. 混合角色对话 → 恢复报告中增加警告：
+   ```
+   ⚠️ 上一轮跨 N 个角色工作，/bye sync 可能不完整。
+   请检查: [角色1] 的 [文件] 是否已同步 | [角色2] 的 [文件] 是否已同步
+   ```
+4. 同时交叉验证：memory 中记录的「决策」是否已同步到 strategy.md（grep 关键词）
+5. 发现未同步 → 恢复报告中标 `🔴 BUG-MUSE-02: 上轮 /bye 跨角色 sync 不完整`
 ### DYA 项目
 
 | 场景 | 指令 |

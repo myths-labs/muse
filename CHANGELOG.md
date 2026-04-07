@@ -1,3 +1,27 @@
+## [3.1.0] - 2026-04-07
+
+### 🔴 Critical Fix — BUG-MUSE-02: Multi-Role Sync Gap
+
+Mixed-role conversations (e.g., Strategy + Prometheus BUILD + MUSE BUILD in one session) caused `/bye` to sync only one role, silently dropping strategic decisions from other roles. Root cause: Step 2 identity detection was single-role by design.
+
+- **`bye.md` Step 2**: Upgraded from single-role to **multi-role routing**. Agent now scans all file paths and keywords to detect every role touched in the conversation, and syncs each one. Strategic decisions (tech stack changes, architecture decisions) automatically append STRATEGY as a sync target regardless of primary role.
+- **`bye.md` Step 3.3b**: New **"New Decision Forward-Write"** step. Scans memory for decisions that don't yet have S0XX entries in `strategy.md` and creates them. Prevents new decisions from falling through the cracks (Step 3.3 only covered completed-instruction write-back).
+- **`bye.md` Step 6**: Compliance checklist updated to report multi-role detection and new decision sync counts.
+- **`resume.md` Step ②.2**: New **"Mixed-Role Sync Integrity Warning"**. Detects if previous session header mentions 2+ roles and warns about potential sync gaps, with cross-validation against `strategy.md`.
+- **Impact**: Prevented loss of Volcengine Voice Clone migration decision (a fundamental TTS engine change) across a 3-role mixed conversation on 2026-04-07.
+
+### Added
+- **Obsidian Vault Integration (v3.1 Persistent Brain)** — Optional knowledge management layer using Obsidian:
+  - **`bye.md` Step 4.8**: Auto-syncs session work to Obsidian Vault (daily notes, decision logs, bug analyses). Detects vault existence; silently skips if absent.
+  - **`resume.md` Step ①.5**: Reads Vault `_index.md` and daily notes for human-readable project context during boot. Supplements (not replaces) `memory/` files.
+  - Daily Notes are human-readable (natural language), while `memory/` files remain agent-formatted. Two layers serve different audiences.
+- **Phantom Deploy Check** (`bye.md` Step 3.6) — Validates deployment claims against actual `vercel --prod` execution output. Flags "ghost deploys" where code was committed but never deployed.
+
+## [3.0.5] - 2026-04-04
+
+### Fixed
+- **Research-First Development Rule** — Added enforcement in CLAUDE.md template: agents must search existing solutions before building from scratch. Three knowledge layers: tried-and-true → new-and-popular → first-principles.
+
 ## [3.0.4] - 2026-04-03
 
 ### Fixed
