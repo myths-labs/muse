@@ -8,6 +8,7 @@ USER.md
 CLAUDE.md
 MEMORIES.md
 .agent/
+.claude/worktrees/
 
 # Node.js
 node_modules/
