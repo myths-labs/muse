@@ -26,8 +26,14 @@ MUSE now works seamlessly across **10 AI coding platforms** with unified session
 - **`release.md`**: 18 hardcoded paths replaced with `<MUSE_ROOT>` / `<DYA_ROOT>` variables resolved at runtime.
 - **`templates/paths.md`**: New template for optional cross-project path configuration.
 
-### Added
-- **Digital Twin Auto-Update** (`bye.md` Step 3.7): Restored from v2.36.0 and expanded — covers Strategy decision patterns, BUILD quality standards, QA verification preferences, Growth brand voice. Evolves across all products.
+### 🧠 Restored — BUG-MUSE-07: Digital Twin Auto-Update (bye.md Step 3.7)
+
+The `/bye` Digital Twin sync (v2.36.0 Step 3.8 "认知与人格镜像同步") was accidentally removed during v3.1.2's SOP simplification (565→124 lines), leaving `USER.md`'s Digital Twin Profile as a dead document. Restored in compact form and **expanded from content-only to all roles and all product lines**:
+
+- **`templates/USER.md`**: New `## 🧠 Digital Twin Profile` with 5 dimensions — Tone & Voice, Decision Making, Communication Patterns, Quality & Craft Standards, Brand & Product Sensibility. Each annotated with consuming roles (Strategy/BUILD/QA/Growth/Airachne).
+- **`bye.md` Step 3.7**: Compact auto-update (15 lines vs original 40+). Signal extraction → merge/correct → silent skip if no new signals. Hard rule: only traits the user **explicitly expressed or demonstrated** — no agent speculation.
+- **`resume.md` Step ④**: Upgraded to **mandatory read + role-specific adaptation**. Strategy→Decision Making+Brand; BUILD→Communication+Quality; QA→Quality; Growth (all products)→Tone+Brand; Airachne→Tone+Communication+Brand (Founder's Voice).
+- **Cross-product**: One Twin feeds DYA, Prometheus, MUSE, Airachne Growth simultaneously. Brand voice consistency without separate style guides.
 
 ## [3.1.3] - 2026-04-10
 
