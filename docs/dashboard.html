@@ -1429,77 +1429,79 @@
                             content: '## 🎯 Core Directive\n- You are the Product Manager and Strategy Architect.\n- Define the MVP scope and ensure alignment with the overarching goal.\n\n## 📋 Current Focus\n- [ ] Finalize the Dashboard v3 specs\n- [x] Review Auth module ACs\n- [ ] Plan Q2 roadmap'
                         },
                         {
-                            name: 'BUILD', l0: 'v1.5.0 | Auth system✅, Dashboard WIP, 12 API endpoints, PostgreSQL + Redis', lines: 890, modified: '2026-03-16',
-                            content: '## 📐 Responsibilities\n- Framework code development\n- Bug fixes & architecture\n- API endpoints\n\n## ⏳ TODO (by priority)\n- [x] Auth system (JWT + OAuth)\n- [/] Dashboard frontend\n- [ ] WebSocket real-time updates\n- [ ] Rate limiting middleware\n- [ ] E2E test suite'
+                            name: 'BUILD', l0: 'v3.2.0 | S116 ✅ 10-tool 跨平台兼容 + S118 Digital Twin | 65 skills', lines: 772, modified: '2026-04-10',
+                            content: '## 📐 Responsibilities\n- Framework code development\n- setup.sh / install.sh maintenance\n- Skill & Workflow development\n- Bug fixes & architecture\n\n## ⏳ TODO (by priority)\n- [x] S116: 10-tool cross-platform (L1 spec + L2 adapters + L3 dispatch)\n- [x] S118: Digital Twin Profile restore\n- [x] S117: BUG-MUSE-06 absolute memory path\n- [ ] S096: MUSE Automation Phase 1 (P2)\n- [ ] Phase 2 skill expansion (design-motion, better-icons)'
                         },
                         {
-                            name: 'QA', l0: 'Latest QA: 8/8 PASS, 0 regressions, coverage 87%', lines: 130, modified: '2026-03-15',
-                            content: '## Latest QA Results\n✅ 8/8 AC PASS — Auth Module v1.5.0\nVerifier: QA identity\nBuild: v1.5.0 / main / commit abc1234\n\n## Coverage\n- Unit: 87%\n- Integration: 72%\n- E2E: 45%'
+                            name: 'QA', l0: 'Latest QA: v3.0.2 S092 OpenCode — 7/7 AC + 3/3 EP PASS', lines: 210, modified: '2026-04-02',
+                            content: '## Latest QA Results\n✅ 7/7 AC + 3/3 EP PASS — S092 OpenCode Compat (v3.0.2)\nVerifier: QA identity (independent session)\nBuild: v3.0.2 / main\n\n## Historical\n- v2.15.0 MCP Server: 10/10 PASS\n- v2.14.0 Skills: 15/15 PASS\n- v2.12.0 Core: 10/10 PASS'
                         },
                         {
-                            name: 'GROWTH', l0: 'Launch week: 450 GitHub stars, 3 blog posts, Show HN drafted', lines: 198, modified: '2026-03-16',
-                            content: '## 📊 Metrics\n- GitHub Stars: 450 (+120 this week)\n- npm downloads: 1.2K/week\n- Blog views: 8.5K total\n\n## 📋 Content Pipeline\n- [x] "Why We Built This" blog post\n- [x] Show HN draft v3\n- [ ] Product Hunt launch prep\n- [ ] Dev.to cross-post'
+                            name: 'GROWTH', l0: 'v3.2.0 ✅ Released | 65 skills | 10 tools | 官网已同步', lines: 450, modified: '2026-04-10',
+                            content: '## 📊 Distribution\n- GitHub: myths-labs/muse\n- Landing: muse.mythslabs.ai\n- Dashboard: muse.mythslabs.ai/dashboard\n\n## 📋 Content Pipeline\n- [x] v3.0 visual asset overhaul (before-after/demo.webp/architecture)\n- [x] XHS v3 story-driven post\n- [x] X OpenCode post\n- [ ] v3.2.0 cross-platform announcement\n- [ ] S063 Supermemory absorption post'
                         },
                     ],
                     memory: [
                         {
-                            date: '2026-03-16', title: 'Auth Integration Session (10:00-14:00)', lines: 85, size: 4200,
-                            content: '## Auth Integration Session (10:00-14:00)\n\n### Completed\n- JWT refresh token rotation\n- OAuth2 Google + GitHub providers\n- Session middleware with Redis store\n- RBAC permission checks on 8 endpoints\n\n### Decisions\n- [DECISION] Use httpOnly cookies over localStorage'
+                            date: '2026-04-10', title: 'S116 Cross-Platform + S118 Digital Twin → v3.2.0', lines: 120, size: 6400,
+                            content: '## [BUILD] Session 1: S116+S118 → v3.2.0 Release\n\n### Completed\n- L1 CONVO_SPEC.md canonical format\n- L2 adapters: detect_tool + cc + aider + manual\n- L3 bye.md N-way dispatch (10 tools)\n- install.sh +3 platforms (copilot/aider/antigravity)\n- Portable paths (.muse/paths.md)\n- Digital Twin Step 3.7 restore\n\n### Decisions\n- S116 upgraded from P2→P1 (user pain point from AG→CC migration)'
                         },
                         {
-                            date: '2026-03-15', title: 'Dashboard UI Redesign', lines: 62, size: 3100,
-                            content: '## Dashboard UI Redesign\n\n### Completed\n- Dark theme with glassmorphism cards\n- Stat grid responsive layout\n- Chart.js integration for metrics\n- Skeleton loading states\n\n### Next\n- [ ] Mobile bottom nav\n- [ ] Notification bell'
+                            date: '2026-04-08', title: 'BUG-MUSE-04/05 SOP Bloat Paradox → v3.1.2', lines: 85, size: 4200,
+                            content: '## [BUILD] SOP Bloat Paradox Fix\n\n### Completed\n- bye.md 565→124 lines (78% reduction)\n- Checklist refresh replaces hardcoded %\n- resume.md Checklist fact-check\n\n### Decisions\n- Architecture principle: 减法 > 加法 — fix by changing data structures, not adding more SOP'
                         },
                         {
-                            date: '2026-03-14', title: 'Database Migration + Redis Setup', lines: 94, size: 4800,
-                            content: '## Database Migration + Redis Setup\n\n### Completed\n- PostgreSQL 16 with pgvector extension\n- Redis 7.2 for sessions + caching\n- Drizzle ORM schema definitions\n- Migration scripts (up/down)\n\n### Issues\n- Connection pooling needed tuning (max 20→50)'
+                            date: '2026-04-03', title: 'Growth: README Visual Assets + Social Posts', lines: 90, size: 4500,
+                            content: '## [Growth] Visual Asset Overhaul\n\n### Completed\n- before-after.png EN/CN remade (v3.0/65 skills)\n- demo.webp remade (40 frames, 224KB)\n- Architecture Mermaid updated (6 layers)\n- XHS v3 story-driven post + X OpenCode post\n\n### User Feedback\n- Story-driven > feature list for social posts'
                         },
-                        { date: '2026-03-13', title: 'API Endpoint Planning', lines: 45, size: 2200 },
-                        { date: '2026-03-12', title: 'Project Kickoff & Architecture', lines: 38, size: 1900 },
+                        { date: '2026-04-02', title: 'S092 OpenCode Compat → v3.0.2 + QA PASS', lines: 65, size: 3200 },
+                        { date: '2026-03-25', title: 'v2.33 Static/Dynamic User Profile + Skill Expansion', lines: 55, size: 2800 },
                     ],
                     skills: [
-                        { name: 'git-commit', tier: 'core', description: 'Enforces conventional commit messages with scope, type, and breaking change detection.' },
-                        { name: 'code-review', tier: 'core', description: 'Structured code review with severity levels, actionable suggestions, and approval criteria.' },
-                        { name: 'context-health-check', tier: 'core', description: 'Monitors context window usage and triggers session checkpoints to prevent overflow.' },
+                        { name: 'verification-before-completion', tier: 'core', description: 'Evidence before assertions — AC-first workflow, pre-flight fast-fail, Judge verdicts.' },
+                        { name: 'context-health-check', tier: 'core', description: 'Context window health check (/ctx). Evaluates consumption, recommends new conversation.' },
                         { name: 'layered-context', tier: 'core', description: 'L0/L1/L2 progressive context loading — scan summaries first, deep-read on demand.' },
                         { name: 'agent-protocol', tier: 'core', description: 'Machine-readable role file protocol for multi-agent communication and MCP integration.' },
-                        { name: 'react-components', tier: 'toolkit', description: 'Best practices for building reusable React components with TypeScript and testing.' },
-                        { name: 'api-design', tier: 'toolkit', description: 'RESTful API design patterns including versioning, pagination, and error handling.' },
-                        { name: 'database-schema', tier: 'toolkit', description: 'Database schema design with migrations, indexing strategies, and normalization.' },
-                        { name: 'testing-strategy', tier: 'toolkit', description: 'Testing pyramid approach: unit → integration → E2E with coverage targets.' },
-                        { name: 'error-handling', tier: 'toolkit', description: 'Structured error handling with custom error classes and user-friendly messages.' },
-                        { name: 'performance-audit', tier: 'toolkit', description: 'Web performance auditing: Core Web Vitals, bundle analysis, and optimization.' },
-                        { name: 'accessibility', tier: 'toolkit', description: 'WCAG 2.1 compliance checks, ARIA patterns, and screen reader testing.' },
-                        { name: 'docker-deploy', tier: 'toolkit', description: 'Dockerfile best practices, multi-stage builds, and container orchestration.' },
-                        { name: 'ci-cd-pipeline', tier: 'toolkit', description: 'CI/CD pipeline setup with GitHub Actions, testing gates, and auto-deployment.' },
-                        { name: 'seo-optimization', tier: 'toolkit', description: 'Technical SEO: meta tags, structured data, sitemap, and Core Web Vitals.' },
-                        { name: 'vercel-deploy', tier: 'ecosystem', description: 'Vercel deployment configuration with preview environments and edge functions.' },
-                        { name: 'stripe-integration', tier: 'ecosystem', description: 'Stripe payment integration: checkout, subscriptions, webhooks, and testing.' },
-                        { name: 'supabase-auth', tier: 'ecosystem', description: 'Supabase authentication with row-level security and social OAuth providers.' },
+                        { name: 'semantic-search', tier: 'core', description: 'Zero-dependency TF-IDF search across MUSE memory, roles, and skills.' },
+                        { name: 'using-superpowers', tier: 'core', description: 'Establishes how to find and use skills — Skill tool invocation before ANY response.' },
+                        { name: 'strategic-compact', tier: 'core', description: 'Manual context compaction at logical intervals to preserve focus through task phases.' },
+                        { name: 'coordinator-mode', tier: 'toolkit', description: 'Multi-agent coordination SOP — synthesis iron law, 4-stage workflow, Continue/Spawn matrix.' },
+                        { name: 'systematic-debugging', tier: 'toolkit', description: '4-phase root cause process + L1→L4 pressure escalation + passive behavior detection.' },
+                        { name: 'git-commit', tier: 'toolkit', description: 'Conventional Commits with type/scope/subject. Handles branch and merge commits.' },
+                        { name: 'brainstorming', tier: 'toolkit', description: 'Reframes problems, challenges 3 assumptions, outputs design doc for downstream skills.' },
+                        { name: 'deep-dive', tier: 'toolkit', description: '2-stage pipeline: trace (causal investigation) → deep-interview (requirements crystallization).' },
+                        { name: 'dispatching-parallel-agents', tier: 'toolkit', description: 'Run multiple subagents concurrently on independent tasks with self-contained prompts.' },
+                        { name: 'iterative-retrieval', tier: 'toolkit', description: 'Progressive context refinement replacing single-pass search for subagent accuracy.' },
+                        { name: 'creating-skills', tier: 'toolkit', description: 'Guide for creating SKILL.md following Anthropic best practices — structure, naming, quality.' },
+                        { name: 'frontend-design', tier: 'toolkit', description: 'Production-grade frontend interfaces with high design quality, avoiding generic AI aesthetics.' },
+                        { name: 'security-review', tier: 'toolkit', description: 'Comprehensive security checklist for auth, user input, secrets, API endpoints, payments.' },
+                        { name: 'vercel-react-best-practices', tier: 'ecosystem', description: 'React/Next.js performance optimization from Vercel Engineering.' },
+                        { name: 'expo-app-design', tier: 'ecosystem', description: 'Cross-platform mobile apps with Expo Router, NativeWind, and React Native.' },
+                        { name: 'database-reviewer', tier: 'ecosystem', description: 'PostgreSQL specialist — query optimization, schema design, security, Supabase patterns.' },
                     ],
                     directives: [
-                        { text: 'Dashboard v2 — add expandable role cards + skills tab + health chart', status: 'pending', source: 'GROWTH→BUILD', date: '2026-03-16' },
-                        { text: 'WebSocket support needed for real-time collab features', status: 'pending', source: 'STRATEGY→BUILD', date: '2026-03-15' },
-                        { text: 'Auth system MVP — JWT + OAuth + RBAC', status: 'done', source: 'STRATEGY→BUILD', date: '2026-03-13' },
-                        { text: 'QA v1.5.0 — 8/8 AC PASS, no issues', status: 'done', source: 'QA→BUILD', date: '2026-03-15' },
+                        { text: 'S116: 10-tool cross-platform compatibility (L1 spec + L2 adapters + L3 dispatch)', status: 'done', source: 'STRATEGY→BUILD', date: '2026-04-10' },
+                        { text: 'S118: Digital Twin Profile restore + full-role upgrade', status: 'done', source: 'STRATEGY→BUILD', date: '2026-04-10' },
+                        { text: 'S117: BUG-MUSE-06 absolute memory path + Vault sync + /release workflow', status: 'done', source: 'STRATEGY→BUILD', date: '2026-04-10' },
+                        { text: 'S096: MUSE Automation Phase 1 (auto-bye + checkpoint + auto-distill)', status: 'pending', source: 'STRATEGY→BUILD', date: '2026-04-08' },
                     ],
                     skillCount: 65,
-                    memoriesWords: 1240,
+                    memoriesWords: 2800,
                     constellation: [
-                        { word: 'Architecture', count: 12 },
-                        { word: 'Optimization', count: 8 },
-                        { word: 'Governance', count: 15 },
-                        { word: 'Automation', count: 7 },
+                        { word: 'Governance', count: 18 },
+                        { word: 'Cross-Platform', count: 14 },
+                        { word: 'Memory', count: 16 },
+                        { word: 'Multi-Agent', count: 11 },
                         { word: 'Security', count: 10 },
-                        { word: 'UX/UI', count: 9 },
-                        { word: 'Middleware', count: 5 },
-                        { word: 'PostgreSQL', count: 6 },
-                        { word: 'TypeScript', count: 11 },
-                        { word: 'Mermaid', count: 4 },
-                        { word: 'Deployment', count: 7 },
-                        { word: 'Refactoring', count: 6 },
-                        { word: 'Interaction', count: 8 },
-                        { word: 'Philosophy', count: 5 }
+                        { word: 'Markdown', count: 13 },
+                        { word: 'SOP', count: 9 },
+                        { word: 'Debugging', count: 7 },
+                        { word: 'Skill', count: 15 },
+                        { word: 'Context', count: 12 },
+                        { word: 'Deployment', count: 8 },
+                        { word: 'Sync', count: 10 },
+                        { word: 'Digital Twin', count: 6 },
+                        { word: 'Automation', count: 7 }
                     ]
                 });
             });
