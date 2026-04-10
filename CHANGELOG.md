@@ -1,3 +1,34 @@
+## [3.2.0] - 2026-04-10
+
+### Full-Stack Cross-Platform Compatibility (S116)
+
+MUSE now works seamlessly across **10 AI coding platforms** with unified session export, skill installation, and context continuity. Switch tools freely — your memory, roles, and conversation history travel with you.
+
+#### L1: Canonical Conversation Format
+- **`docs/CONVO_SPEC.md`**: Formal specification for `convo/YYMMDD/YYMMDD-NN-title.md` exports. Defines header format (tool ID, project, message count), body format (User/Assistant blocks), and adapter contract (zero-dep scripts with `--project-root` routing).
+
+#### L2: Per-Tool Session Adapters (`scripts/adapters/`)
+- **`detect_tool.sh`**: Auto-detects the current AI tool via environment variables and filesystem signals. Returns canonical tool ID (e.g., `claude-code`, `aider`, `cursor`).
+- **`export_cc_session.sh`**: Claude Code adapter (generalized from DYA internal script). Parses JSONL from `~/.claude/projects/`, outputs L1-compliant markdown.
+- **`export_aider_session.sh`**: Aider adapter. Parses `.aider.chat.history.md`, reformats `#### user/assistant` blocks to L1 format.
+- **`export_manual.sh`**: Fallback for tools without accessible session storage (Cursor, Windsurf, Copilot, Codex, Gemini, Antigravity, OpenCode). Generates L1 template for manual paste.
+
+#### L3: N-Way Runtime Dispatch
+- **`bye.md` Step 5**: Upgraded from binary CC/non-CC to **N-way tool dispatch**. `detect_tool.sh` → `case` dispatch → correct adapter. All 10 platforms covered.
+
+#### 3 New Platform Installers
+- **`install.sh --tool copilot`**: Installs to `.github/copilot-instructions.md` (single file).
+- **`install.sh --tool aider`**: Installs to `CONVENTIONS.md` (single file).
+- **`install.sh --tool antigravity`**: Installs to `.gemini/antigravity/skills/` with Antigravity-specific frontmatter.
+
+#### Portable Paths
+- **`bye.md`**: All hardcoded `/Users/*/` paths replaced with configurable `.muse/paths.md` lookups. Defaults to project root for OSS users.
+- **`release.md`**: 18 hardcoded paths replaced with `<MUSE_ROOT>` / `<DYA_ROOT>` variables resolved at runtime.
+- **`templates/paths.md`**: New template for optional cross-project path configuration.
+
+### Added
+- **Digital Twin Auto-Update** (`bye.md` Step 3.7): Restored from v2.36.0 and expanded — covers Strategy decision patterns, BUILD quality standards, QA verification preferences, Growth brand voice. Evolves across all products.
+
 ## [3.1.3] - 2026-04-10
 
 ### 🔴 Critical Fix — BUG-MUSE-06: `/bye` Memory Written to Wrong Path in Worktrees

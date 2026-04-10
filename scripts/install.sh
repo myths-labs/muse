@@ -10,7 +10,7 @@
 #   ./scripts/install.sh --target /path       # Set target project directory
 #   ./scripts/install.sh --help               # Show usage
 #
-# Supported tools: claude, openclaw, opencode, cursor, windsurf, gemini, codex
+# Supported tools: claude, openclaw, opencode, cursor, windsurf, gemini, codex, copilot, aider, antigravity
 
 set -euo pipefail
 
@@ -37,7 +37,7 @@ TARGET_DIR="."
 SELECTED_TOOL=""
 SKILL_TIERS="core toolkit"  # default: install core + toolkit
 
-ALL_TOOLS=(claude openclaw opencode cursor windsurf gemini codex)
+ALL_TOOLS=(claude openclaw opencode cursor windsurf gemini codex copilot aider antigravity)
 
 # ── Usage ──
 usage() {
@@ -125,6 +125,21 @@ detect_tools() {
   # Codex CLI: check for codex command
   if command -v codex &>/dev/null; then
     detected+=(codex)
+  fi
+
+  # Copilot: check for copilot-instructions file
+  if [[ -f "$TARGET_DIR/.github/copilot-instructions.md" ]]; then
+    detected+=(copilot)
+  fi
+
+  # Aider: check for aider command or history file
+  if command -v aider &>/dev/null || [[ -f "$TARGET_DIR/.aider.chat.history.md" ]]; then
+    detected+=(aider)
+  fi
+
+  # Antigravity: check for .gemini/antigravity/ dir
+  if [[ -d "$TARGET_DIR/.gemini/antigravity" ]]; then
+    detected+=(antigravity)
   fi
 
   echo "${detected[@]}"
@@ -506,6 +521,202 @@ HEREDOC
   info "${skill_count} skills + workflows → AGENTS.md ✅"
 }
 
+install_copilot() {
+  header "📦 Installing for GitHub Copilot..."
+
+  local outdir="$TARGET_DIR/.github"
+  mkdir -p "$outdir"
+  local outfile="$outdir/copilot-instructions.md"
+
+  # Start with constitution
+  local const_src="$TEMPLATES_DIR/CLAUDE.md"
+  [[ -f "$TARGET_DIR/CLAUDE.md" ]] && const_src="$TARGET_DIR/CLAUDE.md"
+
+  cat > "$outfile" <<HEREDOC
+$(sed 's/CLAUDE\.md/copilot-instructions.md/g; s/AGENTS\.md/copilot-instructions.md/g' "$const_src")
+
+---
+
+## MUSE Skills Reference
+
+> The following skills are available. Reference them by name when relevant.
+
+HEREDOC
+
+  local skill_count=0
+  for tier in $SKILL_TIERS; do
+    local tier_dir="$SKILLS_DIR/$tier"
+    [[ ! -d "$tier_dir" ]] && continue
+    for skill_dir in "$tier_dir"/*/; do
+      local skill_file="$skill_dir/SKILL.md"
+      [[ ! -f "$skill_file" ]] && continue
+      local name
+      name=$(get_field "name" "$skill_file")
+      local description
+      description=$(get_field "description" "$skill_file")
+      [[ -z "$name" ]] && name=$(basename "$skill_dir")
+
+      echo "### Skill: $name" >> "$outfile"
+      echo "" >> "$outfile"
+      echo "> $description" >> "$outfile"
+      echo "" >> "$outfile"
+      get_body "$skill_file" >> "$outfile"
+      echo "" >> "$outfile"
+      echo "---" >> "$outfile"
+      echo "" >> "$outfile"
+      ((skill_count++))
+    done
+  done
+
+  # Append workflows
+  echo "## MUSE Workflows" >> "$outfile"
+  echo "" >> "$outfile"
+  for wf_file in "$WORKFLOWS_DIR"/*.md; do
+    [[ ! -f "$wf_file" ]] && continue
+    local wf_name
+    wf_name=$(basename "$wf_file" .md)
+    echo "### /$wf_name" >> "$outfile"
+    echo "" >> "$outfile"
+    get_body "$wf_file" >> "$outfile"
+    echo "" >> "$outfile"
+    echo "---" >> "$outfile"
+    echo "" >> "$outfile"
+  done
+
+  info "${skill_count} skills + workflows → .github/copilot-instructions.md ✅"
+}
+
+install_aider() {
+  header "📦 Installing for Aider..."
+
+  local outfile="$TARGET_DIR/CONVENTIONS.md"
+
+  # Start with constitution
+  local const_src="$TEMPLATES_DIR/CLAUDE.md"
+  [[ -f "$TARGET_DIR/CLAUDE.md" ]] && const_src="$TARGET_DIR/CLAUDE.md"
+
+  cat > "$outfile" <<HEREDOC
+$(sed 's/CLAUDE\.md/CONVENTIONS.md/g; s/AGENTS\.md/CONVENTIONS.md/g' "$const_src")
+
+---
+
+## MUSE Skills Reference
+
+> The following skills are available. Reference them by name when relevant.
+
+HEREDOC
+
+  local skill_count=0
+  for tier in $SKILL_TIERS; do
+    local tier_dir="$SKILLS_DIR/$tier"
+    [[ ! -d "$tier_dir" ]] && continue
+    for skill_dir in "$tier_dir"/*/; do
+      local skill_file="$skill_dir/SKILL.md"
+      [[ ! -f "$skill_file" ]] && continue
+      local name
+      name=$(get_field "name" "$skill_file")
+      local description
+      description=$(get_field "description" "$skill_file")
+      [[ -z "$name" ]] && name=$(basename "$skill_dir")
+
+      echo "### Skill: $name" >> "$outfile"
+      echo "" >> "$outfile"
+      echo "> $description" >> "$outfile"
+      echo "" >> "$outfile"
+      get_body "$skill_file" >> "$outfile"
+      echo "" >> "$outfile"
+      echo "---" >> "$outfile"
+      echo "" >> "$outfile"
+      ((skill_count++))
+    done
+  done
+
+  # Append workflows
+  echo "## MUSE Workflows" >> "$outfile"
+  echo "" >> "$outfile"
+  for wf_file in "$WORKFLOWS_DIR"/*.md; do
+    [[ ! -f "$wf_file" ]] && continue
+    local wf_name
+    wf_name=$(basename "$wf_file" .md)
+    echo "### /$wf_name" >> "$outfile"
+    echo "" >> "$outfile"
+    get_body "$wf_file" >> "$outfile"
+    echo "" >> "$outfile"
+    echo "---" >> "$outfile"
+    echo "" >> "$outfile"
+  done
+
+  info "${skill_count} skills + workflows → CONVENTIONS.md ✅"
+}
+
+install_antigravity() {
+  header "📦 Installing for Antigravity..."
+  local dest="$TARGET_DIR/.gemini/antigravity"
+  mkdir -p "$dest/skills"
+
+  # Constitution → .gemini/antigravity/GEMINI.md
+  local const_src="$TEMPLATES_DIR/CLAUDE.md"
+  [[ -f "$TARGET_DIR/CLAUDE.md" ]] && const_src="$TARGET_DIR/CLAUDE.md"
+
+  sed 's/CLAUDE\.md/GEMINI.md/g; s/AGENTS\.md/GEMINI.md/g' "$const_src" > "$dest/GEMINI.md"
+  info "Constitution → .gemini/antigravity/GEMINI.md"
+
+  # Skills → .gemini/antigravity/skills/*/SKILL.md
+  local skill_count=0
+  for tier in $SKILL_TIERS; do
+    local tier_dir="$SKILLS_DIR/$tier"
+    [[ ! -d "$tier_dir" ]] && continue
+    for skill_dir in "$tier_dir"/*/; do
+      local skill_file="$skill_dir/SKILL.md"
+      [[ ! -f "$skill_file" ]] && continue
+      local name
+      name=$(get_field "name" "$skill_file")
+      [[ -z "$name" ]] && name=$(basename "$skill_dir")
+
+      local out_dir="$dest/skills/$name"
+      mkdir -p "$out_dir"
+
+      # Add antigravity-specific frontmatter fields
+      local description
+      description=$(get_field "description" "$skill_file")
+      local body
+      body=$(get_body "$skill_file")
+
+      cat > "$out_dir/SKILL.md" <<SKILLEOF
+---
+name: $name
+description: $description
+risk: low
+source: community
+date_added: '$(date +%Y-%m-%d)'
+---
+
+$body
+SKILLEOF
+      ((skill_count++))
+    done
+  done
+
+  # Workflows → append to GEMINI.md
+  echo "" >> "$dest/GEMINI.md"
+  echo "---" >> "$dest/GEMINI.md"
+  echo "" >> "$dest/GEMINI.md"
+  echo "## MUSE Workflows" >> "$dest/GEMINI.md"
+  echo "" >> "$dest/GEMINI.md"
+  for wf_file in "$WORKFLOWS_DIR"/*.md; do
+    [[ ! -f "$wf_file" ]] && continue
+    local wf_name
+    wf_name=$(basename "$wf_file" .md)
+    echo "### /$wf_name" >> "$dest/GEMINI.md"
+    echo "" >> "$dest/GEMINI.md"
+    get_body "$wf_file" >> "$dest/GEMINI.md"
+    echo "" >> "$dest/GEMINI.md"
+  done
+
+  info "${skill_count} skills → .gemini/antigravity/skills/ ✅"
+  info "Workflows appended to GEMINI.md ✅"
+}
+
 # ══════════════════════════════════════════════
 # Main
 # ══════════════════════════════════════════════
@@ -575,6 +786,9 @@ main() {
   echo "  [4] Windsurf ${DIM}(.windsurf/rules/*.md)${RESET}"
   echo "  [5] Gemini CLI ${DIM}(.gemini/skills/)${RESET}"
   echo "  [6] Codex CLI ${DIM}(AGENTS.md)${RESET}"
+  echo "  [7] Copilot ${DIM}(.github/copilot-instructions.md)${RESET}"
+  echo "  [8] Aider ${DIM}(CONVENTIONS.md)${RESET}"
+  echo "  [9] Antigravity ${DIM}(.gemini/antigravity/skills/)${RESET}"
   echo "  [a] All detected tools"
   echo "  [q] Quit"
   echo ""
@@ -588,6 +802,9 @@ main() {
     4) run_install "windsurf" ;;
     5) run_install "gemini" ;;
     6) run_install "codex" ;;
+    7) run_install "copilot" ;;
+    8) run_install "aider" ;;
+    9) run_install "antigravity" ;;
     a|A)
       local tools_to_install=("${detected_arr[@]}")
       [[ ${#tools_to_install[@]} -eq 0 ]] && tools_to_install=("${ALL_TOOLS[@]}")
@@ -611,6 +828,9 @@ run_install() {
     windsurf)        install_windsurf ;;
     gemini)          install_gemini ;;
     codex)           install_codex ;;
+    copilot)         install_copilot ;;
+    aider)           install_aider ;;
+    antigravity)     install_antigravity ;;
     *) error "Unknown tool: $tool"; return 1 ;;
   esac
 }

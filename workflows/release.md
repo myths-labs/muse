@@ -10,12 +10,21 @@ description: MUSE 开源仓库版本发布 SOP — 更新 README/CHANGELOG/versi
 
 **零输入。** 版本号和标题全部自动生成，用户只需要说 `/release`。
 
+## 路径约定
+
+```bash
+MUSE_ROOT="$(git rev-parse --show-toplevel)"   # MUSE 仓库根目录
+# DYA_ROOT: 从 .muse/paths.md 读取（跨项目回传用，OSS 用户可忽略）
+```
+
+> 本文件中 `<MUSE_ROOT>` = MUSE 仓库根。`<DYA_ROOT>` = 可选的跨项目主仓库。
+
 ## 自动检测逻辑
 
 ### 版本号：自动递增
 ```bash
 # 读取当前版本
-grep -o 'version-[0-9.]*' /Users/jj/Desktop/MUSE/README.md | head -1
+grep -o 'version-[0-9.]*' <MUSE_ROOT>/README.md | head -1
 # 例: version-2.6 → 新版本 = 2.7.0
 ```
 规则：当前版本 minor +1（如 2.6→2.7）。如果是纯 bugfix 无新功能 → patch +1（如 2.6.0→2.6.1）。
@@ -23,7 +32,7 @@ grep -o 'version-[0-9.]*' /Users/jj/Desktop/MUSE/README.md | head -1
 ### 标题：从 git log 自动生成
 ```bash
 # 从 MUSE 仓库最后一次 release tag 到现在的 commit 信息中提取
-cd /Users/jj/Desktop/MUSE && git log $(git describe --tags --abbrev=0)..HEAD --oneline
+cd <MUSE_ROOT> && git log $(git describe --tags --abbrev=0)..HEAD --oneline
 ```
 - 提取 commit message 中的关键词，组合成 3-5 个词的标题
 - 格式：`[核心功能] + [次要功能]`（如 `QA System v2.0 + SOP Deep Fix`）
@@ -31,7 +40,7 @@ cd /Users/jj/Desktop/MUSE && git log $(git describe --tags --abbrev=0)..HEAD --o
 
 ## 前置条件
 
-- MUSE 仓库路径: `/Users/jj/Desktop/MUSE`
+- MUSE 仓库路径: `<MUSE_ROOT>`
 - 已有 GitHub CLI (`gh`) 并已登录
 - 所有代码改动已完成（本 SOP 只管发布，不管改代码）
 
@@ -43,13 +52,13 @@ cd /Users/jj/Desktop/MUSE && git log $(git describe --tags --abbrev=0)..HEAD --o
 
 ```bash
 # 0. 同步远程 tags（防止版本号不同步 — 2026-03-21 bug fix）
-cd /Users/jj/Desktop/MUSE && git fetch --tags origin
+cd <MUSE_ROOT> && git fetch --tags origin
 
 # 1a. 读取当前版本
-grep -o 'version-[0-9.]*' /Users/jj/Desktop/MUSE/README.md | head -1
+grep -o 'version-[0-9.]*' <MUSE_ROOT>/README.md | head -1
 
 # 1b. 读取上次 release 后的 commit
-cd /Users/jj/Desktop/MUSE && git log $(git describe --tags --abbrev=0)..HEAD --oneline
+cd <MUSE_ROOT> && git log $(git describe --tags --abbrev=0)..HEAD --oneline
 
 # 1c. 读取 DYA 本轮 MUSE 相关 commit（如有从 DYA 同步过来的改动）
 cd /Users/jj/Desktop/DYA && git log --oneline -10 --grep="muse" --grep="MUSE" --all-match
@@ -69,7 +78,7 @@ Agent 自动：
 
 ### 2. 编写 CHANGELOG 条目
 
-在 `/Users/jj/Desktop/MUSE/CHANGELOG.md` 顶部插入新版本条目：
+在 `<MUSE_ROOT>/CHANGELOG.md` 顶部插入新版本条目：
 
 ```markdown
 ## [X.Y.0] - YYYY-MM-DD
@@ -138,13 +147,13 @@ find skills/ -name "SKILL.md" | wc -l
 ```bash
 # 安全文件直接复制
 for f in bye.md ctx.md distill.md role.md start.md settings.md; do
-  [ -f "/Users/jj/Desktop/DYA/.agent/workflows/$f" ] && \
-  cp "/Users/jj/Desktop/DYA/.agent/workflows/$f" "/Users/jj/Desktop/MUSE/workflows/$f"
+  [ -f "<DYA_ROOT>/.agent/workflows/$f" ] && \
+  cp "<DYA_ROOT>/.agent/workflows/$f" "<MUSE_ROOT>/workflows/$f"
 done
 
 # resume.md 和 sync.md — 用 diff 检查，手动合并
-diff /Users/jj/Desktop/DYA/.agent/workflows/resume.md /Users/jj/Desktop/MUSE/workflows/resume.md
-diff /Users/jj/Desktop/DYA/.agent/workflows/sync.md /Users/jj/Desktop/MUSE/workflows/sync.md
+diff <DYA_ROOT>/.agent/workflows/resume.md <MUSE_ROOT>/workflows/resume.md
+diff <DYA_ROOT>/.agent/workflows/sync.md <MUSE_ROOT>/workflows/sync.md
 # ⚠️ 只合并通用改动（如新 Step、格式修复），不合并 DYA 绝对路径
 ```
 
@@ -152,16 +161,16 @@ diff /Users/jj/Desktop/DYA/.agent/workflows/sync.md /Users/jj/Desktop/MUSE/workf
 
 ```bash
 # 检查 package.json 是否存在
-if [ -f "/Users/jj/Desktop/MUSE/package.json" ]; then
+if [ -f "<MUSE_ROOT>/package.json" ]; then
   # 更新 version 字段
-  sed -i '' 's/"version": "[^"]*"/"version": "X.Y.0"/' /Users/jj/Desktop/MUSE/package.json
+  sed -i '' 's/"version": "[^"]*"/"version": "X.Y.0"/' <MUSE_ROOT>/package.json
 fi
 ```
 
 ### 5. 🔴 Pre-flight Gate（不通过 = 禁止发版）
 
 ```bash
-cd /Users/jj/Desktop/MUSE
+cd <MUSE_ROOT>
 
 # Gate 1: 旧版本号零残留
 OLD_VER=$(git tag --sort=-creatordate | head -1)
@@ -194,7 +203,7 @@ echo "✅ Pre-flight PASS"
 ### 6. Git Commit + Push
 
 ```bash
-cd /Users/jj/Desktop/MUSE
+cd <MUSE_ROOT>
 
 # Stage 所有改动
 git add -A
@@ -214,7 +223,7 @@ git push origin main
 ### 7. 创建 Git Tag + GitHub Release
 
 ```bash
-cd /Users/jj/Desktop/MUSE
+cd <MUSE_ROOT>
 
 # Tag
 git tag vX.Y.0
@@ -306,7 +315,7 @@ echo "✅ Release published: https://github.com/myths-labs/muse/releases/tag/vX.
 
 对于简单发布，可以直接使用 MUSE 仓库中的 `release.sh` 脚本：
 ```bash
-cd /Users/jj/Desktop/MUSE
+cd <MUSE_ROOT>
 ./release.sh 3.1.0 "Release Title" "### Added\n- Feature description"
 ```
 脚本自动执行: 版本检测 → 旧版本号替换 → skill 数量验证 → pre-flight gate → commit+tag+push → GitHub Release

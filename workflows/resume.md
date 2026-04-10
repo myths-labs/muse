@@ -16,7 +16,16 @@ description: 新对话开始时恢复项目上下文的标准流程
 ②.3 🆕 Conversation Summaries 交叉验证 → 防 /bye 未执行导致的记忆黑洞
 ②.5 扫描 memory `➡️ 下一步` 中的 🟨 项 → 有未完成项则主动提醒（标注可信度）
 ③ 跨天任务? grep_search memory/ 搜索任务关键词 → 定位更早的相关记忆
-④ USER.md                  → 用户偏好
+④ USER.md                  → 用户偏好 + 🧠 Digital Twin Profile（必须读 + 全角色适配）
+   ⚠️ **v3.2.0 升级**: Step ④ 从"可选读"变为**必须读**。
+   → 读取 `USER.md` 的 `## 🧠 Digital Twin Profile` 全部 5 个 section
+   → **角色适配**: 根据当前角色，重点关注对应维度:
+     - Strategy → Section 2 (Decision Making) + 5 (Brand Sensibility)
+     - BUILD → Section 3 (Communication) + 4 (Quality Standards)
+     - QA → Section 4 (Quality Standards) + 3 (Communication)
+     - Growth (所有产品) → Section 1 (Tone & Voice) + 5 (Brand Sensibility)
+     - Airachne → Section 1 + 3 + 5 (社交内容 = Founder's Voice)
+   → 对话中的所有输出（建议/文案/代码审查/QA报告）需贴合 Twin Profile
 ⑤ 对应 .muse/ 角色文件     → 完整进度（按指令决定读哪个）
 ⑥ 🚨 strategy.md 指令拉取  → 非 strategy 角色自动 grep 活跃指令（→BUILD / →GROWTH 等）
    ⚠️ **跨项目铁律**: strategy.md **始终位于 `DYA/.muse/strategy.md`**，无论当前项目是 DYA/Prometheus/MUSE

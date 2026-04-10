@@ -9,7 +9,7 @@
 <p align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/myths-labs/muse/blob/main/LICENSE)
-[![Version](https://img.shields.io/badge/version-3.1.3-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-3.2.0-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
 [![Stars](https://img.shields.io/github/stars/myths-labs/muse?style=social)](https://github.com/myths-labs/muse)
 [![Pure Markdown](https://img.shields.io/badge/pure-markdown-green.svg)](#)
 [![Zero Dependencies](https://img.shields.io/badge/dependencies-zero-brightgreen.svg)](#)
@@ -89,7 +89,7 @@ Inspired by [LCM (Lossless Context Management)](https://papers.voltropy.com/LCM)
 - [Changelog](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
 - [Skill Index](https://github.com/myths-labs/muse/blob/main/SKILL_INDEX.md)
 
-**Works with**: Claude Code · OpenClaw · OpenCode · Cursor · Windsurf · Gemini CLI · Codex CLI — or any AI tool that supports system prompts.
+**Works with**: Claude Code · OpenClaw · OpenCode · Cursor · Windsurf · Gemini CLI · Codex CLI · Copilot · Aider · Antigravity — or any AI tool that supports system prompts.
 
 | Tool | Install Command | Format |
 |------|----------------|--------|
@@ -99,6 +99,9 @@ Inspired by [LCM (Lossless Context Management)](https://papers.voltropy.com/LCM)
 | Windsurf | `./scripts/install.sh --tool windsurf` | `.windsurf/rules/*.md` |
 | Gemini CLI | `./scripts/install.sh --tool gemini` | `.gemini/skills/` + `GEMINI.md` |
 | Codex CLI | `./scripts/install.sh --tool codex` | `AGENTS.md` (single file) |
+| Copilot | `./scripts/install.sh --tool copilot` | `.github/copilot-instructions.md` |
+| Aider | `./scripts/install.sh --tool aider` | `CONVENTIONS.md` |
+| Antigravity | `./scripts/install.sh --tool antigravity` | `.gemini/antigravity/skills/` |
 
 **Recommended companion**: [**nah**](https://github.com/manuelscgipper/nah) — context-aware permission guard for Claude Code. Deterministic classifier that auto-allows safe operations, asks for ambiguous ones, and blocks dangerous patterns (e.g. `curl | bash`). Eliminates permission fatigue without sacrificing safety. `pip install nah && nah install`
 
@@ -451,7 +454,7 @@ Add to your tool's MCP config (e.g., `~/.config/claude/claude_desktop_config.jso
 No. MUSE is pure Markdown files. Copy them to your project and you're ready. Zero dependencies.
 
 **Q: Which AI tools does it support?**
-Seven tools with native install support: **Claude Code**, **OpenClaw**, **OpenCode**, **Cursor**, **Windsurf**, **Gemini CLI**, and **Codex CLI**. Run `./scripts/install.sh --tool <name>` to install in the correct format for each tool. Additionally, `./scripts/convert-skills.sh --tool <name>` exports all 65 skills to Cursor, Windsurf, Copilot, OpenClaw, OpenCode, Aider, or Antigravity formats. Import from [agency-agents](https://github.com/msitarzewski/agency-agents) (35K+ ⭐) with `--import agency-agents`.
+Ten tools with native install support: **Claude Code**, **OpenClaw**, **OpenCode**, **Cursor**, **Windsurf**, **Gemini CLI**, **Codex CLI**, **Copilot**, **Aider**, and **Antigravity**. Run `./scripts/install.sh --tool <name>` to install in the correct format for each tool. Additionally, `./scripts/convert-skills.sh --tool <name>` exports all 65 skills to any supported format. Import from [agency-agents](https://github.com/msitarzewski/agency-agents) (35K+ ⭐) with `--import agency-agents`.
 
 **Q: How is this different from lossless-claw?**
 lossless-claw is a code plugin (SQLite + DAG + sub-agents) that requires the OpenClaw runtime. MUSE is pure Markdown SOPs, works with any AI tool, zero dependencies. Same principles, different implementation.
@@ -500,6 +503,6 @@ MIT © [Myths Labs](https://github.com/myths-labs)
 </p>
 
 <p align="center">
-  <i>MUSE v3.1.3</i>
+  <i>MUSE v3.2.0</i>
 </p>
 

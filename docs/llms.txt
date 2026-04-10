@@ -82,6 +82,9 @@ cd muse && ./setup.sh
 | Windsurf | `./scripts/install.sh --tool windsurf` |
 | Gemini CLI | `./scripts/install.sh --tool gemini` |
 | Codex CLI | `./scripts/install.sh --tool codex` |
+| Copilot | `./scripts/install.sh --tool copilot` |
+| Aider | `./scripts/install.sh --tool aider` |
+| Antigravity | `./scripts/install.sh --tool antigravity` |
 | OpenClaw | `./scripts/install.sh --tool openclaw` |
 
 ## Links
