@@ -1,3 +1,20 @@
+## [3.1.3] - 2026-04-10
+
+### 🔴 Critical Fix — BUG-MUSE-06: `/bye` Memory Written to Wrong Path in Worktrees
+
+When running inside a Claude Code git worktree, `/bye` Step 4 used relative `memory/` paths that resolved to the worktree directory instead of the project root. Additionally, CC's `auto-memory` system intercepted writes to `~/.claude/projects/` rather than the intended `DYA/memory/`. Memory was silently lost.
+
+- **`bye.md` Step 4**: Memory write path changed from relative `memory/` to **`${DYA_ROOT}/memory/YYYY-MM-DD.md`** (absolute). Added mandatory `ls -la` verification after write — the session fails explicitly if the file isn't at the expected path.
+- **`bye.md` Step 4.5**: New **Obsidian Vault Sync** step (optional enhancement layer). If `MythsLabs/` vault exists, auto-writes session summaries to `daily/`, architectural decisions to `decisions/`, bug root-cause analyses to `bugs/`, and appends `_index.md` recent-activity log. Silent skip if vault absent.
+- **`bye.md` Step 5**: Upgraded from hardcoded `convo/` path to **runtime-aware routing**. Detects `$CLAUDECODE=1` and calls `export_cc_session.sh`; falls back to manual Antigravity flow. `$CONVO_ROOT` derived from primary role (Strategy → DYA, MUSE → MUSE OSS root, etc.).
+- **`.claude/commands/`**: Committed to git (not gitignored). Symlinks point to `../../workflows/` so CC worktree checkouts automatically include all slash commands (`/bye`, `/resume`, `/release`, etc.).
+- **New workflows**: `launch.md` (Launch Day Protocol via Airachne MCP), `model.md` (model-switching SOP), `release.md` (open-source release SOP).
+
+### Added
+- **`launch.md`** — `/launch` workflow: Launch Day nuclear-strike publication flow via Airachne MCP (social broadcast + industry analysis).
+- **`model.md`** — `/model` workflow: Switch AI model config and update `USER.md` model preference.
+- **`release.md`** — `/release` workflow: Open-source release SOP (auto version detection → CHANGELOG → version bump → pre-flight gate → git tag → GitHub Release).
+
 ## [3.1.2] - 2026-04-08
 
 ### 🔴 Critical Fix — BUG-MUSE-04/05: SOP Bloat Paradox + Stale Metric Recovery
