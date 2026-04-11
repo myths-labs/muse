@@ -1,3 +1,20 @@
+## [3.2.1] - 2026-04-11
+
+### S119: Cursor Bugbot 6-Fix + BUG-MUSE-08 Sync Granularity
+
+Cursor Bugbot (automated code review on DYA PRs) identified 6 issues in MUSE source files. Additionally fixes BUG-MUSE-08 where `/bye` sync only updated 1-2 of 5 redundant locations for the same fact in `strategy.md`.
+
+- **`export_cc_session.sh`** (High): Path encoding replaced dots with dashes, but Claude Code only replaces `/` with `-`. Also used `pwd` instead of `git --git-common-dir`, failing in worktrees.
+- **`resume.md`**: Boot overview referenced 🟨 but implementation scans for 🔲. Duplicate `/resume airachne` path mapping removed.
+- **`retro.md`**: 3 references to `STATUS.md` (which `bye.md` prohibits creating) replaced with `.muse/` role files.
+- **`sprint.md`**: 1 reference to `STATUS.md` replaced with `.muse/` role files.
+- **`bye.md`**: BUG-MUSE-08 — Step 3.2 adds full-file consistency grep after directive flip; Step 3.4 adds closed-item cleanup + multi-table sync; Step 3.5 adds git state section push for Strategy-direct-execution.
+
+### S120: BUG-MUSE-09 — Primary Role Routing Fix + Resume Convo Review
+
+- **`bye.md` Step 5.1**: In multi-role sessions, the agent picked the "most code changed" role for convo export routing instead of the `/resume` launch role. Added iron rule: primary role = launch role, not code-volume role.
+- **`resume.md` ②.4**: New convo tail review step. Reads last 200 lines of latest `convo/` export to cross-check against `memory/` next-steps, catching tasks discussed at session end but omitted from memory summaries.
+
 ## [3.2.0] - 2026-04-10
 
 ### Full-Stack Cross-Platform Compatibility (S116)

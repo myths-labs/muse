@@ -98,6 +98,22 @@ description: 新对话开始时恢复项目上下文的标准流程
 4. 同时交叉验证：memory 中记录的「决策」是否已同步到 strategy.md（grep 关键词）
 5. 发现未同步 → 恢复报告中标 `🔴 BUG-MUSE-02: 上轮 /bye 跨角色 sync 不完整`
 
+### ②.4 convo 结尾回顾（v3.3 新增 — BUG-MUSE-09 修复）
+
+> **根因**: memory ➡️下一步 是 /bye 时 Agent 自己写的摘要，经常遗漏对话尾部讨论的具体任务。
+> convo/ 是原始对话记录，比 memory 更完整。
+
+**Boot 序列中执行（在读完 memory 后）：**
+1. 根据当前角色确定 `$CONVO_ROOT`（规则同 bye.md Step 5.1: 启动角色决定）
+2. `ls -t "$CONVO_ROOT/convo/YYMMDD/"` 找到最新 convo 文件
+3. **读取最后 200 行**（通常包含 /bye 前最后的讨论 + /bye Step 6 摘要）
+4. 提取对话末尾的任务承诺（关键词: "下一步"/"要做"/"继续"/"下轮"/"先做"/"再做"）
+5. **与 memory ➡️下一步交叉对比**:
+   - memory 有但 convo 没提 → 可能是 Agent 自行添加的（可信度 🟡）
+   - convo 有但 memory 没提 → **🔴 遗漏！** 补入恢复报告
+6. 恢复报告新增 section: `📜 上轮结尾回顾`
+7. **如果最新 session 无 convo 导出** → 标 `🔴 上轮 convo 未导出，可能有记忆黑洞`
+
 ### DYA 项目
 
 | 场景 | 指令 |
