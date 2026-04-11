@@ -37,9 +37,16 @@ done
 # Sanitize title for filename
 TITLE_SAFE=$(echo "$TITLE" | tr ' /' '--' | tr -cd '[:alnum:]-_')
 
-CWD="$(pwd)"
-# CC encodes cwd by replacing / and . with -
-ENCODED="$(echo "$CWD" | sed -e 's|/|-|g' -e 's|\.|-|g')"
+# CC resolves project dir from the git repo root, not pwd.
+# In worktrees, pwd differs from repo root — use git-common-dir to find the real root.
+GIT_COMMON_FOR_CC="$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)"
+if [ -n "$GIT_COMMON_FOR_CC" ]; then
+  CWD="$(dirname "$GIT_COMMON_FOR_CC")"
+else
+  CWD="$(pwd)"
+fi
+# CC encodes cwd by replacing / with - only (dots are preserved)
+ENCODED="$(echo "$CWD" | sed -e 's|/|-|g')"
 PROJECT_DIR="$HOME/.claude/projects/$ENCODED"
 
 if [ ! -d "$PROJECT_DIR" ]; then

@@ -124,4 +124,4 @@ Use `/bye` at end of session to persist everything.
 
 You can run multiple sprints in parallel across different branches.
 Each sprint should be in its own conversation. Use `/resume` to pick up context.
-The `trio-status-sop` keeps all sprints aware of each other through STATUS.md.
+The `trio-status-sop` keeps all sprints aware of each other through `.muse/` role files.

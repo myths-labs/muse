@@ -14,7 +14,7 @@ description: 新对话开始时恢复项目上下文的标准流程
 ② memory/今天.md + 昨天.md → 短期记忆（最近发生了什么）
 ②.1 🆕v3.0 记忆漂移检测 → 超 7 天的记忆附过时警告，文件/函数引用须验证
 ②.3 🆕 Conversation Summaries 交叉验证 → 防 /bye 未执行导致的记忆黑洞
-②.5 扫描 memory `➡️ 下一步` 中的 🟨 项 → 有未完成项则主动提醒（标注可信度）
+②.5 扫描 memory `➡️ 下一步` 中的 🔲 项 → 有未完成项则主动提醒（标注可信度）
 ③ 跨天任务? grep_search memory/ 搜索任务关键词 → 定位更早的相关记忆
 ④ USER.md                  → 用户偏好 + 🧠 Digital Twin Profile（必须读 + 全角色适配）
    ⚠️ **v3.2.0 升级**: Step ④ 从"可选读"变为**必须读**。
@@ -316,7 +316,6 @@ description: 新对话开始时恢复项目上下文的标准流程
 > 之前此步骤只有 `/resume build`/`growth` 等 DYA 角色会做，子项目不做 = 指令传递链断裂。
 > **修复**: 子项目 /resume 也执行 Step ③ 的 `grep_search strategy.md "→PROMETHEUS"`，
 > 找到未传递指令 → 高亮 + 写入子项目角色文件。
-- `/resume airachne` → `Airachne/.muse/build.md`（Airachne 开发）
 
 **向后兼容**（旧指令自动映射）：
 - `/resume status` → `/resume build`

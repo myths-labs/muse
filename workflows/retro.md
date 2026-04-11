@@ -11,7 +11,7 @@ description: Weekly development retrospective — generates statistics from memo
 Generates a development retrospective by combining:
 1. `memory/` daily logs
 2. Git commit history
-3. STATUS.md changes
+3. `.muse/` role file changes
 
 Outputs a structured weekly/monthly summary with statistics, trends, and actionable insights.
 
@@ -56,10 +56,10 @@ Extract:
 - Blockers encountered
 - Lessons learned
 
-**STATUS.md diff:**
+**Role file diff:**
 // turbo
 ```bash
-git log --since="7 days ago" -p -- "**/STATUS.md" "**/STRATEGY_STATUS.md" "**/MARKETING_STATUS.md" | head -100
+git log --since="7 days ago" -p -- "**/.muse/*.md" | head -100
 ```
 
 ### 3. Generate Report
@@ -109,7 +109,7 @@ Create a retro report in the following format:
 Save the retro to `memory/retro-[date].md`.
 
 Offer:
-- Post to STATUS.md as a reflection
+- Update `.muse/` role files with retrospective insights
 - Run `/distill` to extract permanent lessons to MEMORIES.md
 - Share with team (if applicable)
 

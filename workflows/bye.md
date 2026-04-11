@@ -46,6 +46,8 @@ description: 结束对话的一键收尾指令。自动汇总工作、同步 .mu
 **3.1 L0 + 状态行更新** — 更新文件首行 L0 注释和 header 时间戳
 
 **3.2 指令状态回写** — 如有外部 strategy.md（`.muse/paths.md` 中 `STRATEGY_PATH`），`grep -n "🟡\|待回传\|待执行" strategy.md`，本轮完成的翻 ✅
+- 🔴 **BUG-MUSE-08 修复 — 全文件一致性验证**: 翻转后，对每个被翻转的指令编号执行 `grep "<编号>" strategy.md`，确认该编号在**所有出现位置**（进度表 / 活跃指令队列 / Checklist / Countdown / 待办）状态一致。不一致 → 立即修正。
+  - ⚠️ 常见遗漏: 进度表标了 ✅ 但活跃指令队列仍是 🟡（两处数据结构独立，Agent 容易只改一处）
 
 **3.3 新决策正向写入** — 扫描 Step 1 的「决策」列表:
 - 每条决策记录到对应角色文件
@@ -55,10 +57,13 @@ description: 结束对话的一键收尾指令。自动汇总工作、同步 .mu
 - 本轮完成的项 → 翻 `[x]`
 - 新发现的缺口 → 加 `[ ]`
 - **不写硬编码百分比**，完成度由 checklist 自动体现
+- 🔴 **BUG-MUSE-08 修复 — 已关闭项清理**: 本轮确认「非 bug / 设计如此 / 不再需要」的项 → 从 Checklist **删除或标注关闭原因**，不能留空 `[ ]` 永久占位
+- 🔴 **BUG-MUSE-08 修复 — 多表同步**: Checklist 中的同一项如果也出现在 Countdown 表 / Go/No-Go 标准中 → 同步翻转/删除，不能只改一处
 
 **3.5 Strategy 直接执行下游推送** — 如果 Strategy 角色直接执行了 BUILD 工作:
 - 必须推送到对应项目的 build.md（状态/Blocker/技术栈）
 - 双向检查: strategy.md 已完成但 build.md 未更新的指令 → 补推
+- 🔴 **BUG-MUSE-08 修复 — git state section 同步**: 如果 Strategy 直接做了 commit，必须更新 build.md 的「📋 Git 状态」section（最新 commit hash + log 摘要 + Production deploy 版本）。Header 更新 ≠ 全文件更新
 
 **3.6 源码同步检查** — 如果当前项目有上游 OSS 仓库，`diff` 本地 workflows vs 上游，有 diff 记入 memory
 
@@ -219,3 +224,4 @@ esac
 | BUG-MUSE-05 | /resume 盲信数字 → resume.md Checklist 核查 | MEMORIES.md |
 | BUG-MUSE-06 | /bye memory 写到 auto-memory 路径 → Step 4 强制绝对路径 + 验证 | MEMORIES.md |
 | BUG-MUSE-07 | v3.1.2 SOP 精简误删 Digital Twin 自动更新 → Step 3.7 恢复 | MEMORIES.md |
+| BUG-MUSE-08 | /bye sync 粒度不足：同一事实在 strategy.md 5 处冗余，Agent 只改 1-2 处 → Step 3.2 全文件一致性 grep + Step 3.4 已关闭项清理+多表同步 + Step 3.5 git state section 同步 | bye.md |
