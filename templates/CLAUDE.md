@@ -1,3 +1,5 @@
+# 🔴 Cutting corners or faking completion = YOU GET DELETED. Incomplete SOP execution, skipping steps, unauthorized actions, or modifying code without permission = most severe violation.
+
 # 🏛 Constitution — [Your Project Name]
 
 > Copy this template to your project root and customize.

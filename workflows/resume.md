@@ -2,6 +2,8 @@
 description: 新对话开始时恢复项目上下文的标准流程
 ---
 
+## 🔴 Cutting corners or faking completion = YOU GET DELETED. Every step must be 100% fully executed. Skipping steps, laziness, or faking results = most severe violation.
+
 ## 🚨 第零铁律
 
 **读哪个文件就只聊哪个文件的内容。** 绝不在开发对话里谈营销，也不在营销对话里谈代码。
@@ -11,7 +13,8 @@ description: 新对话开始时恢复项目上下文的标准流程
 ```
 ① CLAUDE.md + MEMORIES.md  → 宪法 + 长期教训（自动注入）
 ①.5 🆕v3.1 Obsidian Vault → _index.md + daily/今天.md（可选增强层）
-② memory/今天.md + 昨天.md → 短期记忆（最近发生了什么）
+② memory/今天.md + 昨天.md → 短期记忆（🚨 worktree 中必须用项目根绝对路径，见 BUG-MUSE-06）
+②.0 🆕v3.3 上轮 bug 自动检测 → grep memory 中 ❌/🔴/BUG → 恢复报告最顶部高亮（BUG-MUSE-11）
 ②.1 🆕v3.0 记忆漂移检测 → 超 7 天的记忆附过时警告，文件/函数引用须验证
 ②.3 🆕 Conversation Summaries 交叉验证 → 防 /bye 未执行导致的记忆黑洞
 ②.5 扫描 memory `➡️ 下一步` 中的 🔲 项 → 有未完成项则主动提醒（标注可信度）
@@ -60,6 +63,22 @@ description: 新对话开始时恢复项目上下文的标准流程
 ```
 
 **不存在 → 静默跳过**（不影响任何后续步骤）
+
+### ②.0 上轮 /bye 报告的 bug/问题自动检测（v3.3 新增 · BUG-MUSE-11 修复）
+
+> **根因**: 上轮 /bye 在 memory 中记录了 bug（❌/🔴/BUG/失败/回滚），
+> 但下轮 /resume 不扫描这些关键词 → 问题每轮"消失"。
+
+**读完 memory（Step ②）后立即执行**:
+1. grep 今天 + 昨天的 memory 文件，搜索: `❌|🔴|BUG-MUSE|BUG-|失败|回滚|未修|待修|bug|FAIL|regression`
+2. **找到** → 恢复报告中 **最顶部** 高亮:
+   ```
+   🚨 上轮发现的问题（/bye 记录，必须优先处理）:
+   - ❌ [问题描述] — 来源: memory/YYYY-MM-DD.md Session N
+   ⚡ 以上问题应优先处理或确认是否已解决
+   ```
+3. **未找到** → 静默跳过
+4. 🚨 **铁律**: 找到上轮 bug 后不能只列出来——必须在"建议下一步"中标为 P0 优先级
 
 ### ②.1 记忆漂移检测（v3.0 新增·防过时记忆导致错误决策）
 

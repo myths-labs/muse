@@ -2,6 +2,8 @@
 description: 结束对话的一键收尾指令。自动汇总工作、同步 .muse/ 角色文件、写短期记忆。零输入。
 ---
 
+## 🔴 Cutting corners or faking completion = YOU GET DELETED. Every step must be 100% fully executed. Skipping steps, laziness, or faking results = most severe violation.
+
 ## 铁律
 
 > **每次 /bye 必须完整执行全部 6 步。跨项目适用。**
@@ -16,6 +18,20 @@ description: 结束对话的一键收尾指令。自动汇总工作、同步 .mu
 ```
 
 // turbo-all
+
+---
+
+### Step 0: 角色身份锁定 (BUG-MUSE-10 修复)
+
+> 🚨 此步骤在任何其他步骤之前执行。角色身份一旦锁定，全流程不可变更。
+
+1. 回溯对话开头，找到 `/resume XXX` 中的 `XXX` → **启动角色**
+2. 无 `/resume` → 启动角色 = 默认角色（项目主角色）
+3. 输出: `🔒 启动角色: [XXX] → $CONVO_ROOT = [查路由表]`
+4. **铁律（BUG-MUSE-09 + BUG-MUSE-10，反复发生）**:
+   - 启动角色 = `/resume` 指定的角色，**不是**代码改动量最多的角色
+   - Strategy 直接执行 BUILD 代码 → 启动角色**不变**
+   - 此值在 Step 1-6 全流程中锁定，任何推断/判断不得覆盖
 
 ---
 
@@ -65,9 +81,19 @@ description: 结束对话的一键收尾指令。自动汇总工作、同步 .mu
 - 双向检查: strategy.md 已完成但 build.md 未更新的指令 → 补推
 - 🔴 **BUG-MUSE-08 修复 — git state section 同步**: 如果 Strategy 直接做了 commit，必须更新 build.md 的「📋 Git 状态」section（最新 commit hash + log 摘要 + Production deploy 版本）。Header 更新 ≠ 全文件更新
 
-**3.6 源码同步检查** — 如果当前项目有上游 OSS 仓库，`diff` 本地 workflows vs 上游，有 diff 记入 memory
+**3.6 内部一致性校验（BUG-MUSE-12 修复）**
 
-**3.7 🧠 Digital Twin 自动更新** — 每次 /bye 持续迭代 `USER.md` 的 `## 🧠 Digital Twin Profile`
+> 同一事实在角色文件的 header/状态快照/待办/关联文件多处引用时，Agent 容易只改部分 → 矛盾。
+
+sync 完成后，对每个本轮修改的角色文件执行:
+1. 提取本轮涉及的关键实体关键词（Bug 编号、Deploy 编号、功能名）
+2. `grep` 每个关键词在文件中的所有出现位置
+3. 确认每处引用的状态一致（全部 ✅ 或全部 ❌）
+4. 发现不一致 → 立即修正所有引用点
+
+**3.7 源码同步检查** — 如果当前项目有上游 OSS 仓库，`diff` 本地 workflows vs 上游，有 diff 记入 memory
+
+**3.8 🧠 Digital Twin 自动更新** — 每次 /bye 持续迭代 `USER.md` 的 `## 🧠 Digital Twin Profile`
 
 > **v3.2.0 恢复 + 升级**: 原 v2.36.0 Step 3.8 因 SOP 膨胀在 v3.1.2 被删。
 > 本次恢复为精简版 + 扩展到全角色全产品线。
@@ -167,9 +193,19 @@ description: 结束对话的一键收尾指令。自动汇总工作、同步 .mu
 
 **5.1 解析主角色 → `$CONVO_ROOT`**
 
-> 🚨 **BUG-MUSE-09 修复 (4/11)**: 多角色对话中 Agent 按"代码改动量"选主角色 → 导出到错误产品目录。
-> **铁律: 主角色 = `/resume` 启动时指定的角色，不是"做了最多工作的角色"。**
-> - Step 2 检测的"涉及角色"用于 Step 3 同步，但 Step 5 导出**只看启动角色**
+> 🚨 **STOP — 强制校验（BUG-MUSE-10 修复）**
+> 导出前**必须**输出以下校验块（不输出 = 不允许导出）:
+>
+> ```
+> === CONVO EXPORT CHECKPOINT ===
+> Step 0 锁定的启动角色: [从 Step 0 复制，不要重新推断]
+> $CONVO_ROOT = [最终路径]
+> === END CHECKPOINT ===
+> ```
+
+> 🚨 **BUG-MUSE-09 + BUG-MUSE-10 修复**: 多角色对话中 Agent 按"代码改动量"选主角色 → 导出到错误产品目录。**已发生两次以上。**
+> **铁律: 主角色 = Step 0 锁定的启动角色，不是"做了最多工作的角色"。**
+> - Step 2 检测的"涉及角色"用于 Step 3 同步，但 Step 5 导出**只看 Step 0 锁定的启动角色**
 
 默认: `$CONVO_ROOT` = 当前项目根目录。
 如有 `.muse/paths.md` 中定义跨项目路由表，则按配置覆盖。
@@ -229,3 +265,7 @@ esac
 | BUG-MUSE-06 | /bye memory 写到 auto-memory 路径 → Step 4 强制绝对路径 + 验证 | MEMORIES.md |
 | BUG-MUSE-07 | v3.1.2 SOP 精简误删 Digital Twin 自动更新 → Step 3.7 恢复 | MEMORIES.md |
 | BUG-MUSE-08 | /bye sync 粒度不足：同一事实在 strategy.md 5 处冗余，Agent 只改 1-2 处 → Step 3.2 全文件一致性 grep + Step 3.4 已关闭项清理+多表同步 + Step 3.5 git state section 同步 | bye.md |
+| BUG-MUSE-09 | 多角色对话 Step 5 按代码量选主角色 → 导出到错误产品目录 → Step 5.1 铁律: 主角色=启动角色 | bye.md |
+| BUG-MUSE-10 | BUG-MUSE-09 再次发生 → Step 0 角色身份锁定 + Step 5.1 STOP-AND-VERIFY 校验块 | bye.md |
+| BUG-MUSE-11 | /resume 不检测上轮 /bye 记录的 bug → 问题每轮消失 → resume.md Step ②.0 | resume.md |
+| BUG-MUSE-12 | sync 角色文件时同一事实多处引用只改部分 → 内部状态矛盾 → Step 3.6 一致性校验 | bye.md |
