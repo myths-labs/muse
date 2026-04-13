@@ -1,0 +1,480 @@
+{
+  "version": "1.0.0",
+  "generated": "2026-04-13",
+  "generator": "scripts/generate-manifest.sh",
+  "total": 65,
+  "categories": {
+    "core": 7,
+    "toolkit": 44,
+    "ecosystem": 13,
+    "growth": 1
+  },
+  "skills": [
+    {
+      "name": "agent-protocol",
+      "description": "Specification for making MUSE role files machine-readable as an Agent Protocol — enabling multi-agent coordination and tool interoperability",
+      "category": "core",
+      "path": "skills/core/agent-protocol",
+      "sizeBytes": 8096
+    },
+    {
+      "name": "context-health-check",
+      "description": "Context window health check. Trigger with /ctx or phrases like \"context check\", \"do I need a new conversation\", \"how much context left\". Evaluates current context consumption and recommends whether...",
+      "category": "core",
+      "path": "skills/core/context-health-check",
+      "sizeBytes": 9040
+    },
+    {
+      "name": "layered-context",
+      "description": "L0/L1/L2 three-layer context loading protocol — reduces token consumption during /resume boot",
+      "category": "core",
+      "path": "skills/core/layered-context",
+      "sizeBytes": 3155
+    },
+    {
+      "name": "semantic-search",
+      "description": "Zero-dependency TF-IDF search across MUSE memory, roles, and skills. Use when user wants to find information across their project context.",
+      "category": "core",
+      "path": "skills/core/semantic-search",
+      "sizeBytes": 1981
+    },
+    {
+      "name": "strategic-compact",
+      "description": "Suggests manual context compaction at logical intervals to preserve context through task phases rather than arbitrary auto-compaction. Supports focus-aware compaction for targeted context preservat...",
+      "category": "core",
+      "path": "skills/core/strategic-compact",
+      "sizeBytes": 4197
+    },
+    {
+      "name": "using-superpowers",
+      "description": "Use when starting any conversation - establishes how to find and use skills, requiring Skill tool invocation before ANY response including clarifying questions",
+      "category": "core",
+      "path": "skills/core/using-superpowers",
+      "sizeBytes": 3798
+    },
+    {
+      "name": "verification-before-completion",
+      "description": "Use when about to claim work is complete, fixed, or passing, before committing or creating PRs - requires running verification commands and confirming output before making any success claims; evide...",
+      "category": "core",
+      "path": "skills/core/verification-before-completion",
+      "sizeBytes": 11468
+    },
+    {
+      "name": "backend-patterns",
+      "description": "Backend architecture patterns, API design, database optimization, and server-side best practices for Node.js, Express, and Next.js API routes.",
+      "category": "ecosystem",
+      "path": "skills/ecosystem/backend-database/backend-patterns",
+      "sizeBytes": 13415
+    },
+    {
+      "name": "database-reviewer",
+      "description": "PostgreSQL database specialist for query optimization, schema design, security, and performance. Use PROACTIVELY when writing SQL, creating migrations, designing schemas, or troubleshooting databas...",
+      "category": "ecosystem",
+      "path": "skills/ecosystem/backend-database/database-reviewer",
+      "sizeBytes": 1421
+    },
+    {
+      "name": "postgres-patterns",
+      "description": "PostgreSQL database patterns for query optimization, schema design, indexing, and security. Based on Supabase best practices.",
+      "category": "ecosystem",
+      "path": "skills/ecosystem/backend-database/postgres-patterns",
+      "sizeBytes": 3816
+    },
+    {
+      "name": "expo-app-design",
+      "description": "Build beautiful cross-platform mobile apps with Expo Router, NativeWind, and React Native.",
+      "category": "ecosystem",
+      "path": "skills/ecosystem/expo-mobile/expo-app-design",
+      "sizeBytes": 553
+    },
+    {
+      "name": "expo-deployment",
+      "description": "Deploy Expo apps to iOS App Store, Android Play Store, and web.",
+      "category": "ecosystem",
+      "path": "skills/ecosystem/expo-mobile/expo-deployment",
+      "sizeBytes": 474
+    },
+    {
+      "name": "upgrading-expo",
+      "description": "Guidelines for upgrading Expo SDK versions and fixing dependency issues.",
+      "category": "ecosystem",
+      "path": "skills/ecosystem/expo-mobile/upgrading-expo",
+      "sizeBytes": 496
+    },
+    {
+      "name": "javascript-typescript",
+      "description": "JavaScript and TypeScript development with ES6+, Node.js, React, and modern web frameworks. Use for frontend, backend, or full-stack JavaScript/TypeScript projects.",
+      "category": "ecosystem",
+      "path": "skills/ecosystem/javascript-typescript/javascript-typescript",
+      "sizeBytes": 3129
+    },
+    {
+      "name": "frontend-patterns",
+      "description": "Frontend development patterns for React, Next.js, state management, performance optimization, and UI best practices.",
+      "category": "ecosystem",
+      "path": "skills/ecosystem/react-nextjs/frontend-patterns",
+      "sizeBytes": 14311
+    },
+    {
+      "name": "react-best-practices",
+      "description": "React development guidelines with hooks, component patterns, state management, and performance optimization.",
+      "category": "ecosystem",
+      "path": "skills/ecosystem/react-nextjs/react-best-practices",
+      "sizeBytes": 631
+    },
+    {
+      "name": "vercel-react-best-practices",
+      "description": "React and Next.js performance optimization guidelines from Vercel Engineering. This skill should be used when writing, reviewing, or refactoring React/Next.js code to ensure optimal performance pat...",
+      "category": "ecosystem",
+      "path": "skills/ecosystem/react-nextjs/vercel-react-best-practices",
+      "sizeBytes": 6165,
+      "extraFiles": 2
+    },
+    {
+      "name": "remotion-best-practices",
+      "description": "Best practices for Remotion - Video creation in React",
+      "category": "ecosystem",
+      "path": "skills/ecosystem/remotion/remotion-best-practices",
+      "sizeBytes": 3592
+    },
+    {
+      "name": "vercel-deploy",
+      "description": "Deploy applications to Vercel with edge functions, serverless, and ISR.",
+      "category": "ecosystem",
+      "path": "skills/ecosystem/vercel/vercel-deploy-claimable",
+      "sizeBytes": 546
+    },
+    {
+      "name": "web-artifacts-builder",
+      "description": "Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern frontend web technologies (React, Tailwind CSS, shadcn/ui). Use for complex artifacts requiring state ma...",
+      "category": "ecosystem",
+      "path": "skills/ecosystem/web-artifacts/web-artifacts-builder",
+      "sizeBytes": 3087,
+      "hasScripts": true,
+      "extraFiles": 1
+    },
+    {
+      "name": "growth-distribution",
+      "description": "Cross-platform content distribution and growth strategy for DYA app across 10+ platforms (Xiaohongshu, Douyin, TikTok, Instagram Reels, X/Twitter, Reddit, Weibo, Bilibili, WeChat Video). Use when p...",
+      "category": "growth",
+      "path": "skills/growth-distribution",
+      "sizeBytes": 17201
+    },
+    {
+      "name": "",
+      "description": "Guidelines for designing robust, scalable, and intuitive APIs.",
+      "category": "toolkit",
+      "path": "skills/toolkit/api-design-principles",
+      "sizeBytes": 685
+    },
+    {
+      "name": "architect-agent",
+      "description": "Software architecture specialist for system design, scalability, and technical decision-making. Use PROACTIVELY when planning new features, refactoring large systems, or making architectural decisi...",
+      "category": "toolkit",
+      "path": "skills/toolkit/architect-agent",
+      "sizeBytes": 1715
+    },
+    {
+      "name": "brainstorming",
+      "description": "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Reframes the problem, challenges assumptions, and outputs a design ...",
+      "category": "toolkit",
+      "path": "skills/toolkit/brainstorming",
+      "sizeBytes": 3570
+    },
+    {
+      "name": "build-error-resolver",
+      "description": "Build and TypeScript error resolution specialist. Use PROACTIVELY when build fails or type errors occur.",
+      "category": "toolkit",
+      "path": "skills/toolkit/build-error-resolver",
+      "sizeBytes": 1317
+    },
+    {
+      "name": "changelog-generator",
+      "description": "Automatically creates user-facing changelogs from git commits by analyzing commit history, categorizing changes, and transforming technical commits into clear, customer-friendly release notes. Turn...",
+      "category": "toolkit",
+      "path": "skills/toolkit/changelog-generator",
+      "sizeBytes": 3096
+    },
+    {
+      "name": "code-documentation",
+      "description": "Writing effective code documentation - API docs, README files, inline comments, and technical guides. Use for documenting codebases, APIs, or writing developer guides.",
+      "category": "toolkit",
+      "path": "skills/toolkit/code-documentation",
+      "sizeBytes": 5747
+    },
+    {
+      "name": "code-refactoring",
+      "description": "Code refactoring patterns and techniques for improving code quality without changing behavior. Use for cleaning up legacy code, reducing complexity, or improving maintainability.",
+      "category": "toolkit",
+      "path": "skills/toolkit/code-refactoring",
+      "sizeBytes": 5172
+    },
+    {
+      "name": "code-reviewer-agent",
+      "description": "Code quality and security reviewer. Checks for bugs, security issues, and maintainability.",
+      "category": "toolkit",
+      "path": "skills/toolkit/code-reviewer-agent",
+      "sizeBytes": 839
+    },
+    {
+      "name": "coding-standards",
+      "description": "Universal coding standards, best practices, and patterns for TypeScript, JavaScript, React, and Node.js development.",
+      "category": "toolkit",
+      "path": "skills/toolkit/coding-standards",
+      "sizeBytes": 11398
+    },
+    {
+      "name": "context7-mcp",
+      "description": "This skill should be used when the user asks about libraries, frameworks, API references, or needs code examples. Activates for setup questions, code generation involving libraries, or mentions of ...",
+      "category": "toolkit",
+      "path": "skills/toolkit/context7",
+      "sizeBytes": 2124
+    },
+    {
+      "name": "coordinator-mode",
+      "description": "Multi-agent coordination SOP derived from Anthropic's internal coordinator architecture. Use when orchestrating parallel workers, dispatching subagents, planning multi-step implementations, or when...",
+      "category": "toolkit",
+      "path": "skills/toolkit/coordinator-mode",
+      "sizeBytes": 8389
+    },
+    {
+      "name": "creating-skills",
+      "description": "Guide for creating Claude Code skills following Anthropic's official best practices. Use when user wants to create a new skill, build a skill, write SKILL.md, or needs skill creation guidelines. Pr...",
+      "category": "toolkit",
+      "path": "skills/toolkit/creating-skills",
+      "sizeBytes": 8304
+    },
+    {
+      "name": "deep-dive",
+      "description": "2-stage pipeline: trace (causal investigation) -> deep-interview (requirements crystallization) with 3-point injection",
+      "category": "toolkit",
+      "path": "skills/toolkit/deep-dive",
+      "sizeBytes": 24564
+    },
+    {
+      "name": "dispatching-parallel-agents",
+      "description": "Use to run multiple subagents concurrently on independent tasks",
+      "category": "toolkit",
+      "path": "skills/toolkit/dispatching-parallel-agents",
+      "sizeBytes": 6802
+    },
+    {
+      "name": "doc-coauthoring",
+      "description": "Guide users through a structured workflow for co-authoring documentation. Use when user wants to write documentation, proposals, technical specs, decision docs, or similar structured content. This ...",
+      "category": "toolkit",
+      "path": "skills/toolkit/doc-coauthoring",
+      "sizeBytes": 15815
+    },
+    {
+      "name": "doc-updater",
+      "description": "Documentation and codemap specialist. Use PROACTIVELY for updating codemaps and documentation.",
+      "category": "toolkit",
+      "path": "skills/toolkit/doc-updater",
+      "sizeBytes": 962
+    },
+    {
+      "name": "e2e-runner",
+      "description": "End-to-end testing specialist using Vercel Agent Browser or Playwright.",
+      "category": "toolkit",
+      "path": "skills/toolkit/e2e-runner",
+      "sizeBytes": 960
+    },
+    {
+      "name": "executing-plans",
+      "description": "Use when you have a written implementation plan to execute in a separate session with review checkpoints",
+      "category": "toolkit",
+      "path": "skills/toolkit/executing-plans",
+      "sizeBytes": 2171
+    },
+    {
+      "name": "finishing-a-development-branch",
+      "description": "Use when implementation is complete, all tests pass, and you need to decide how to integrate the work - guides completion of development work by presenting structured options for merge, PR, or cleanup",
+      "category": "toolkit",
+      "path": "skills/toolkit/finishing-a-development-branch",
+      "sizeBytes": 4250
+    },
+    {
+      "name": "frontend-design",
+      "description": "Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, artifacts, posters, or applications (examples in...",
+      "category": "toolkit",
+      "path": "skills/toolkit/frontend-design",
+      "sizeBytes": 3026,
+      "extraFiles": 1
+    },
+    {
+      "name": "git-commit",
+      "description": "Creates git commits following Conventional Commits format with type/scope/subject. Use when user wants to commit changes, create commit, save work, or stage and commit. Handles regular branch commi...",
+      "category": "toolkit",
+      "path": "skills/toolkit/git-commit",
+      "sizeBytes": 6596
+    },
+    {
+      "name": "",
+      "description": "Git 安全守卫。防止 API Key、Token、私钥、钱包地址、.env 文件等敏感信息被提交到 Git。在 git commit、git push、创建新 repo、PR review 时自动触发。当用户�...",
+      "category": "toolkit",
+      "path": "skills/toolkit/git-security-guard",
+      "sizeBytes": 3926
+    },
+    {
+      "name": "github-pr-creation",
+      "description": "Creates GitHub Pull Requests with automated validation and task tracking. Use when user wants to create PR, open pull request, submit for review, or check if ready for PR. Analyzes commits, validat...",
+      "category": "toolkit",
+      "path": "skills/toolkit/github-pr-creation",
+      "sizeBytes": 5645
+    },
+    {
+      "name": "github-pr-merge",
+      "description": "Merges GitHub Pull Requests after validating pre-merge checklist. Use when user wants to merge PR, close PR, finalize PR, complete merge, approve and merge, or execute merge. Runs pre-merge validat...",
+      "category": "toolkit",
+      "path": "skills/toolkit/github-pr-merge",
+      "sizeBytes": 5800
+    },
+    {
+      "name": "github-pr-review",
+      "description": "Handles PR review comments and feedback resolution. Use when user wants to resolve PR comments, handle review feedback, fix review comments, address PR review, check review status, respond to revie...",
+      "category": "toolkit",
+      "path": "skills/toolkit/github-pr-review",
+      "sizeBytes": 7612
+    },
+    {
+      "name": "iterative-retrieval",
+      "description": "Pattern for progressively refining context retrieval to solve the subagent context problem",
+      "category": "toolkit",
+      "path": "skills/toolkit/iterative-retrieval",
+      "sizeBytes": 7065
+    },
+    {
+      "name": "markitdown",
+      "description": "A Python utility for converting various file formats (PDF, Word, Excel, PowerPoint, etc.) to Markdown. Use this skill to install and use MarkItDown for document conversion.",
+      "category": "toolkit",
+      "path": "skills/toolkit/markitdown",
+      "sizeBytes": 1283
+    },
+    {
+      "name": "planner-agent",
+      "description": "Feature implementation planning agent. Transforms requirements into detailed implementation plans.",
+      "category": "toolkit",
+      "path": "skills/toolkit/planner-agent",
+      "sizeBytes": 934
+    },
+    {
+      "name": "",
+      "description": "",
+      "category": "toolkit",
+      "path": "skills/toolkit/ralph-wiggum",
+      "sizeBytes": 5201
+    },
+    {
+      "name": "receiving-code-review",
+      "description": "Responding to feedback",
+      "category": "toolkit",
+      "path": "skills/toolkit/receiving-code-review",
+      "sizeBytes": 1917
+    },
+    {
+      "name": "requesting-code-review",
+      "description": "Use when completing tasks, implementing major features, or before merging to verify work meets requirements",
+      "category": "toolkit",
+      "path": "skills/toolkit/requesting-code-review",
+      "sizeBytes": 2700
+    },
+    {
+      "name": "sciomc",
+      "description": "Orchestrate parallel scientist agents for comprehensive analysis with AUTO mode",
+      "category": "toolkit",
+      "path": "skills/toolkit/sciomc",
+      "sizeBytes": 13323
+    },
+    {
+      "name": "security-review",
+      "description": "Use this skill when adding authentication, handling user input, working with secrets, creating API endpoints, or implementing payment/sensitive features. Provides comprehensive security checklist a...",
+      "category": "toolkit",
+      "path": "skills/toolkit/security-review",
+      "sizeBytes": 12202
+    },
+    {
+      "name": "skill-creator",
+      "description": "Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Claude's capabilities with specialized knowledge, wor...",
+      "category": "toolkit",
+      "path": "skills/toolkit/skill-creator",
+      "sizeBytes": 17837,
+      "hasScripts": true,
+      "extraFiles": 1
+    },
+    {
+      "name": "skills-updater",
+      "description": "Check and update installed Claude Code skills from multiple sources (Claude plugins and npx skills). Scans for available updates, supports batch or individual updates with intelligent local change ...",
+      "category": "toolkit",
+      "path": "skills/toolkit/skills-updater",
+      "sizeBytes": 9095,
+      "hasScripts": true,
+      "extraFiles": 2
+    },
+    {
+      "name": "subagent-driven-development",
+      "description": "Fast iteration with two-stage review (spec compliance, then code quality)",
+      "category": "toolkit",
+      "path": "skills/toolkit/subagent-driven-development",
+      "sizeBytes": 7840
+    },
+    {
+      "name": "systematic-debugging",
+      "description": "4-phase root cause process + passive behavior auto-detection + L1→L4 pressure escalation (includes root-cause-tracing, defense-in-depth, condition-based-waiting techniques)",
+      "category": "toolkit",
+      "path": "skills/toolkit/systematic-debugging",
+      "sizeBytes": 15447
+    },
+    {
+      "name": "tdd-workflow",
+      "description": "Use this skill when writing new features, fixing bugs, or refactoring code. Enforces test-driven development with 80%+ coverage including unit, integration, and E2E tests.",
+      "category": "toolkit",
+      "path": "skills/toolkit/tdd-workflow",
+      "sizeBytes": 9763
+    },
+    {
+      "name": "theme-factory",
+      "description": "Toolkit for styling artifacts with a theme. These artifacts can be slides, docs, reportings, HTML landing pages, etc. There are 10 pre-set themes with colors/fonts that you can apply to any artifac...",
+      "category": "toolkit",
+      "path": "skills/toolkit/theme-factory",
+      "sizeBytes": 3124,
+      "extraFiles": 2
+    },
+    {
+      "name": "trace",
+      "description": "Evidence-driven tracing lane that orchestrates competing tracer hypotheses in Claude built-in team mode",
+      "category": "toolkit",
+      "path": "skills/toolkit/trace",
+      "sizeBytes": 9650
+    },
+    {
+      "name": "ui-ux-pro-max",
+      "description": "UI/UX design intelligence for web and mobile. Includes 50+ styles, 161 color palettes, 57 font pairings, 161 product types, 99 UX guidelines, and 25 chart types across 10 stacks (React, Next.js, Vu...",
+      "category": "toolkit",
+      "path": "skills/toolkit/ui-ux-pro-max",
+      "sizeBytes": 44776
+    },
+    {
+      "name": "using-git-worktrees",
+      "description": "Parallel development branches",
+      "category": "toolkit",
+      "path": "skills/toolkit/using-git-worktrees",
+      "sizeBytes": 3769
+    },
+    {
+      "name": "webapp-testing",
+      "description": "Toolkit for interacting with and testing local web applications using Playwright. Supports verifying frontend functionality, debugging UI behavior, capturing browser screenshots, and viewing browse...",
+      "category": "toolkit",
+      "path": "skills/toolkit/webapp-testing",
+      "sizeBytes": 3913,
+      "hasScripts": true,
+      "extraFiles": 1
+    },
+    {
+      "name": "writing-plans",
+      "description": "Use when you have a spec or requirements for a multi-step task, before touching code",
+      "category": "toolkit",
+      "path": "skills/toolkit/writing-plans",
+      "sizeBytes": 3264
+    }
+  ]
+}

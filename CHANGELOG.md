@@ -1,3 +1,19 @@
+## [3.3.0] - 2026-04-13
+
+### S122: Skill Manifest Auto-Discovery + UI/UX Pro Max v2.5.0
+
+Absorbed from [garrytan/gbrain](https://github.com/garrytan/gbrain) (7.2K stars): machine-readable skill indexing via `manifest.json`. Also upgraded `ui-ux-pro-max` from 111-line reasoning skeleton to the full 658-line v2.5.0 design intelligence engine.
+
+#### Skill Manifest (`scripts/generate-manifest.sh`)
+- **Auto-indexes all 65 skills** into `skills/manifest.json` with name, description, category, path, size, and asset flags (`hasData`, `hasScripts`, `extraFiles`).
+- **Category breakdown**: core (7) / toolkit (44) / ecosystem (13) / growth (1).
+- **`--check` mode**: Verifies manifest is up-to-date (CI-friendly). Returns exit 1 if stale.
+- **`--pretty` mode**: Pretty-prints JSON via Python (optional, gracefully degrades).
+
+#### UI/UX Pro Max v2.5.0 Upgrade
+- From 111-line reasoning skeleton to **658-line full design intelligence**: 50+ UI styles, 161 color palettes, 57 font pairings, 161 product types, 99 UX guidelines, 25 chart types across 10 tech stacks.
+- Source: [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill).
+
 ## [3.2.2] - 2026-04-13
 
 ### S121: SOP Reliability — 5-Bug Systematic Fix + Anti-Lazy Constitution
