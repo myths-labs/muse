@@ -64,7 +64,7 @@
       "Role-based context isolation (build, QA, growth, strategy)",
       "Async cross-role directive queue with status tracking",
       "Built-in MCP Server with 6 JSON-RPC tools",
-      "65 reusable skills (core 7 + toolkit 45 + ecosystem 13)",
+      "65 reusable skills (core 7 + toolkit 44 + ecosystem 13 + growth 1)",
       "Builder Ethos — 5 core principles for AI-governed development",
       "/sprint pipeline — 7-phase feature development workflow",
       "/retro — automated weekly retrospective from memory + git",
@@ -104,6 +104,8 @@
       "Primary Role Routing — /bye convo export uses /resume launch role, not code-volume heuristic, preventing cross-project misrouting",
       "Previous Session Bug Auto-Detection — /resume greps memory for failure keywords and surfaces unresolved issues as P0 in recovery report",
       "Internal Consistency Check — /bye force-syncs all references when the same fact appears in multiple role file locations",
+      "Skill Manifest Auto-Discovery — generate-manifest.sh indexes all skills into machine-readable manifest.json with name, description, category, path, size, and asset flags. CI-friendly --check mode",
+      "UI/UX Pro Max v2.5.0 — 658-line design intelligence engine with 50+ UI styles, 161 color palettes, 57 font pairings, 99 UX guidelines, and 25 chart types across 10 tech stacks",
       "Pure Markdown format, zero code dependencies",
       "One-command install per tool"
     ],
@@ -343,12 +345,15 @@
         <div class="feature-card">
           <div class="feature-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
               stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8" />
-              <path d="m21 21-4.3-4.3" />
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <path d="M14 2v6h6" />
+              <path d="M16 13H8" />
+              <path d="M16 17H8" />
+              <path d="M10 9H8" />
             </svg></div>
-          <h3>Skill Marketplace</h3>
-          <p><code>recommend</code>, <code>categories</code>, <code>export</code>, <code>registry</code> — discover,
-            browse, share, and install community skills.</p>
+          <h3>Skill Manifest</h3>
+          <p>One script indexes all 65 skills into <code>manifest.json</code> — name, category, size, assets.
+            Machine-readable. CI-friendly <code>--check</code> mode catches stale indexes.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
