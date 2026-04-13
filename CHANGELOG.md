@@ -1,3 +1,20 @@
+## [3.2.2] - 2026-04-13
+
+### S121: SOP Reliability — 5-Bug Systematic Fix + Anti-Lazy Constitution
+
+Systematic hardening of the `/bye` and `/resume` SOP workflows, fixing 5 bugs discovered during cross-project sessions. Also introduces the "Anti-Lazy" constitution layer — an iron rule at the top of every `CLAUDE.md` that penalizes incomplete SOP execution.
+
+#### Bug Fixes
+- **BUG-MUSE-10**: `bye.md` Step 0 — Role identity lock at session start. Prevents mid-session role drift that caused convo exports to wrong directories.
+- **BUG-MUSE-11**: `resume.md` Step ②.0 — Auto-detect bugs from previous session. Greps memory for `❌/🔴/BUG/FAIL` keywords and surfaces them at the top of the recovery report as P0 priority.
+- **BUG-MUSE-12**: `bye.md` Step 3.6 — Internal consistency check. When the same fact appears in multiple locations (e.g., directive queue + status snapshot + blocker list), all locations are now force-synced during `/bye`.
+- **BUG-MUSE-06 (read-side)**: `resume.md` memory paths absolutized for worktree compatibility. Complements the write-side fix in v3.1.3.
+- **BUG-MUSE-13**: Documented worktree `.agent/` staleness — git worktrees snapshot `.agent/` at creation time; main repo SOP updates don't propagate automatically.
+
+#### Anti-Lazy Constitution
+- **`CLAUDE.md`** + **`templates/CLAUDE.md`**: Added `🔴 YOU GET DELETED` iron rule at the very top. Cutting corners, faking completion, skipping SOP steps, or unauthorized modifications = most severe violation.
+- **`bye.md`** + **`resume.md`**: Anti-Lazy header reinforcement.
+
 ## [3.2.1] - 2026-04-11
 
 ### S119: Cursor Bugbot 6-Fix + BUG-MUSE-08 Sync Granularity
