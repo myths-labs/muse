@@ -448,6 +448,22 @@ Add to your tool's MCP config (e.g., `~/.config/claude/claude_desktop_config.jso
 
 ---
 
+## 🌐 Optional Third-Party MCP Integrations
+
+MUSE links well-vetted third-party MCP servers as optional add-ons. Each runs independently, has its own token / config, and is fully opt-in.
+
+| MCP | Purpose | Cost | Setup |
+|-----|---------|------|-------|
+| 🎨 **Lazyweb** | UI design reference search · real-app screenshots + semantic descriptions (pricing pages, onboarding, dashboards, etc.) | Free (per-user token) | [`/setup-lazyweb`](.agent/workflows/setup-lazyweb.md) — 3 steps, ~2 min |
+
+> **How it works**: Open the vendor's install page, copy the generated install instructions block (token embedded), paste it to your AI agent (Claude Code / Cursor / Codex / OpenClaw / Windsurf / etc.), and say "install this". The agent picks the right install path for its client. Restart the client to load tools.
+>
+> **Why we link these**: design taste calibration is non-trivial without real references. Lazyweb gives MUSE-driven projects access to a curated UI library — useful when an agent needs to advise on pricing pages, onboarding flows, dashboard layouts, or compare a mockup to industry patterns.
+
+Want to suggest another MCP for the list? Open a PR · we vet for free-tier availability, no-billing safety, and per-user token isolation.
+
+---
+
 ## 🤔 FAQ
 
 **Q: Does MUSE require installation?**
