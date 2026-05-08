@@ -60,6 +60,47 @@ Defensive saving: every 10 interaction rounds silently update `memory/CRASH_CONT
 3. **不确定就不要 commit** — 问用户
 4. **违反本规则 = 最严重 bug**
 
+### 🔴🔴 Inspect 含 secret 的文件铁律 v2 · Default-Deny Mode (BUG-MUSE-19 v2 · 5/9 ship · 第 2 次 leak 后写死永久)
+
+**Agent 永不直接 inspect 任何 secret-containing file** — 不论命令看起来多 length-only / format-only。
+
+**适用 file**:
+- `.env*` (任何 `.env` / `.env.local` / `.env.production` / `.env.vercel*`)
+- `~/.config/*.env` / `secrets.json` / `*.pem` / `*.p12` / `*.key` / `*.jks`
+- 任何含 sensitive prefix 的 file: `sk-` / `msy_` / `tripo_` / `tsk_` / `hf_` / `AIzaSy` / `gsk_` / `sk_test_` / `pk_test_` / `eyJhbG` / `xoxb-` / `xoxp-` / `gho_` / `ghp_` / `github_pat_` / `sb_secret_`
+
+**永远禁止** (不论命令多 length-only):
+- ❌ `xxd` / `cat` / `head` / `tail` / `printf` / `echo`
+- ❌ `awk -F= '...' FILE` (envless line 上 `$1` = 整行 plaintext leak · v1 ban list 漏)
+- ❌ `sed` / `wc` / `grep` / `tr` / `python3 -c "open(...)"` / `node -e "fs.readFileSync(...)"`
+- ❌ `Read` tool on secret file
+- ❌ `vim` / `nano` / `vi` 在 transcript-visible session
+
+**需要 length / format / drift info 时**:
+1. Agent 输出 command · 让 JC 在自己 terminal 跑
+2. **JC paste plain text 数字** 给 Agent (e.g. "TRIPO_API_KEY ...1XYA")
+3. Agent 仅处理 plain text 数字 · 永不直接跑 inspect command
+
+**例外** (允许的 secret file 操作):
+- ✅ `Write FILE` (整体覆盖 · 不 Read 原内容)
+- ✅ `open -a "TextEdit" FILE` / `open -a "Cursor" FILE` (launch editor · JC 自己 edit)
+- ✅ `chmod 600 FILE` (permission · 不读 content)
+
+**Leak 后处理**:
+1. 立即 surface user · 必须 revoke · 不 narrative ack
+2. r2 rotation 3 处 sync (`~/.config` + `.env.local` + `Vercel/Modal/Supabase env`)
+3. 写 `memory/feedback_<vendor>_inspect_*.md` 记录 leak vendor + 命令 + 教训
+
+**Why default-deny (不再 ban list 模式)**:
+- BUG-MUSE-19 v1 (5/7): `xxd .env.local` leak Meshy key → ship `xxd / cat / head / tail / printf / echo` ban list 修复
+- BUG-MUSE-19 v2 (5/9 · 仅 2 天后): `awk -F= '{print $1, length($2)}' tripo.env` (envless format) 回退 `$1` = 整行 plaintext leak Tripo session token · awk 不在 v1 ban list · default 信任 "看起来 length-only OK"
+- v1 失效根因: SOP ship 后 default 信任结论 · 不再 audit 新 inspect 命令 · ban list 模式只 ban 已知命令 · 新命令默认信任
+- v2 fix: 一次性 ban 全部 inspect 行为 · 不再依赖 ban list 维护 · structural prevention · 永久关闭 inspect-side leak 根因
+
+**违反后果**:
+- 发现泄露 → 立即 `git filter-branch` 清除全部历史 + `git push --force` + 轮换所有泄露 Key
+- **违反 = 与「假功能」同级 = 最严重 bug** · 第 N+1 次 violator 触发深度 self-audit + 永久零容忍
+
 ## Project-Specific Rules
 
 ### 🚨 跨项目战略指令搜索路径

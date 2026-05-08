@@ -187,6 +187,49 @@ sync 完成后，对每个本轮修改的角色文件执行:
 
 **4.5.5 限制**: 最近活动列表保留最近 10 条，超出的移除末尾行。
 
+### Step 4.6: 🔴🔴 Transcript Plaintext Leak Sweep + Default-Deny Inspect Audit (BUG-MUSE-19 v2 · 5/9 ship · 第 2 次 leak 后写死永久)
+
+> **触发事件**:
+> - **5/7 r2 (BUG-MUSE-19 v1)**: Agent 用 `xxd .env.local` 把 fresh Meshy key plaintext leak 到 transcript · ship `xxd / cat / head / tail / printf / echo` ban list 修复
+> - **5/9 (BUG-MUSE-19 v2)**: Agent 用 `awk -F= '{print $1, length($2)}' tripo.env` (envless format · 单行 raw token 无 KEY= prefix) · awk 在无 `=` 的 line 上回退 `$1` = 整行 plaintext leak Tripo session token · v1 ban list 漏掉 awk · 第 2 次 leak 仅 2 天间隔
+>
+> **v1 失效根因**: SOP ship 后 default 信任结论 · 不再 audit 新 inspect 命令 · ban list 模式只 ban 已知命令 · 新命令默认信任。
+>
+> **v2 fix = Default-Deny Mode** (写死永久 · 不再依赖 ban list 维护)。
+
+**执行 (主 prevention + last-line catch)**:
+
+1. **Default-Deny Inspect Mode** (主 prevention · Agent 内化铁律 · 详见 CLAUDE.md `🔴 安全红线` Default-Deny subsection):
+   - Agent 永不直接 inspect 任何 `.env*` / `~/.config/*.env` / `secrets.json` / `*.pem` / `*.key`
+   - 不论命令多 length-only · 永不在 secret file 上跑 `xxd` / `cat` / `head` / `tail` / `printf` / `echo` / `awk` / `sed` / `wc` / `grep` / `tr` / `python3 -c "..."` / `node -e "..."` / `Read` tool
+   - 需要 info → Agent 输出 command · JC 跑 · JC paste plain text 数字给 Agent
+   - 例外: `Write` (整体覆盖) · `open -a "Editor" FILE` (JC 自己 edit) · `chmod 600 FILE`
+
+2. **Transcript Plaintext Leak Sweep** (last-line catch · default-deny 失效后的 backstop):
+   scan transcript for plaintext secret prefixes:
+   ```
+   sk- · AIzaSy · gsk_ · sk_live_ · sk_test_ · pk_test_ · pk_live_ · eyJhbG (JWT) · msy_ · tripo_ · tsk_ · hf_ · gho_ · ghp_ · github_pat_ · xoxb- · xoxp- · sb_secret_
+   ```
+
+3. **如有 leak event** → /bye 报告必须含:
+   ```
+   ===== 🔴 TRANSCRIPT LEAK DETECTED =====
+   Vendor: <e.g. Tripo>
+   Prefix matched: tsk_
+   Tool/cmd that leaked: <command>
+   Default-deny mode 是否被绕过: YES (新 ban entry?) / NO (default-deny 直接被违反 = 第 N+1 次 violator)
+   Action required:
+     1. revoke leaked key NOW
+     2. r2 rotation 3 处 sync (~/.config + .env.local + Vercel/Modal/Supabase env)
+     3. ship feedback to memory/feedback_<vendor>_inspect_*.md
+   ```
+
+4. **0 leak event + Agent 0 inspect command on secret file** → 输出 "===== TRANSCRIPT LEAK SWEEP + DEFAULT-DENY AUDIT =====" block 标 "0 leak detected · default-deny held · ✅"
+
+**强制验证**: Step 5 导出对话之前必须**先**输出 "===== TRANSCRIPT LEAK SWEEP + DEFAULT-DENY AUDIT =====" block · 即使 0 leak 也要明确说 · 不输出 = 不允许 proceed Step 5。
+
+> 💡 **历史背书**: 5/3 OpenAI key leak (S209 · `cat` mask pattern 漏大写) + 5/7 r2 Meshy key xxd leak (BUG-MUSE-19 v1 · ban list 修复 · **失效**) + 5/9 Tripo session token awk envless leak (BUG-MUSE-19 v2 · default-deny mode 写死) — 同根因 (default 信任自己 inspect 工具) 不同表现。v2 一次性 ban 全部 inspect 行为 · 不再依赖 ban list 维护 · 永久关闭 inspect-side leak 根因。
+
 ### Step 5: 导出对话
 
 **对话归档写入主角色对应产品的 `convo/`**。路由规则见 `.muse/paths.md` 或默认为项目根。
@@ -269,3 +312,5 @@ esac
 | BUG-MUSE-10 | BUG-MUSE-09 再次发生 → Step 0 角色身份锁定 + Step 5.1 STOP-AND-VERIFY 校验块 | bye.md |
 | BUG-MUSE-11 | /resume 不检测上轮 /bye 记录的 bug → 问题每轮消失 → resume.md Step ②.0 | resume.md |
 | BUG-MUSE-12 | sync 角色文件时同一事实多处引用只改部分 → 内部状态矛盾 → Step 3.6 一致性校验 | bye.md |
+| **BUG-MUSE-19 v1** | **Agent 用 `xxd .env.local` 验证 key 空字符串 · 把 fresh rotated Meshy key plaintext leak 到 transcript → ship `xxd / cat / head / tail / printf / echo` ban list 修复 (现作废)** | **5/7 · ban list 模式失效** |
+| **BUG-MUSE-19 v2** | **Agent 用 `awk -F= '{print $1, length($2)}' tripo.env` (envless format file 单行 raw token 无 KEY= prefix) · awk 回退 `$1` = 整行 plaintext leak Tripo session token · v1 ban list 失效 (awk 不在 ban list · default 信任 length-only OK · 没 spike envless 边界 case) · 第 2 次 leak 仅 2 天间隔 → ship Default-Deny Mode (Agent 永不直接 inspect secret file · 不论命令多 length-only · 需要 info ask JC 跑 + 报数字) · CLAUDE.md + bye.md Step 4.6 + MUSE OSS 三处写死永久 · ban list 模式作废** | **5/9 · bye.md Step 4.6 + CLAUDE.md `🔴 安全红线` Default-Deny subsection** |

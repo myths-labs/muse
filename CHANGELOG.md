@@ -1,3 +1,28 @@
+## [3.4.0] - 2026-05-09
+
+### S228: Default-Deny Secret Inspect Mode (BUG-MUSE-19 v2) + Lazyweb Workflow + Digital Twin Profile
+
+Structural fix for the second occurrence of secret-key transcript leak in 2 days (BUG-MUSE-19 v1 ban list mode failed). Plus consolidation of Lazyweb MCP setup workflow and Digital Twin Profile template absorbed from prior MUSE work.
+
+#### Default-Deny Secret Inspect Mode (BUG-MUSE-19 v2)
+
+- **`CLAUDE.md` 🔴 Security Red Line**: Replaced ban-list pattern (`xxd / cat / head / tail / printf / echo`) with **default-deny mode** — the agent never directly inspects any `.env*` / `~/.config/*.env` / `secrets.json` / `*.pem` / `*.key` file, regardless of how length-only the command appears. All inspection commands are banned: `awk -F=` (which falls open to plaintext leak on envless format files), `sed`, `wc`, `grep`, `tr`, `python3 -c "open(...)"`, `node -e "fs.readFileSync(...)"`, and `Read` tool. Exceptions: `Write FILE` (full overwrite), `open -a "Editor" FILE` (user edits in their own GUI), `chmod 600 FILE` (permission only).
+- **`workflows/bye.md` Step 4.6**: Transcript Plaintext Leak Sweep + Default-Deny Audit added as last-line catch — every `/bye` scans the session transcript for sensitive prefixes (`sk- / msy_ / tripo_ / tsk_ / hf_ / AIzaSy / gsk_ / sk_test_ / pk_test_ / eyJhbG / xoxb- / sb_secret_` etc.) and surfaces detected leaks with revocation guidance.
+- **`workflows/resume.md` Key Principles #9**: Default-deny rule reinforcement at the SOP-guideline level so it surfaces during every `/resume`.
+- **Why structural fix (not another ban-list entry)**: Ban-list mode failed twice within 2 days — `xxd` ban shipped May 7, then `awk -F=` envless leak occurred May 9 (the agent trusted "looks length-only OK" without spike-verifying envless format edge cases). Default-deny eliminates the maintenance burden of tracking new inspection commands and closes the inspect-side leak root cause permanently.
+
+#### `/setup-lazyweb` Workflow (S225)
+
+- New optional MCP integration for [Lazyweb](https://www.lazyweb.com/mcp) — a UI design reference search engine (real app screenshots with semantic descriptions for pricing pages, onboarding flows, dashboards, etc.).
+- Plain-language 3-step setup (per `Plain-Language-Setup-Instructions` principle): no `echo` / `Ctrl+D` / `wc -c verify` jargon — just paste the install command into the agent.
+- Per-user-token isolation, free-tier compatible.
+
+#### Digital Twin Profile Template (S118)
+
+- Template for the `## 🧠 Digital Twin Profile` section of `USER.md`.
+- 5-section structure: Tone & Voice, Decision Making, Communication, Quality Standards, Brand Sensibility.
+- Used by `/bye` Step 3.8 for continuous user-personality learning across all roles (Strategy, Build, QA, Growth).
+
 ## [3.3.0] - 2026-04-13
 
 ### S122: Skill Manifest Auto-Discovery + UI/UX Pro Max v2.5.0
