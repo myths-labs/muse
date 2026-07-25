@@ -61,7 +61,7 @@ grep -o 'version-[0-9.]*' <MUSE_ROOT>/README.md | head -1
 cd <MUSE_ROOT> && git log $(git describe --tags --abbrev=0)..HEAD --oneline
 
 # 1c. 读取 DYA 本轮 MUSE 相关 commit（如有从 DYA 同步过来的改动）
-cd /Users/jj/Desktop/DYA && git log --oneline -10 --grep="muse" --grep="MUSE" --all-match
+cd <DYA_ROOT> && git log --oneline -10 --grep="muse" --grep="MUSE" --all-match
 ```
 
 Agent 自动：

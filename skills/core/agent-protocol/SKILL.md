@@ -155,7 +155,7 @@ For users managing multiple projects:
 
 **Path resolution**: `CLAUDE.md` MAY specify absolute paths for cross-project strategy files:
 ```markdown
-> strategy.md 绝对路径: `/Users/jj/Desktop/DYA/.muse/strategy.md`
+> strategy.md 绝对路径: `${DYA_ROOT}/.muse/strategy.md`
 ```
 
 ## Integration Points

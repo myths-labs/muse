@@ -40,7 +40,7 @@ Defensive saving: every 10 interaction rounds silently update `memory/CRASH_CONT
 - **Action Gate**: STOP and ASK before: Refactoring, Major Updates, Deleting Files.
 - **Pre-Flight**: Always BACKUP before approved destructive actions.
 - **Rule Zero**: Check `CLAUDE.md` + `MEMORIES.md` before every task.
-- **🚨 strategy.md 跨项目写入铁律**: `/Users/jj/Desktop/DYA/.muse/strategy.md` 是全局战略中枢。任何项目、任何角色均可直接读写。"不在当前 workspace" 绝不是拒绝写入的理由。
+- **🚨 strategy.md 跨项目写入铁律**: `${DYA_ROOT}/.muse/strategy.md` 是全局战略中枢。任何项目、任何角色均可直接读写。"不在当前 workspace" 绝不是拒绝写入的理由。
 
 ## 🔴 安全红线（最高宪法 · 2026-03-21 安全事件后新增）
 
@@ -107,7 +107,7 @@ Defensive saving: every 10 interaction rounds silently update `memory/CRASH_CONT
 
 > **strategy.md 位于 DYA 项目，不在 MUSE 本地。**
 > 
-> 绝对路径: `/Users/jj/Desktop/DYA/.muse/strategy.md`
+> 绝对路径: `${DYA_ROOT}/.muse/strategy.md`
 > 
 > `/resume` 执行 Step 3（拉取战略指令）时，必须搜索上方绝对路径，
 > 而不是本地相对路径 `.muse/strategy.md`（MUSE 本地不存在此文件）。

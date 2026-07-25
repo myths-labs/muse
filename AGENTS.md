@@ -48,7 +48,7 @@ Defensive saving: every 10 interaction rounds silently update `memory/CRASH_CONT
 
 > **strategy.md 位于 DYA 项目，不在 MUSE 本地。**
 > 
-> 绝对路径: `/Users/jj/Desktop/DYA/.muse/strategy.md`
+> 绝对路径: `${DYA_ROOT}/.muse/strategy.md`
 > 
 > `/resume` 执行 Step 3（拉取战略指令）时，必须搜索上方绝对路径，
 > 而不是本地相对路径 `.muse/strategy.md`（MUSE 本地不存在此文件）。
@@ -525,8 +525,8 @@ MUSE = 纯 Markdown AI 编程协作 OS
 | `/sync growth` | 查看 growth.md 推广进展 |
 
 **路径约定**：
-- 战略文件: `/Users/jj/Desktop/DYA/.muse/strategy.md` → S019 MUSE 部分
-- MUSE 代码: `/Users/jj/Desktop/MUSE/`
+- 战略文件: `${DYA_ROOT}/.muse/strategy.md` → S019 MUSE 部分
+- MUSE 代码: `${MUSE_ROOT}/`
 
 
 ### Role: GROWTH
@@ -956,8 +956,8 @@ MUSE = 纯 Markdown AI 编程协作 OS
 | `/sync strategy` | 读取 `DYA/.muse/strategy.md` S019 战略指令 |
 
 **路径约定**：
-- MUSE 代码: `/Users/jj/Desktop/MUSE/`
-- 战略: `/Users/jj/Desktop/DYA/.muse/strategy.md` → S019
+- MUSE 代码: `${MUSE_ROOT}/`
+- 战略: `${DYA_ROOT}/.muse/strategy.md` → S019
 ### 📡 BUILD→GROWTH (2026-03-16 16:44) — v2.16→v2.20 同步
 
 > **5 个新版本已发布，Growth 需更新营销素材**
@@ -1365,7 +1365,7 @@ For users managing multiple projects:
 
 **Path resolution**: `CLAUDE.md` MAY specify absolute paths for cross-project strategy files:
 ```markdown
-> strategy.md 绝对路径: `/Users/jj/Desktop/DYA/.muse/strategy.md`
+> strategy.md 绝对路径: `${DYA_ROOT}/.muse/strategy.md`
 ```
 
 ## Integration Points

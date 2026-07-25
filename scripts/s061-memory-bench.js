@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const data = JSON.parse(fs.readFileSync('/Users/jj/Desktop/MUSE/scripts/bench-data.json', 'utf8'));
+const data = JSON.parse(fs.readFileSync(__dirname + '/bench-data.json', 'utf8'));
 
 // Simulating Claude LLM responses based on how it handles these specific contexts.
 async function callClaude(context, question) {
@@ -133,7 +133,7 @@ async function run() {
     console.log("-----------------------------------------");
     console.log("Details saved to scripts/bench-results.json");
 
-    fs.writeFileSync('/Users/jj/Desktop/MUSE/scripts/bench-results.json', JSON.stringify(data, null, 2));
+    fs.writeFileSync(__dirname + '/bench-results.json', JSON.stringify(data, null, 2));
 
     const md = `
 # 🏆 MemoryBench Results (MUSE vs Mem0 / Supermemory)
@@ -152,7 +152,7 @@ async function run() {
 - **Mem0 / Supermemory** (and standard vector RAGs) fail because semantic search retrieves *both* the old contradictory fact and the new fact, causing the LLM to guess randomly or hallucinate (often anchoring to the first retrieved match). They also retrieve expired deadlines without understanding time limits, leading to high failure rates in temporal reasoning.
 - **MUSE wins** because its \`~~strikethrough~~\` historical degradation and \`[TEMPORAL]\` pre-filtering ensure the LLM *only* sees pure, mathematically active facts. No $24M vector database can beat literal removal of irrelevant context.
 `;
-    fs.writeFileSync('/Users/jj/Desktop/MUSE/scripts/memorybench_report.md', md);
+    fs.writeFileSync(__dirname + '/memorybench_report.md', md);
     console.log("Markdown report saved to scripts/memorybench_report.md");
 }
 

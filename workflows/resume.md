@@ -33,7 +33,7 @@ description: 新对话开始时恢复项目上下文的标准流程
 ⑤ 对应 .muse/ 角色文件     → 完整进度（按指令决定读哪个）
 ⑥ 🚨 strategy.md 指令拉取  → 非 strategy 角色自动 grep 活跃指令（→BUILD / →GROWTH 等）
    ⚠️ **跨项目铁律**: strategy.md **始终位于 `DYA/.muse/strategy.md`**，无论当前项目是 DYA/Prometheus/MUSE
-   → 绝对路径: `/Users/jj/Desktop/DYA/.muse/strategy.md`
+   → 绝对路径: `${DYA_ROOT}/.muse/strategy.md`
 ⑦ 项目部署事实表        → strategy.md 的 🌐 项目部署事实表（快查网址/域名/版本）
    ⚠️ 所有角色（含 Strategy 本身）恢复报告必须列出当前项目的活跃网址
 ```
@@ -46,7 +46,7 @@ description: 新对话开始时恢复项目上下文的标准流程
 > Agent 通过 Vault 可以快速了解「最近发生了什么 + 重要决策 + 已知 Bug」，
 > 比纯读 memory/ 更高效（memory 是 Agent 格式，Vault 是人类格式）。
 
-**检测**：`[ -d "/Users/jj/Desktop/MythsLabs" ]`
+**检测**：`[ -d "$HOME/Desktop/MythsLabs" ]`
 
 **存在 → 执行**：
 1. 读取 `MythsLabs/_index.md`（<50 行的全局导航 + 最近活动）
@@ -268,7 +268,7 @@ description: 新对话开始时恢复项目上下文的标准流程
      🚨 以上指令已写入角色文件但尚未执行，本轮应优先处理
      ```
 3. **🚨 自动拉取战略指令（所有非 strategy 角色必须执行）**：
-   - `grep_search` 扫描 `/Users/jj/Desktop/DYA/.muse/strategy.md` 中的「📡 战略指令队列 → 活跃指令」
+   - `grep_search` 扫描 `${DYA_ROOT}/.muse/strategy.md` 中的「📡 战略指令队列 → 活跃指令」
    - **⚠️ 精确匹配规则**（防止跨项目误拉取）：
      - `/resume build` → 搜 `→DYA/BUILD` 或 `→BUILD`（不带任何项目前缀的）
      - `/resume growth` → 搜 `→DYA/GROWTH` 或 `→GROWTH`（不带任何项目前缀的）
@@ -276,7 +276,7 @@ description: 新对话开始时恢复项目上下文的标准流程
      - 判断方法: 如果 `→` 前面有 `/`（如 `→MUSE/GROWTH`），检查项目名是否匹配当前对话的项目
    - ⚠️ **跨项目搜索路径铁律**:
      - **所有项目**（DYA/Prometheus/MUSE）的指令拉取都搜索 **同一个文件**: `DYA/.muse/strategy.md`
-     - 绝对路径: `/Users/jj/Desktop/DYA/.muse/strategy.md`
+     - 绝对路径: `${DYA_ROOT}/.muse/strategy.md`
      - ❌ **禁止**搜索项目本地的 strategy.md（如 `MUSE/.muse/strategy.md` 或 `Prometheus/.muse/strategy.md`）
      - 原因: DYA strategy.md 是全局战略中枢，所有项目的指令都从这里发出
    - 🚨 **✅/🟡 过滤规则（必读·防止漏拉取）**:

@@ -85,5 +85,5 @@ for (let i = 0; i < 500; i++) {
     });
 }
 
-fs.writeFileSync('/Users/jj/Desktop/MUSE/scripts/bench-data.json', JSON.stringify(items, null, 2));
+fs.writeFileSync(__dirname + '/bench-data.json', JSON.stringify(items, null, 2));
 console.log(`Generated ${items.length} benchmark cases to scripts/bench-data.json`);

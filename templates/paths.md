@@ -19,6 +19,7 @@ MEMORY_ROOT: .
 # STRATEGY_PATH: /path/to/shared/.muse/strategy.md
 # OBSIDIAN_VAULT: /path/to/obsidian/vault
 # DYA_ROOT: /path/to/main/project
+# MUSE_ROOT: /path/to/muse/repo
 ```
 
 ## Tool-Specific Overrides (optional)
