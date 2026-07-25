@@ -1,3 +1,32 @@
+## [3.5.0] - 2026-07-26
+
+### S284: Skills Auto-Update System — Two-Layer Design
+
+MUSE has shipped the `skills-updater` skill since v2.4.0, which checks and updates Claude Code plugin marketplaces and npx-installed skills. What it does **not** cover is arbitrary git-backed skill clones living in a skill root, and — more importantly — **nothing ever ran it on a schedule**. It is human-invoked, so skills only got updated when someone happened to remember.
+
+This release adds the missing half: scheduled, unattended sync that also covers git-backed clones, plus a report that surfaces itself in the next conversation instead of waiting to be asked for.
+
+Drift accumulates fast without it. In one real skill collection, the worst git-backed clone had fallen **thousands of commits** behind upstream, and several `SKILL.md` files carried **unresolved git merge conflict markers** (`<<<<<<< HEAD` landing on line 2, corrupting the YAML frontmatter — those skills had most likely been failing to load for a long time, silently).
+
+#### `scripts/skills-autoupdate.sh` (new)
+
+- **Layer 1** — git-backed skill clones: automatic `fetch` + `merge --ff-only`. Idempotent and revertible.
+- **Layer 1b** — Claude Code plugin marketplaces (`~/.claude/plugins/marketplaces/*`): same automatic fast-forward. The existing `skills-updater` skill already covers this ground when invoked manually; what is new is that it now happens on a schedule alongside Layer 1.
+- **Layer 2** — non-git skills: **detection only, never writes**.
+- Three guards: skips any repo with uncommitted local changes, aborts when free disk falls below a threshold, and uses `--ff-only` exclusively so it can never create a merge commit or diverge.
+- Emits a Markdown report. Skill root and report directory configurable via `MUSE_SKILL_ROOT` / `MUSE_CONFIG_DIR`; disk threshold via `MUSE_MIN_DISK_MI`; plugin marketplace path via `MUSE_PLUGIN_MARKETPLACES`.
+
+#### `workflows/resume.md` — Boot step ②.5 (new)
+
+- Every `/resume` reads the report. If nothing needs attention it stays silent; otherwise it surfaces what was auto-updated and what awaits a human merge.
+- Run it on a schedule (launchd / cron — one-liner guidance in the script header; no scheduler ships with the repo), and the next conversation is where a human actually sees the result. Repos skipped for having uncommitted local changes also raise the attention flag, so they cannot sit unnoticed.
+
+#### Why Layer 2 refuses to auto-merge
+
+This is the most important design decision in this release. Non-git skills routinely carry local customization — project-specific wiring, localized corpora, extra `scripts/` and `templates/`, custom frontmatter fields. During the manual sweep, a naive `rsync --delete` would have permanently destroyed a localized design corpus and silently swallowed local rewrites across dozens of skills. Because the diffs are large, the loss would have been very hard to notice after the fact.
+
+So Layer 2 only reports. Entries marked `(MANUAL)` must be diffed and merged by a human; only `(AUTO)` entries are safe to overwrite. **Knowing what not to automate is the point.**
+
 ## [3.4.0] - 2026-05-09
 
 ### S228: Default-Deny Secret Inspect Mode (BUG-MUSE-19 v2) + Lazyweb Workflow + Digital Twin Profile

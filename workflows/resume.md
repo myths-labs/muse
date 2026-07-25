@@ -18,6 +18,7 @@ description: 新对话开始时恢复项目上下文的标准流程
 ②.1 🆕v3.0 记忆漂移检测 → 超 7 天的记忆附过时警告，文件/函数引用须验证
 ②.3 🆕 Conversation Summaries 交叉验证 → 防 /bye 未执行导致的记忆黑洞
 ②.5 扫描 memory `➡️ 下一步` 中的 🔲 项 → 有未完成项则主动提醒（标注可信度）
+②.6 🆕v3.5 Skills 自动更新报告 Pickup → 读 skills-update-report.md，「需要关注：是」才 surface（详见下方 ②.6 节）
 ③ 跨天任务? grep_search memory/ 搜索任务关键词 → 定位更早的相关记忆
 ④ USER.md                  → 用户偏好 + 🧠 Digital Twin Profile（必须读 + 全角色适配）
    ⚠️ **v3.2.0 升级**: Step ④ 从"可选读"变为**必须读**。
@@ -132,6 +133,40 @@ description: 新对话开始时恢复项目上下文的标准流程
    - convo 有但 memory 没提 → **🔴 遗漏！** 补入恢复报告
 6. 恢复报告新增 section: `📜 上轮结尾回顾`
 7. **如果最新 session 无 convo 导出** → 标 `🔴 上轮 convo 未导出，可能有记忆黑洞`
+
+### ②.6 🔄 Skills 自动更新报告 Pickup（v3.5 新增）
+
+> **根因**: 靠人主动提醒才更新 skills = 必然腐坏。实测一个长期未更新的 skill 集里，
+> 最严重的 git-backed clone 落后上游**数千个 commit**，并有多个 `SKILL.md` 残留未解决的
+> merge conflict 标记（`<<<<<<< HEAD` 落在第 2 行，破坏 YAML frontmatter，很可能长期加载失败）。
+> `scripts/skills-autoupdate.sh` 可定时自动跑，但**报告需要有人读**，故加本步。
+
+**执行（每次 /resume 都做 · 极低成本）**:
+
+1. 读 `${MUSE_CONFIG_DIR:-$HOME/.config/muse}/skills-update-report.md`
+2. 看报告头部 `> 需要关注：` 字段：
+   - **否·全部最新** → 静默跳过，不输出 noise
+   - **是** → 恢复报告中列出：Layer 1 自动更新了哪些 · Layer 2 检测到哪些上游有新内容待人工合并 · 有无 dirty 跳过项
+3. 报告不存在 → 提示用户可手动跑：`bash <MUSE仓库>/scripts/skills-autoupdate.sh`
+4. 报告中出现「Layer 2 已跳过」或「上游检查失败」 → 如实转告，**不得**把跳过/失败当成「无更新」
+
+> **映射表说明**: Layer 2 依赖 `${MUSE_CONFIG_DIR}/skills-upstream-map.json`（skill → 上游 repo，标记 AUTO/MANUAL）。
+> 该文件**不随仓库分发**——每个用户的 skill 集不同，需要自建（格式见脚本头注释；让 agent 审计一次本地 skills 的来源即可生成）。
+> 无映射表时 Layer 2 会在报告中显式标注「未配置·已跳过」，Layer 1/1b 不受影响。
+
+**🔴 铁律 — Layer 2 绝不自动合并**:
+
+报告里标 `(MANUAL)` 的 skill **有本地定制**（项目专属接线 · 本地化语料 · 额外 scripts/templates · 自定义 frontmatter 字段）。
+实测：若对这类 skill 照搬 `rsync --delete`，本地语料文件会永久消失，数十个 skill 的本地改写会被静默吞掉，
+而且因为 diff 巨大，事后极难发现丢了什么。
+
+**必须逐个 diff 后人工合并**，任何「批量同步」提议都要先出 diff 给用户看。标 `(AUTO)` 的才可安全覆盖。
+
+**相关载体**:
+- 脚本 `scripts/skills-autoupdate.sh`（含 dirty 跳过 / 磁盘不足中止 / 仅 `--ff-only` 三道守卫）
+- 映射表 `${MUSE_CONFIG_DIR}/skills-upstream-map.json`（skill → 上游 repo · 标记 AUTO / MANUAL）
+- 定时：建议每周一次（上游最活跃的项目也就每天几个 commit）
+
 
 ### DYA 项目
 
