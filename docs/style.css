@@ -583,7 +583,15 @@ body {
 
 .step-content {
   flex: 1;
+  min-width: 0;
 }
+
+.step-content p { margin: 8px 0 12px; color: var(--text-secondary); }
+.step-content .code-block + .code-block { margin-top: 12px; }
+#copy-status { min-height: 1.5em; color: var(--text-secondary); }
+.copy-btn:disabled { opacity: 0.7; cursor: wait; }
+.section a:not(.btn) { color: var(--gold); }
+.section, .hero { scroll-margin-top: 80px; }
 
 .step-content h4 {
   font-size: 1rem;
@@ -607,7 +615,9 @@ body {
   font-size: 0.85rem;
   color: var(--green);
   flex: 1;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  min-width: 0;
 }
 
 .copy-btn {

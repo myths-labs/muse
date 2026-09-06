@@ -4,14 +4,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MUSE — The AI Coding Governance System | Roles, Memory, Skills in Markdown</title>
+  <title>MUSE — Continuous Development with Codex and Claude Code</title>
   <meta name="description"
-    content="MUSE is a Markdown-based governance system with Python-powered continuity for AI pair programming. Preserve decisions and verify source boundaries across sessions. Works with Claude Code, OpenCode, Cursor, Windsurf, Gemini CLI, and more.">
+    content="Keep your role, decisions and next steps across Codex and Claude Code. MUSE 3.6 brings incremental saves, reviewed recovery and portable installation to AI-assisted development.">
   <meta name="keywords"
-    content="MUSE, AI memory, Claude Code, OpenCode, Cursor, AI pair programming, context management, Markdown, agent memory">
+    content="MUSE, Codex, Claude Code, AI memory, AI pair programming, context management, Markdown, agent memory">
   <meta property="og:title" content="MUSE — The AI Coding Governance System">
   <meta property="og:description"
-    content="The only full governance system for AI coding. Roles, memory, 66 skills, directives, dashboard — Markdown skills with a Python continuity runtime.">
+    content="MUSE 3.6: continue in Codex, Claude Code or both, with shared role and Lane records. Markdown skills with a Python continuity runtime.">
   <meta property="og:image" content="https://raw.githubusercontent.com/myths-labs/muse/main/assets/banner.png">
   <meta property="og:url" content="https://muse.mythslabs.ai">
   <meta property="og:type" content="website">
@@ -25,93 +25,59 @@
   <link rel="stylesheet" href="style.css">
   <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM-readable description">
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "MUSE",
-    "alternateName": "The AI Coding Governance System",
-    "description": "The only full governance system for AI pair programming. Goes beyond AGENTS.md and .cursorrules with role isolation, persistent memory, 66 reusable skills, cross-role directives, TF-IDF search, and visual dashboards. Markdown workflows with Python continuity.",
-    "url": "https://muse.mythslabs.ai",
-    "applicationCategory": "DeveloperApplication",
-    "operatingSystem": "macOS, Linux, Windows",
-    "softwareVersion": "3.6.0",
-    "license": "https://opensource.org/licenses/MIT",
-    "isAccessibleForFree": true,
-    "codeRepository": "https://github.com/myths-labs/muse",
-    "programmingLanguage": ["Markdown", "Bash"],
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "author": {
-      "@type": "Organization",
-      "name": "Myths Labs",
-      "url": "https://github.com/myths-labs",
-      "sameAs": [
-        "https://x.com/MythsLabs",
-        "https://linkedin.com/company/MythsLabs"
-      ]
-    },
-    "creator": {
-      "@type": "Person",
-      "name": "JC",
-      "url": "https://x.com/sunshiningday",
-      "sameAs": ["https://github.com/jc-myths"]
-    },
-    "featureList": [
-      "Cross-conversation memory persistence",
-      "Role-based context isolation (build, QA, growth, strategy)",
-      "Async cross-role directive queue with status tracking",
-      "Built-in MCP Server with 6 JSON-RPC tools",
-      "66 reusable skills (core 7 + toolkit 44 + ecosystem 13 + growth 1)",
-      "Builder Ethos — 5 core principles for AI-governed development",
-      "/sprint pipeline — 7-phase feature development workflow",
-      "/retro — automated weekly retrospective from memory + git",
-      "Git Security Guard — pre-commit secret leak prevention",
-      "Systematic Debugging v2 — L1-L4 pressure escalation",
-      "Graph Memory Relations (UPDATES/EXTENDS/DERIVES/NEW auto-detection)",
-      "Auto-Expiry Temporal Tagging (PERMANENT/TEMPORAL/EPISODIC smart forgetting)",
-      "Unexecuted Directive Scan (surface buried 🟡 directives in role files)",
-      "Static/Dynamic User Profile (permanent preferences + auto-updating work focus with 7-day window)",
-      "BUILD→QA AC Dual-Write Protocol (AC simultaneously written to both build.md and qa.md with unified AC-SXXX-NN numbering)",
-      "Coordinator Mode — multi-agent coordination SOP extracted from Claude Code source analysis",
-      "Iterative Retrieval — progressive context refinement replacing single-pass search",
-      "SOP Layer Evolution — memory 4-category taxonomy, drift detection, coordinator iron law, absolute dates",
-      "Automated Release SOP — pre-flight version/skill count validation script",
-      "Multi-Role Sync — mixed-role conversations sync all touched roles, not just the primary one (BUG-MUSE-02 fix)",
-      "Obsidian Vault Integration — optional persistent brain layer auto-syncing daily notes, decisions, and bug analyses",
-      "Cross-Project Bidirectional Sync — Strategy↔BUILD downstream push ensures role files never go stale",
-      "Claude Code Slash Commands — .claude/commands/ committed to git, worktree-safe symlinks to workflows",
-      "/launch workflow — Launch Day nuclear-strike protocol via Airachne MCP social broadcast",
-      "/model workflow — switch AI model config and update USER.md preferences",
-      "/release workflow — open-source release SOP with auto version detection and pre-flight gate",
-      "Auto memory capture (LESSON/DECISION/FACT extraction)",
-      "Semantic compression (3-tier context compression)",
-      "Session checkpoint (silent save every 15 rounds)",
-      "Defensive auto-save (crash recovery)",
-      "Multi-tool support (Claude Code, Cursor, Windsurf, Gemini CLI, Codex CLI, Copilot, Aider, Antigravity, OpenClaw, OpenCode)",
-      "Skill Marketplace Discovery (6 commands: categories, stats, export, recommend, remote-install, registry)",
-      "Web Dashboard (scripts/dashboard.sh) — self-contained HTML project visualizer",
-      "Online Dashboard (muse.mythslabs.ai/dashboard) — client-side project visualization",
-      "VS Code Extension with Roles, Skills, Memory tree views",
-      "Skill Format Converter (Cursor, Windsurf, Copilot, OpenClaw, OpenCode, Aider, Antigravity)",
-      "Full-Stack Cross-Platform Compatibility — unified session export and skill installation across 10 AI coding tools with L1 canonical format, L2 per-tool adapters, and L3 N-way runtime dispatch",
-      "Digital Twin Profile — auto-evolving 5-dimension behavioral model (Tone, Decision, Communication, Quality, Brand) that adapts all agent output to the user's authentic voice across every role",
-      "Self-Healing SOP Cycle — 6 iterations of bug-driven SOP hardening. Every governance bug discovered in production is systematically patched back into bye.md/resume.md, making the framework more reliable with each use",
-      "Anti-Lazy Constitution — iron rule at the top of every CLAUDE.md preventing incomplete SOP execution, step-skipping, or faked completion",
-      "Cursor Bugbot Integration — automated code review findings from Cursor Bugbot fed back as MUSE source fixes",
-      "Primary Role Routing — /bye convo export uses /resume launch role, not code-volume heuristic, preventing cross-project misrouting",
-      "Previous Session Bug Auto-Detection — /resume greps memory for failure keywords and surfaces unresolved issues as P0 in recovery report",
-      "Internal Consistency Check — /bye force-syncs all references when the same fact appears in multiple role file locations",
-      "Skill Manifest Auto-Discovery — generate-manifest.sh indexes all skills into machine-readable manifest.json with name, description, category, path, size, and asset flags. CI-friendly --check mode",
-      "UI/UX Pro Max v2.5.0 — 658-line design intelligence engine with 50+ UI styles, 161 color palettes, 57 font pairings, 99 UX guidelines, and 25 chart types across 10 tech stacks",
-      "Markdown skills with a Python 3.7+ continuity runtime",
-      "One-command install per tool"
-    ],
-    "softwareRequirements": "Markdown workflows: compatible assistant; guarded continuity: local macOS/Linux, Git, Python 3.7+, Codex or Claude Code",
-    "keywords": "AI memory, Claude Code, Cursor, Windsurf, AI pair programming, context management, agent memory, lossless context, MCP server, vibe coding"
-  }
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "MUSE",
+  "alternateName": "The AI Coding Governance System",
+  "description": "Shared role and Lane continuity for Codex and Claude Code, with Markdown skills and a Python runtime.",
+  "url": "https://muse.mythslabs.ai",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "macOS, Linux",
+  "softwareVersion": "3.6.0",
+  "license": "https://opensource.org/licenses/MIT",
+  "isAccessibleForFree": true,
+  "codeRepository": "https://github.com/myths-labs/muse",
+  "programmingLanguage": [
+    "Markdown",
+    "Bash",
+    "Python"
+  ],
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Organization",
+    "name": "Myths Labs",
+    "url": "https://github.com/myths-labs",
+    "sameAs": [
+      "https://x.com/MythsLabs",
+      "https://linkedin.com/company/MythsLabs"
+    ]
+  },
+  "creator": {
+    "@type": "Person",
+    "name": "JC",
+    "url": "https://x.com/sunshiningday",
+    "sameAs": [
+      "https://github.com/jc-myths"
+    ]
+  },
+  "featureList": [
+    "Incremental Save without ending the conversation",
+    "Reviewed recovery of the same role and Lane",
+    "Native writer checks and stale-writer rejection through MUSE helpers",
+    "Reusable closeout receipts that track changed evidence",
+    "Preservation-aware installation, upgrade and rollback",
+    "66 reusable skills loaded on demand",
+    "Skill adapters for ten AI coding tools; guarded continuity for Codex and Claude Code",
+    "Local project dashboard"
+  ],
+  "softwareRequirements": "Markdown workflows: compatible assistant; guarded continuity: local macOS/Linux, Git, Python 3.7+, Codex or Claude Code",
+  "keywords": "Codex, Claude Code, AI coding, project memory, role continuity, Lane checkpoints, Markdown skills"
+}
   </script>
 </head>
 
@@ -132,10 +98,11 @@
           height="32">
         <span>MUSE</span>
       </a>
-      <div class="nav-links">
+      <div class="nav-links" id="nav-links">
         <a href="#features">Features</a>
         <a href="#tools">Tools</a>
-        <a href="#comparison">Compare</a>
+        <a href="#demo">Daily use</a>
+        <a href="#guides">Guides</a>
         <a href="./dashboard.html" class="nav-dashboard-link">Dashboard</a>
         <a href="https://github.com/myths-labs/muse" class="btn btn-sm" target="_blank" rel="noopener">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
@@ -145,7 +112,7 @@
           Star on GitHub
         </a>
       </div>
-      <button class="nav-toggle" aria-label="Menu">☰</button>
+      <button class="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">☰</button>
     </div>
   </nav>
 
@@ -156,10 +123,9 @@
       <div class="hero-overlay"></div>
     </div>
     <div class="container hero-content">
-      <div class="hero-badge">Markdown + Python Continuity · MIT Open Source</div>
-      <h1>Your AI's memory,<br>governed.</h1>
-      <p class="hero-subtitle">AGENTS.md tells your AI what your project is.<br>MUSE tells it <strong>who it
-          is</strong>, what it remembers, and what it can do.</p>
+      <div class="hero-badge">MUSE 3.6 · MIT Open Source</div>
+      <h1>Keep building.<br>Keep your context.</h1>
+      <p class="hero-subtitle">Use <strong>Codex, Claude Code, or both.</strong><br>Carry your role, decisions and next steps between sessions with shared project records.</p>
       <div class="hero-actions">
         <a href="https://github.com/myths-labs/muse" class="btn btn-primary" target="_blank" rel="noopener">
           <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor">
@@ -173,9 +139,9 @@
       <div class="hero-stats">
         <div class="stat"><span class="stat-num">66</span><span class="stat-label">Skills</span></div>
         <div class="stat-divider"></div>
-        <div class="stat"><span class="stat-num">10</span><span class="stat-label">AI Tools</span></div>
+        <div class="stat"><span class="stat-num">2</span><span class="stat-label">Continuity Clients</span></div>
         <div class="stat-divider"></div>
-        <div class="stat"><span class="stat-num">0</span><span class="stat-label">Dependencies</span></div>
+        <div class="stat"><span class="stat-num">10</span><span class="stat-label">Skill Adapters</span></div>
       </div>
     </div>
   </section>
@@ -183,39 +149,35 @@
   <!-- Problem / Solution -->
   <section class="section section-dark" id="problem">
     <div class="container">
-      <h2 class="section-title">Your AI forgets. Every. Single. Time.</h2>
+      <h2 class="section-title">A place for the work to continue</h2>
       <div class="comparison-grid">
-        <div class="comparison-card bad">
-          <h3>Without MUSE</h3>
+        <div class="comparison-card">
+          <h3>What you keep</h3>
           <ul>
-            <li>New conversation = re-explain your entire codebase</li>
-            <li>3 hours in, context fills up, quality tanks</li>
-            <li>Yesterday's fix? Reintroduced today</li>
-            <li>Switch projects, AI mixes up everything</li>
-            <li>Forget to save? All progress gone</li>
+            <li>The role you chose and its scope of work</li>
+            <li>Decisions, constraints and unresolved issues</li>
+            <li>Evidence of what passed and what failed</li>
+            <li>Progress for each ongoing workstream, or Lane</li>
+            <li>A concrete next action for the receiving agent</li>
           </ul>
         </div>
         <div class="comparison-card good">
-          <h3>With MUSE</h3>
+          <h3>How you continue</h3>
           <ul>
-            <li><code>/resume</code> — full context restored in 5 seconds</li>
-            <li><code>/bye</code> — one-click save, zero input needed</li>
-            <li><code>/distill</code> — lessons extracted to long-term memory</li>
-            <li>Role isolation — dev, QA, marketing stay separate</li>
-            <li>Auto-save every 15 rounds — crash-proof</li>
+            <li><code>/resume</code> — review the saved Lane and current workspace</li>
+            <li><code>/save</code> — save useful progress and keep working</li>
+            <li><code>/bye</code> — formally close out when requested</li>
+            <li>Stay in one client or resume the same Lane in another</li>
+            <li>The agent prepares the plan and checks from your intent</li>
           </ul>
         </div>
       </div>
       <div class="benchmark-banner"
         style="margin-top:2rem;padding:1.2rem 1.5rem;border-radius:12px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);text-align:center;">
         <p style="margin:0;color:var(--accent);font-weight:600;font-size:1.05rem;">
-          🎯 Benchmark: <code>/resume</code> loads <strong>16.9× more context</strong> than a bare
-          <code>.cursorrules</code> cold start
-          <span style="opacity:0.6;margin-left:0.5rem;">|</span>
-          <strong>15/15</strong> governance features vs <strong>0/15</strong> for format-spec-only setups
+          MUSE 3.6: <strong>44 installer and state regressions</strong> across Linux and macOS
         </p>
-        <p style="margin:0.4rem 0 0;font-size:0.8rem;opacity:0.5;">Run <code>./scripts/benchmark.sh</code> on your own
-          project to verify</p>
+        <p style="margin:0.4rem 0 0;font-size:0.9rem;">Plus a separate native Codex → Claude Code → Codex continuity check. <a href="https://github.com/myths-labs/muse/releases/tag/v3.6.0">Read the release and validation scope →</a></p>
       </div>
     </div>
   </section>
@@ -224,7 +186,7 @@
   <section class="section" id="features">
     <div class="container">
       <h2 class="section-title">What MUSE actually does</h2>
-      <p class="section-subtitle">Six building blocks. All Markdown. All git-tracked.</p>
+      <p class="section-subtitle">Markdown skills and project records, backed by a shared Python continuity runtime.</p>
       <div class="features-grid">
         <div class="feature-card">
           <div class="feature-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -235,9 +197,8 @@
               <path d="M10 17v4" />
               <path d="M14 17v4" />
             </svg></div>
-          <h3>Two-Layer Memory</h3>
-          <p>Daily logs (<code>memory/</code>) capture what happened. <code>MEMORIES.md</code> distills what matters.
-            Short-term meets long-term.</p>
+          <h3>Project Memory</h3>
+          <p>Lane checkpoints capture progress and evidence. Daily logs record events; long-term notes retain lessons. The agent reads the parts needed for the current work.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -247,9 +208,8 @@
               <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
               <path d="M16 3.13a4 4 0 0 1 0 7.75" />
             </svg></div>
-          <h3>Role Isolation</h3>
-          <p>Build, QA, Growth, Strategy — each stays in its own lane. Your AI won't suggest marketing while you're
-            debugging.</p>
+          <h3>Your Role, Preserved</h3>
+          <p>Keep your project's own division of work. If Strategy develops directly, it keeps doing so. Switching clients preserves the selected role and Lane.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -257,9 +217,8 @@
               <path d="m22 2-7 20-4-9-9-4z" />
               <path d="M22 2 11 13" />
             </svg></div>
-          <h3>Directive Queue</h3>
-          <p>Async messaging across roles with delivery tracking. Strategy decides, Build ships, QA verifies — all
-            through Markdown.</p>
+          <h3>Reviewed Handoffs</h3>
+          <p>The receiving agent checks saved decisions, evidence gaps and the workspace before taking over. MUSE helpers reject saves from a previous writer after the Lane is claimed.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -267,9 +226,8 @@
               <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
               <path d="m9 12 2 2 4-4" />
             </svg></div>
-          <h3>MCP Server</h3>
-          <p>6 JSON-RPC tools in a single Bash script. Claude Code reads your project status through the standard
-            protocol. No Node. No Python.</p>
+          <h3>Reusable Closeout Evidence</h3>
+          <p>An unchanged closeout can reuse its validated receipt. New work or changed evidence reopens the affected checks. Product readiness still needs its own acceptance tests.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -292,9 +250,8 @@
               <path d="M9 11h6" />
               <path d="M9 15h4" />
             </svg></div>
-          <h3>Crash-Proof Auto-Save</h3>
-          <p>Silent checkpoints every 15 rounds. Context blowout? <code>/resume crash</code> picks up where you left
-            off. At most 10 rounds lost.</p>
+          <h3>Save and Continue</h3>
+          <p>Save meaningful changes during work. At observed context pressure, save, compact when supported, then verify and continue. Recovery starts from persisted evidence; unsaved work needs checking.</p>
         </div>
       </div>
     </div>
@@ -304,16 +261,16 @@
   <!-- Highlights -->
   <section class="section" id="new">
     <div class="container">
-      <h2 class="section-title">Highlights</h2>
-      <p class="section-subtitle">The features that make MUSE different</p>
+      <h2 class="section-title">Built for ongoing work</h2>
+      <p class="section-subtitle">Continuity alongside the skills and tools you already use.</p>
       <div class="features-grid">
         <div class="feature-card">
           <div class="feature-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
               stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z" />
             </svg></div>
-          <h3>Self-Healing SOP</h3>
-          <p>6 iterations and counting. Every governance bug found in production is patched back into <code>/bye</code> and <code>/resume</code> — role drift, memory loss, cross-project misrouting — all systematically fixed.</p>
+          <h3>Install with a Way Back</h3>
+          <p>The native installer preserves user policy and existing Claude hooks. Known 3.5 workflows are backed up; unknown modifications stop installation for review. Private receipts support rollback.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -330,8 +287,7 @@
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             </svg></div>
           <h3>Git Security Guard</h3>
-          <p>Pre-commit secret leak prevention. Catches API keys, tokens, private keys, .env files before they enter git
-            history. Born from a real incident.</p>
+          <p>Pre-commit checks look for known secret patterns. Review remains necessary; private install receipts and prompt inboxes stay out of Git through installed ignore rules.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -368,11 +324,8 @@
               <path d="M6 17l4.5-3.5" />
               <path d="M18 17l-4.5-3.5" />
             </svg></div>
-          <h3>Graph Memory</h3>
-          <p>UPDATES supersede old facts with <code>~~strikethrough~~</code>. EXTENDS append sub-details. DERIVES link
-            inferences. Auto-Expiry tags entries as <code>[PERMANENT]</code>, <code>[TEMPORAL]</code>, or
-            <code>[EPISODIC]</code> — expired memories fade automatically.
-          </p>
+          <h3>Evidence Boundaries</h3>
+          <p>Missing sources remain incomplete. The agent checks gaps against available records instead of claiming perfect memory. Closed Lanes retain their recorded reopen conditions.</p>
         </div>
       </div>
     </div>
@@ -381,11 +334,12 @@
   <!-- Demo -->
   <section class="section section-dark" id="demo">
     <div class="container">
-      <h2 class="section-title">Five seconds to full context</h2>
-      <p class="section-subtitle"><code>/resume</code> → work → <code>/bye</code> — that's the whole workflow</p>
-      <div class="demo-container">
-        <img src="https://raw.githubusercontent.com/myths-labs/muse/main/assets/demo.webp"
-          alt="MUSE Demo — /resume → boot → work → /ctx → /bye" loading="lazy">
+      <h2 class="section-title">A lighter daily workflow</h2>
+      <p class="section-subtitle">Resume when needed. Save progress. Keep building.</p>
+      <div class="features-grid">
+        <div class="feature-card"><h3>1. Resume your Lane</h3><p><code>/resume strategy Lane A</code></p><p>The agent reviews the saved state and current workspace, then prepares goals and checks from your request.</p></div>
+        <div class="feature-card"><h3>2. Work and save</h3><p><code>continue</code> → <code>/save</code> → continue</p><p>Stay in the same conversation. Save decisions and results as the work progresses; formal Bye is optional.</p></div>
+        <div class="feature-card"><h3>3. Switch when useful</h3><p>Save and stop the current writer. Resume the same role and Lane in the other client. Use <code>/bye</code> when you want a formal closeout.</p></div>
       </div>
     </div>
   </section>
@@ -393,8 +347,8 @@
   <!-- Supported Tools -->
   <section class="section" id="tools">
     <div class="container">
-      <h2 class="section-title">Pick your tool. One command. Done.</h2>
-      <p class="section-subtitle">Auto-converts to the right format for each tool</p>
+      <h2 class="section-title">Use your preferred coding assistant</h2>
+      <p class="section-subtitle">Codex and Claude Code share the guarded continuity runtime. Other tools use the existing Markdown skill adapters; equivalent native continuity has not been certified.</p>
       <div class="tools-grid">
         <div class="tool-card">
           <div class="tool-name">Claude Code</div>
@@ -443,140 +397,62 @@
   <!-- Install -->
   <section class="section section-dark" id="install">
     <div class="container">
-      <h2 class="section-title">Up and running in 60 seconds</h2>
+      <h2 class="section-title">Install for the clients you use</h2>
+      <p class="section-subtitle">Local macOS or Linux · Git · Python 3.7+ · a client version that supports your model</p>
       <div class="install-block">
-        <div class="install-step">
-          <span class="step-num">1</span>
-          <div class="step-content">
-            <h4>Clone MUSE</h4>
-            <div class="code-block">
-              <code>git clone https://github.com/myths-labs/muse.git</code>
-              <button class="copy-btn"
-                onclick="navigator.clipboard.writeText('git clone https://github.com/myths-labs/muse.git')">Copy</button>
-            </div>
+        <div class="install-step"><span class="step-num">1</span><div class="step-content">
+          <h4>Clone MUSE</h4><div class="code-block">
+            <code>git clone https://github.com/myths-labs/muse.git</code>
+            <button class="copy-btn" aria-label="Copy clone command">Copy</button>
           </div>
-        </div>
-        <div class="install-step">
-          <span class="step-num">2</span>
-          <div class="step-content">
-            <h4>Install to your project</h4>
-            <div class="code-block">
-              <code>cd muse && ./scripts/install.sh --target /path/to/your-project</code>
-              <button class="copy-btn"
-                onclick="navigator.clipboard.writeText('cd muse && ./scripts/install.sh --target /path/to/your-project')">Copy</button>
-            </div>
+        </div></div>
+        <div class="install-step"><span class="step-num">2</span><div class="step-content">
+          <h4>Install Codex, Claude Code, or both</h4>
+          <p>Run either command from the folder containing the cloned MUSE repository. Replace the project path; use the same path for both clients.</p>
+          <div class="code-block">
+            <code>bash muse/scripts/install.sh --tool codex --target /path/to/your-project</code>
+            <button class="copy-btn" aria-label="Copy Codex install command">Copy</button>
           </div>
-        </div>
-        <div class="install-step">
-          <span class="step-num">3</span>
-          <div class="step-content">
-            <h4>Start using</h4>
-            <div class="code-block">
-              <code>/resume  →  work  →  /bye</code>
-            </div>
+          <div class="code-block">
+            <code>bash muse/scripts/install.sh --tool claude --target /path/to/your-project</code>
+            <button class="copy-btn" aria-label="Copy Claude install command">Copy</button>
           </div>
-        </div>
+          <p>Existing policy and hooks are preserved. Keep the returned rollback receipt private. Review unknown local modifications before upgrading.</p>
+        </div></div>
+        <div class="install-step"><span class="step-num">3</span><div class="step-content">
+          <h4>Open your project in your coding client</h4>
+          <p>Resume an existing Lane with <code>/resume strategy Lane A</code>, or describe your new work. The agent prepares setup and acceptance checks. Restart the client if newly installed skills are not yet visible.</p>
+        </div></div>
+        <p id="copy-status" role="status" aria-live="polite"></p>
       </div>
     </div>
   </section>
 
-  <!-- Comparison -->
+  <!-- Working modes -->
   <section class="section" id="comparison">
     <div class="container">
-      <h2 class="section-title">MUSE vs. format specs vs. memory infra</h2>
-      <p class="section-subtitle">Format specs tell your AI the rules. Memory infra stores embeddings. MUSE governs the
-        whole system.</p>
-      <div class="table-wrapper">
-        <table class="comparison-table">
-          <thead>
-            <tr>
-              <th>Feature</th>
-              <th class="highlight">MUSE</th>
-              <th>mem0</th>
-              <th>memsearch</th>
-              <th>lossless-claw</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Dependencies</td>
-              <td class="highlight"><strong>Zero</strong></td>
-              <td>Python + DB</td>
-              <td>Milvus + Node</td>
-              <td>SQLite + DAG</td>
-            </tr>
-            <tr>
-              <td>Format</td>
-              <td class="highlight"><strong>Pure Markdown</strong></td>
-              <td>Vector DB</td>
-              <td>Vector DB</td>
-              <td>Custom DAG</td>
-            </tr>
-            <tr>
-              <td>Tool Support</td>
-              <td class="highlight"><strong>10 tools</strong></td>
-              <td>API only</td>
-              <td>Claude Code</td>
-              <td>OpenClaw</td>
-            </tr>
-            <tr>
-              <td>Role System</td>
-              <td class="highlight">✅ Multi-role</td>
-              <td>—</td>
-              <td>—</td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <td>Cross-role Directives</td>
-              <td class="highlight">✅ 📡 Protocol</td>
-              <td>—</td>
-              <td>—</td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <td>MCP Server</td>
-              <td class="highlight">✅ Built-in</td>
-              <td>—</td>
-              <td>✅</td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <td>Graph Memory</td>
-              <td class="highlight">✅ UPDATES/EXTENDS/DERIVES</td>
-              <td>Vector similarity</td>
-              <td>Vector similarity</td>
-              <td>DAG nodes</td>
-            </tr>
-            <tr>
-              <td>Smart Forgetting</td>
-              <td class="highlight">✅ Auto-Expiry tags</td>
-              <td>TTL-based</td>
-              <td>—</td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <td>Self-Healing SOP</td>
-              <td class="highlight">✅ 6 iterations</td>
-              <td>—</td>
-              <td>—</td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <td>Digital Twin</td>
-              <td class="highlight">✅ 5-dimension profile</td>
-              <td>—</td>
-              <td>—</td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <td>License</td>
-              <td class="highlight"><strong>MIT</strong></td>
-              <td>Apache 2.0</td>
-              <td>MIT</td>
-              <td>MIT</td>
-            </tr>
-          </tbody>
-        </table>
+      <h2 class="section-title">One system, three ways to work</h2>
+      <p class="section-subtitle">Your role and project records follow the work.</p>
+      <div class="table-wrapper"><table class="comparison-table">
+        <thead><tr><th scope="col">Mode</th><th scope="col">How it works</th><th scope="col">What to keep in mind</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">One client</th><td>Use Codex or Claude Code for the whole task. Save meaningful progress and continue.</td><td>No routine client switch or full Bye is required.</td></tr>
+          <tr><th scope="row">Switch clients</th><td>Save, stop the active writer, then resume the same role and Lane in the receiving client.</td><td>The receiving agent reviews the workspace and missing evidence before taking over.</td></tr>
+          <tr><th scope="row">Parallel work</th><td>Use separately scoped Lanes and isolated workspaces for independent work.</td><td>Coordinate shared files and decisions. Writer checks do not protect arbitrary edits outside MUSE helpers.</td></tr>
+        </tbody>
+      </table></div>
+      <p class="section-subtitle" style="margin-top:1.5rem;">Saving and compaction do not guarantee lossless memory. Missing sources stay incomplete, and product readiness needs its own tests. Native Windows and network filesystem durability are not certified.</p>
+    </div>
+  </section>
+
+  <section class="section section-dark" id="guides">
+    <div class="container">
+      <h2 class="section-title">Start here, in your language</h2>
+      <p class="section-subtitle">Daily commands, switching clients, migration, recovery and rollback.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="https://github.com/myths-labs/muse/blob/v3.6.0/docs/CONTINUITY.md">English usage guide</a>
+        <a class="btn btn-ghost" href="https://github.com/myths-labs/muse/blob/v3.6.0/docs/CONTINUITY_CN.md" lang="zh-CN">中文使用说明</a>
+        <a class="btn btn-ghost" href="https://github.com/myths-labs/muse/releases/tag/v3.6.0">MUSE 3.6 release notes</a>
       </div>
     </div>
   </section>
@@ -584,16 +460,14 @@
   <!-- Commands -->
   <section class="section section-dark" id="commands">
     <div class="container">
-      <h2 class="section-title">The entire interface</h2>
+      <h2 class="section-title">Commands for ongoing work</h2>
       <div class="commands-grid">
         <div class="command-card">
           <code>/resume</code>
-          <p>Boot — auto-restore context & start work</p>
+          <p>Review saved state and continue the selected role and Lane</p>
         </div>
-        <div class="command-card">
-          <code>/bye</code>
-          <p>One-click wrap-up — save, sync, archive</p>
-        </div>
+        <div class="command-card"><code>/save</code><p>Persist useful changes and keep the conversation going</p></div>
+        <div class="command-card"><code>/bye</code><p>Formal closeout of a declared scope, with checked evidence</p></div>
         <div class="command-card">
           <code>/sprint</code>
           <p>Feature pipeline: Think→Plan→Build→Review→Test→Ship</p>
@@ -604,7 +478,7 @@
         </div>
         <div class="command-card">
           <code>/ctx</code>
-          <p>Context health check (🟢🟡🔴)</p>
+          <p>Use available context observations; unknown stays unknown</p>
         </div>
         <div class="command-card">
           <code>/distill</code>
@@ -672,28 +546,8 @@
     </div>
   </footer>
 
+  <script src="site-controls.js" defer></script>
   <script>
-    // Mobile nav toggle
-    document.querySelector('.nav-toggle').addEventListener('click', () => {
-      document.querySelector('.nav-links').classList.toggle('open');
-    });
-    // Smooth scroll
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
-      a.addEventListener('click', e => {
-        e.preventDefault();
-        const t = document.querySelector(a.getAttribute('href'));
-        if (t) t.scrollIntoView({ behavior: 'smooth' });
-        document.querySelector('.nav-links').classList.remove('open');
-      });
-    });
-    // Copy button feedback
-    document.querySelectorAll('.copy-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        btn.textContent = '✓';
-        setTimeout(() => btn.textContent = 'Copy', 1500);
-      });
-    });
-
     // ─── Golden Starlight Particles ───
     (function () {
       const canvas = document.getElementById('starfield');

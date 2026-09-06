@@ -1,104 +1,74 @@
-# MUSE — The AI Coding Governance System
+# MUSE — Continuous Development with Codex and Claude Code
 
-> Roles, memory and skills in Markdown, with Python-powered continuity.
+> MUSE 3.6 preserves roles, decisions and next steps in shared project records.
 
-MUSE is the only full governance system for AI pair programming. It goes beyond format specs (AGENTS.md, .cursorrules) and memory infrastructure (mem0, MemOS) by providing role isolation, persistent memory, 66 skills, cross-role directives, TF-IDF search, and visual dashboards — all in pure Markdown.
+MUSE combines Markdown skills and workflows with a Python continuity runtime.
+Use Codex alone, Claude Code alone, or move the same role and Lane between them.
+A Lane is a workstream with its own checkpoint; the agent derives goals,
+constraints and acceptance checks from the user's request and recorded evidence.
 
-## Core Concept
+## Daily use
 
-AGENTS.md defines the format. MUSE builds the system.
+- Continue an active conversation with a normal request such as "continue".
+- `/resume strategy Lane A`: review and recover the chosen role and Lane.
+- `/save`: persist useful progress without ending the conversation.
+- `/bye`: perform an explicit formal closeout for a declared scope.
+- Context pressure: save, compact when supported, verify the state, then continue.
+  A percentage does not force Bye or a new conversation. Unknown usage stays unknown.
 
-MUSE wraps AI coding assistants with a governance protocol that enables:
-- Role-based context isolation (build, qa, growth, strategy)
-- Dual-layer memory persistence (short-term + long-term)
-- 66 reusable skills loaded on demand
-- Cross-role async directive queue with delivery tracking
-- TF-IDF search across all project context
-- Web Dashboard + VS Code Extension for visualization
+Projects retain their own division of work. Strategy can implement directly;
+starting technical work or changing clients does not automatically switch to Build.
+Existing closed Lanes retain their reopen conditions. Missing old Lane records
+must be investigated, not silently initialized as empty.
 
-## Layer Model
+## Switching clients
 
-```
-L3  Memory Infrastructure   mem0 · MemOS · memsearch     ← MUSE doesn't compete here
-L2  Governance System       🎭 MUSE                       ← Only player at this layer
-L1  Workflow Kits           Spec Kit · sudocode            ← MUSE covers this + more
-L0  Format Specs            AGENTS.md · .cursorrules       ← MUSE is compatible
-```
+Save and stop the active writer, then resume the same role and Lane in the other
+client. The receiving agent reviews the workspace, decisions and evidence gaps
+before taking over. MUSE helpers reject saves from a previous writer after a
+claim. Parallel work needs distinct scopes and isolated workspaces; arbitrary
+external file edits are outside these helper protections.
 
-## Key Features
+## Install or upgrade
 
-- **Two-Layer Memory**: Daily logs (`memory/YYYY-MM-DD.md`) + long-term lessons (`MEMORIES.md`)
-- **Role Isolation**: Build, QA, Growth, Strategy — each role reads only its own state file
-- **Directive Queue**: Async cross-role messaging with 🟡/✅ status protocol
-- **MCP Server**: Built-in Bash MCP server with 6 JSON-RPC tools, zero dependencies
-- **66 Skills**: Core (8) + Toolkit (44) + Ecosystem (13) + Growth distribution (1) reusable skill packs
-- **Builder Ethos**: 5 core principles for AI-governed development (Boil the Lake, Search Before Building, Ship the Narrowest Wedge, Memory Over Momentum, Governance Is Speed)
-- **Sprint Pipeline**: `/sprint` — 7-phase feature development workflow (Think→Plan→Build→Review→Test→Ship→Reflect)
-- **Weekly Retro**: `/retro` — automated retrospective from memory logs + git history
-- **Git Security Guard**: Pre-commit/push secret leak prevention for API keys, tokens, private keys, .env files
-- **Systematic Debugging v2**: L1→L4 pressure escalation with passive behavior detection and anti-rationalization
-- **Graph Memory Relations**: Memory entries auto-detect relationships — UPDATES (supersede old facts with ~~strikethrough~~), EXTENDS (sub-details), DERIVES (inferences), NEW. Pure Markdown graph, zero vector DB.
-- **Auto-Expiry Temporal Tagging**: Memory classified at write time as `[PERMANENT]` (never expires), `[TEMPORAL:YYYY-MM-DD]` (auto-expires), or `[EPISODIC]` (fades after 3 days). `/resume` auto-filters expired entries.
-- **Unexecuted Directive Scan**: `/resume` Step 2.8 surfaces buried 🟡 received-but-unexecuted directives in role files, preventing lost work in long documents.
-- **Static/Dynamic User Profile**: `USER.md` split into Static Profile (permanent preferences, always loaded) and Dynamic Profile (recent work focus, auto-updated by `/bye`, `/resume` loads only 7-day window).
-- **BUILD→QA AC Dual-Write Protocol**: Acceptance Criteria simultaneously written to both `build.md` and `qa.md` with unified `AC-SXXX-NN` numbering. QA force re-reads latest AC on resume. Prevents cross-conversation AC sync failures.
-- **Coordinator Mode**: Multi-agent coordination SOP — understand first, then write self-contained specs. Never forward raw chat history. Extracted from Claude Code internal architecture.
-- **Iterative Retrieval**: Progressive context refinement replacing single-pass search. Search→refine→search until confident.
-- **SOP Layer Evolution**: Memory 4-category taxonomy (user_preference/feedback/project_knowledge/reference), drift detection (>7 days warning), coordinator iron law, absolute dates enforcement.
-- **TF-IDF Search**: Zero-dependency ranked search across memory, roles, and skills
-- **Auto Memory Capture**: Automatic LESSON/DECISION/FACT extraction on session end
-- **Semantic Compression**: 3-tier context compression based on session length
-- **Session Checkpoint**: Silent progress save every 15 interaction rounds
-- **Defensive Auto-Save**: Crash recovery with at most 10 rounds of data loss
-- **Web Dashboard**: Online at muse.mythslabs.ai/dashboard (100% client-side)
-- **VS Code Extension**: Roles, Skills, Memory tree views + in-editor dashboard
-
-## Quick Start
+Requires Git, Python 3.7+ and a local macOS/Linux filesystem. Use a client version
+that supports the selected model. From the directory containing the cloned repo:
 
 ```bash
 git clone https://github.com/myths-labs/muse.git
-cd muse && ./setup.sh
+bash muse/scripts/install.sh --tool codex --target /path/to/project
+bash muse/scripts/install.sh --tool claude --target /path/to/project
 ```
 
-## Commands
+Install only the client you use, or point both at the same project. User policy
+and existing Claude hooks are preserved. Known 3.5 workflows are backed up;
+unknown local modifications stop installation for review. Installation does not
+create or claim a Lane. Keep installation/rollback receipts private.
 
-- `/resume [role]` — Boot and restore context
-- `/bye` — One-click wrap-up, auto-save
-- `/sprint` — Feature dev pipeline: Think→Plan→Build→Review→Test→Ship→Reflect
-- `/retro` — Weekly retrospective from memory + git history
-- `/ctx` — Context health check (🟢🟡🔴)
-- `/distill` — Condense daily logs to long-term memory
-- `/search` — TF-IDF search across memory, roles, skills
-- `/sync` — Cross-role synchronization
-- `/settings` — Change language, model, preferences
+## Package and compatibility
 
-## Supported Tools
+- 66 skills: Core 8, Toolkit 44, Ecosystem 13, Growth distribution 1.
+- Guarded native continuity: Codex and Claude Code.
+- Existing skill adapters: Claude Code, OpenClaw, OpenCode, Cursor, Windsurf,
+  Gemini CLI, Codex, Copilot, Aider, Antigravity. Adapter support does not imply
+  equivalent native continuity certification.
+- Optional project dashboard, directive workflows and long-term notes.
+- MIT license. No hosted MUSE service is required for the local continuity runtime.
 
-| Tool | Install Command |
-|------|----------------|
-| Claude Code | `./scripts/install.sh --tool claude` |
-| OpenCode | `./scripts/install.sh --tool opencode` |
-| Cursor | `./scripts/install.sh --tool cursor` |
-| Windsurf | `./scripts/install.sh --tool windsurf` |
-| Gemini CLI | `./scripts/install.sh --tool gemini` |
-| Codex CLI | `./scripts/install.sh --tool codex` |
-| Copilot | `./scripts/install.sh --tool copilot` |
-| Aider | `./scripts/install.sh --tool aider` |
-| Antigravity | `./scripts/install.sh --tool antigravity` |
-| OpenClaw | `./scripts/install.sh --tool openclaw` |
+## Verification boundaries
 
-## Links
+The 3.6 release has 44 public installer/state regressions passing on Linux and
+macOS, plus a separate native Codex → Claude Code → Codex exercise. Synthetic
+fixtures are not native evidence. Missing source coverage stays incomplete;
+Save, Bye and automatic compaction do not guarantee lossless memory or product
+readiness. Native Windows and network filesystem durability are not certified.
 
-- Website: https://muse.mythslabs.ai
-- GitHub: https://github.com/myths-labs/muse
-- Dashboard: https://muse.mythslabs.ai/dashboard
-- Discussions: https://github.com/myths-labs/muse/discussions
-- X (Twitter): https://x.com/MythsLabs
-- Creator: https://x.com/sunshiningday
+## Documentation
 
-## Optional
-
-- [Full documentation](https://github.com/myths-labs/muse/blob/main/README.md)
-- [Chinese docs](https://github.com/myths-labs/muse/blob/main/README_CN.md)
-- [Changelog](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
-- [Skill Index](https://github.com/myths-labs/muse/blob/main/SKILL_INDEX.md)
+- [English usage and migration](https://github.com/myths-labs/muse/blob/v3.6.0/docs/CONTINUITY.md)
+- [中文使用与迁移说明](https://github.com/myths-labs/muse/blob/v3.6.0/docs/CONTINUITY_CN.md)
+- [3.6 release and validation scope](https://github.com/myths-labs/muse/releases/tag/v3.6.0)
+- [Source and full documentation](https://github.com/myths-labs/muse)
+- [Skill index](https://github.com/myths-labs/muse/blob/main/SKILL_INDEX.md)
+- [Website](https://muse.mythslabs.ai)
+- [Dashboard](https://muse.mythslabs.ai/dashboard.html)
