@@ -1,3 +1,21 @@
+## [3.6.0] - 2026-09-06
+
+### Added
+- Portable shared continuity runtime for Codex and Claude Code: incremental saves, reviewed recovery/adoption, native writer guards, source evidence and reusable declared-scope closeout receipts.
+- Project configuration with stable role-home/Lane identities and compatibility for explicitly configured legacy roots.
+- Preservation-aware native installers with local receipts, rollback, relative skill discovery links and Claude session/source hooks.
+- English/Chinese continuity and upgrade guides, isolated install/state regression tests and known-v3.5 migration fixtures.
+
+### Fixed
+- Stale writers and incomplete source coverage cannot be mistaken for a safe handoff through the supported helpers.
+- Closeout receipts become stale when validators, entry points or resolved project mappings change.
+- Native installation preserves existing user policy/hooks instead of overwriting AGENTS.md; private installation backups are ignored by Git.
+
+### Changed
+- Daily continuity saves and resumes replace repeated full closeout/bootstrap cycles. At observed 80% pressure, save, compact, verify and continue; unknown context occupancy stays unknown.
+- Agent-owned recovery planning: users give a short resume/continue instruction; goals, acceptance and constraints are derived from recorded intent, without user forms or forced role changes.
+- Native client entries load skills on demand. Continuity requires Python 3.7+ and Git on local macOS/Linux; no claim of lossless memory, native Windows certification or product readiness is implied.
+
 ## [3.5.0] - 2026-07-26
 
 ### S284: Skills Auto-Update System — Two-Layer Design

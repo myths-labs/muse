@@ -6,7 +6,7 @@ description: L0/L1/L2 three-layer context loading protocol — reduces token con
 # Layered Context Loading Protocol
 
 > Inspired by OpenViking (ByteDance) L0/L1/L2 architecture.
-> Adapted for MUSE's pure Markdown zero-dependency design.
+> Adapted for MUSE's on-demand Markdown context loading.
 
 ## Why
 

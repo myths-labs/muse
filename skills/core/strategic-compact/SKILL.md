@@ -51,7 +51,7 @@ Scenario: Completed 3 hours of debugging, now starting a new feature
 | In the middle of multi-step implementation | ❌ Do NOT compact |
 | Still analyzing a problem | ❌ Do NOT compact |
 | `/ctx` shows 60-70% consumed | 🟡 Consider compacting |
-| `/ctx` shows ≥ 80% consumed | 🔴 Must exit (constitution rule) |
+| `/ctx` observes ≥80% pressure | Save the current Lane, compact if supported, verify and continue |
 
 ## Hook Setup
 
@@ -81,13 +81,13 @@ Environment variables:
 1. **Compact with focus** — Always specify what to preserve, never compact blindly
 2. **Write memory before compacting** — Save key information to `memory/YYYY-MM-DD.md` first
 3. **Never compact mid-task** — Maintain complete context during multi-step implementations
-4. **Pair with /ctx** — 60-70% consider compacting, ≥ 80% must exit
+4. **Pair with /ctx** — Use actual observations; ≥80% means save and reassess after compaction, not forced exit. Unknown occupancy remains unknown.
 
 ## Pre-Compaction Protocol (MUSE — derived from LCM compact:before)
 
 **MUST** execute in order before compaction:
 1. **Persist**: Write current task progress to `memory/YYYY-MM-DD.md`
-2. **Mark protected zone**: Mark last 5 conversation turns as "non-compactable" (≈ LCM freshTailCount=32)
+2. **Preserve recent instructions**: Save recent decisions, corrections and constraints; do not claim the client supports a protected/non-compactable zone unless its actual interface does.
 3. **Extract key decisions**: Scan content about to be compacted, extract key decisions/data to memory
 4. **Notify user**: Inform about upcoming compaction, list what will be preserved
 
@@ -101,4 +101,4 @@ Environment variables:
 3. Today's `memory/` snapshot (just written)
 4. Any focus-aware specified preservation items
 
-> **Principle: Compaction ≠ forgetting. Core identity and current context must be restored immediately after compaction.**
+> Compaction may omit information. Reconcile the selected role/Lane checkpoint and required evidence after it; do not reload all history or claim memory is lossless.

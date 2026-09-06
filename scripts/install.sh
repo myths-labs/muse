@@ -62,13 +62,13 @@ ${BOLD}EXAMPLES${RESET}
   ./scripts/install.sh --list                 # Show detected tools
 
 ${BOLD}SUPPORTED TOOLS${RESET}
-  claude     Claude Code (.agent/skills/ + CLAUDE.md)
+  claude     Claude Code (.claude/skills/ discovery + shared continuity)
   openclaw   OpenClaw (same as Claude Code)
   opencode   OpenCode (.agents/skills/ + CLAUDE.md)
   cursor     Cursor IDE (.cursor/rules/*.mdc)
   windsurf   Windsurf IDE (.windsurf/rules/*.md)
   gemini     Gemini CLI (.gemini/ + GEMINI.md)
-  codex      Codex CLI (AGENTS.md — all skills concatenated)
+  codex      Codex CLI (.agents/skills/ discovery + shared continuity)
 EOF
   exit 0
 }
@@ -84,6 +84,13 @@ while [[ $# -gt 0 ]]; do
     *) error "Unknown option: $1"; usage ;;
   esac
 done
+
+# Shared continuity uses preservation-aware installation for the two native clients.
+if [[ "$SELECTED_TOOL" == "codex" || "$SELECTED_TOOL" == "claude" ]]; then
+  continuity_args=(--tool "$SELECTED_TOOL" --target "$TARGET_DIR")
+  [[ "$SKILL_TIERS" == "core" ]] && continuity_args+=(--core-only)
+  exec "${MUSE_PYTHON:-python3}" "$SCRIPT_DIR/install-continuity.py" "${continuity_args[@]}"
+fi
 
 # Resolve target path
 TARGET_DIR="$(cd "$TARGET_DIR" 2>/dev/null && pwd || echo "$TARGET_DIR")"
@@ -211,6 +218,10 @@ count_skills() {
 # ══════════════════════════════════════════════
 
 install_claude() {
+  local continuity_args=(--tool claude --target "$TARGET_DIR")
+  [[ "$SKILL_TIERS" == "core" ]] && continuity_args+=(--core-only)
+  "${MUSE_PYTHON:-python3}" "$SCRIPT_DIR/install-continuity.py" "${continuity_args[@]}"
+  return
   header "📦 Installing for Claude Code / OpenClaw..."
   local dest="$TARGET_DIR/.agent"
   mkdir -p "$dest/skills" "$dest/workflows"
@@ -457,6 +468,10 @@ install_gemini() {
 }
 
 install_codex() {
+  local continuity_args=(--tool codex --target "$TARGET_DIR")
+  [[ "$SKILL_TIERS" == "core" ]] && continuity_args+=(--core-only)
+  "${MUSE_PYTHON:-python3}" "$SCRIPT_DIR/install-continuity.py" "${continuity_args[@]}"
+  return
   header "📦 Installing for Codex CLI..."
 
   local outfile="$TARGET_DIR/AGENTS.md"

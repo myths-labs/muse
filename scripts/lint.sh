@@ -3,6 +3,11 @@
 # muse-lint: Protocol Conformance Test (v1.0)
 # Verifies a project against the MUSE Protocol Specification v1.0
 
+if [[ "${1:-}" == "--release" ]]; then
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+  exec "${MUSE_PYTHON:-python3}" "$SCRIPT_DIR/check-release.py"
+fi
+
 # Colors
 GREEN='\033[0;32m'
 RED='\033[0;31m'

@@ -10,9 +10,9 @@
 1. **Language**: 🚨 YOU MUST communicate in **简体中文**. Every response, explanation, question, and comment MUST be in 简体中文. This is NON-NEGOTIABLE. Do NOT default to English unless this rule explicitly says English.
 2. **Skill-First**: Before ANY task, check if a relevant Skill exists in `.agent/skills/`
 3. **Large Files**: Only view ≤300 lines at a time. Never blindly read entire large files.
-4. **Context Protection**: When context ≥ 80%, immediately run `/bye`
+4. **Context Protection**: At observed context ≥80%, save the current Lane, compact, verify and continue; do not force Bye
 5. **Verify Before Claiming Done**: Run `verification-before-completion` skill before saying "done"
-6. **End Sessions Properly**: Always use `/bye` to end conversations
+6. **End Sessions Properly**: Use `/save` for ordinary progress and `/bye` for explicit formal closeout
 
 ## Skill-Driven Execution
 
@@ -31,9 +31,9 @@
 
 ## Context Health Pre-Check
 
-Every session start: estimate context usage. If ≥ 70%, suggest opening new conversation.
+Use actual current native context observations; UNKNOWN stays unknown. A percentage alone does not require a new conversation.
 
-Defensive saving: every 10 interaction rounds silently update `memory/CRASH_CONTEXT.md`.
+Save meaningful current-Lane deltas at least every ten interaction rounds when changes are unsaved; only legacy sessions without a Lane use CRASH_CONTEXT.md.
 
 ## Safety Protocols
 

@@ -4,15 +4,15 @@
 
 # 🎭 MUSE（缪斯）
 
-**The AI Coding Governance System — 角色、记忆、技能，纯 Markdown**
+**The AI Coding Governance System — 角色、记忆、技能与连续开发**
 
 <p align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/myths-labs/muse/blob/main/LICENSE)
-[![Version](https://img.shields.io/badge/version-3.5.0-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-3.6.0-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
 [![Stars](https://img.shields.io/github/stars/myths-labs/muse?style=social)](https://github.com/myths-labs/muse)
-[![Pure Markdown](https://img.shields.io/badge/pure-markdown-green.svg)](#)
-[![Zero Dependencies](https://img.shields.io/badge/dependencies-zero-brightgreen.svg)](#)
+[![Markdown + Python](https://img.shields.io/badge/Markdown-Python-green.svg)](#)
+[![Continuity Runtime](https://img.shields.io/badge/continuity-Python_3.7%2B-blue.svg)](docs/CONTINUITY.md)
 
 </p>
 
@@ -28,11 +28,13 @@
 
 > *希腊神话中九位缪斯女神是记忆女神 **Mnemosyne** 的女儿。她们将母亲的全知记忆化为对艺术与科学的精通。*
 >
-> *MUSE（缪斯）继承了这一血脉。它确保 AI 对话中的每一个洞见都不会丢失，将原始会话数据转化为驱动执行的结构化知识。*
+> *MUSE（缪斯）继承了这一血脉，帮助保存跨对话的决定和证据；来源缺失时明确保留边界。*
 
-MUSE（缪斯）是一套**纯 Markdown** 的 AI 编程协作操作系统。通过宪法、记忆层、技能库和执行工作流，实现 AI 编程助手的**跨对话无损上下文管理**。
+**3.6 新增：** 增量 Save、Codex／Claude 同角色同 Lane 接续、保留配置的安装与回退。[完整使用与升级说明](docs/CONTINUITY_CN.md)。
 
-灵感来源：[LCM（Lossless Context Management）](https://papers.voltropy.com/LCM) 论文 + [lossless-claw](https://github.com/Martian-Engineering/lossless-claw) 插件。MUSE（缪斯）用**纯 Markdown SOP**（而非代码插件）实现了 LCM 的核心设计思想。
+MUSE（缪斯）是一套以 **Markdown 与 Python 连续开发工具**组成的 AI 编程协作系统。通过角色、检查点、来源证据和执行工作流支持跨对话接续，来源不完整时保留明确边界。
+
+灵感来源：[LCM（Lossless Context Management）](https://papers.voltropy.com/LCM) 论文 + [lossless-claw](https://github.com/Martian-Engineering/lossless-claw) 插件。MUSE（缪斯）以 Markdown 工作流与 Python 工具管理必要的上下文和接续证据。
 
 [📖 English Docs](./README.md) | [📦 Protocol Spec v1.0](./docs/PROTOCOL.md)
 
@@ -150,7 +152,7 @@ graph TB
         CO --> CO2["子 Agent 综合"]
     end
     
-    subgraph "⚡ 技能层 (65)"
+    subgraph "⚡ 技能层 (66)"
         G["触发型技能<br/>按需加载"]
         H["生命周期技能<br/>strategic-compact"]
     end
@@ -345,13 +347,13 @@ MUSE 内置 **MCP (Model Context Protocol) 服务器** — 纯 Bash 零依赖实
 ## 🤔 FAQ
 
 **Q: MUSE（缪斯）需要安装吗？**
-不需要。MUSE（缪斯）是纯 Markdown 文件。复制到你的项目即可使用。零依赖。
+技能说明使用 Markdown；新版连续开发运行器需要本地 Python 3.7+ 与 Git。按上方安装指令接入 Codex 或 Claude。
 
 **Q: 支持哪些 AI 工具？**
 十种工具原生安装支持：**Claude Code**、**OpenClaw**、**OpenCode**、**Cursor**、**Windsurf**、**Gemini CLI**、**Codex CLI**、**Copilot**、**Aider** 和 **Antigravity**。运行 `./scripts/install.sh --tool <工具名>` 自动转换为对应格式安装。
 
 **Q: 和 lossless-claw 有什么区别？**
-lossless-claw 是代码插件（SQLite + DAG + 子代理），依赖 OpenClaw 运行时。MUSE（缪斯）是纯 Markdown SOP，适用于任何 AI 工具，零依赖。相同理念，不同实现。
+lossless-claw 是代码插件（SQLite + DAG + 子代理），依赖 OpenClaw 运行时。MUSE 的技能与工作流使用 Markdown，连续开发运行器使用 Python。支持范围与验收边界见连续开发使用说明。
 
 **Q: memory/ 文件堆太多怎么办？**
 超过 30 天的文件归档到 `memory/archive/`。先用 `/distill` 提取关键教训到 `MEMORIES.md`，然后安全归档源文件。
@@ -388,5 +390,5 @@ MIT © [Myths Labs](https://github.com/myths-labs)
 </p>
 
 <p align="center">
-  <i>MUSE v3.5.0</i>
+  <i>MUSE v3.6.0</i>
 </p>

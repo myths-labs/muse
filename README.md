@@ -9,10 +9,10 @@
 <p align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/myths-labs/muse/blob/main/LICENSE)
-[![Version](https://img.shields.io/badge/version-3.5.0-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-3.6.0-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
 [![Stars](https://img.shields.io/github/stars/myths-labs/muse?style=social)](https://github.com/myths-labs/muse)
-[![Pure Markdown](https://img.shields.io/badge/pure-markdown-green.svg)](#)
-[![Zero Dependencies](https://img.shields.io/badge/dependencies-zero-brightgreen.svg)](#)
+[![Markdown + Python](https://img.shields.io/badge/Markdown-Python-green.svg)](#)
+[![Continuity Runtime](https://img.shields.io/badge/continuity-Python_3.7%2B-blue.svg)](docs/CONTINUITY.md)
 
 </p>
 
@@ -28,9 +28,11 @@
 
 > *The nine Muses of Greek mythology were daughters of **Mnemosyne** — the Titaness of Memory. They transformed their mother's gift of total recall into mastery of the arts and sciences.*
 >
-> *MUSE inherits this lineage. It ensures no insight is lost across AI conversations, transforming raw session data into structured knowledge that drives execution.*
+> *MUSE inherits this lineage. It helps preserve decisions and evidence across AI conversations, with explicit boundaries when source history is incomplete.*
 
-MUSE is a pure-Markdown governance system for AI pair programming. It goes beyond format specs (like AGENTS.md or .cursorrules) by providing a **full system** — role isolation, persistent memory, 65 skills, cross-role directives, and visual dashboards — all with zero code dependencies.
+**New in 3.6:** incremental Save, reviewed role/Lane recovery across Codex and Claude, safe installation and rollback. [Complete usage and upgrade guide](docs/CONTINUITY.md).
+
+MUSE is a Markdown-based governance system for AI pair programming, with a Python runtime for guarded continuity. It goes beyond format specs (like AGENTS.md or .cursorrules) by providing a **full system** — role isolation, persistent memory, 66 skills, cross-role directives, and visual dashboards — with portable local tooling for supported clients.
 
 ```
 ┌─────────────────────────────────────────────────────┐
@@ -47,7 +49,7 @@ MUSE is a pure-Markdown governance system for AI pair programming. It goes beyon
 
 > **AGENTS.md defines the format. MUSE builds the system on top of it.**
 
-Inspired by [LCM (Lossless Context Management)](https://papers.voltropy.com/LCM) + [lossless-claw](https://github.com/Martian-Engineering/lossless-claw). MUSE implements LCM's core design principles using **pure Markdown SOPs** — zero code dependencies.
+Inspired by [LCM (Lossless Context Management)](https://papers.voltropy.com/LCM) + [lossless-claw](https://github.com/Martian-Engineering/lossless-claw). MUSE adapts these ideas into Markdown workflows and a Python runtime for guarded checkpoint updates.
 
 [📖 中文文档 / Chinese Docs](./README_CN.md)
 
@@ -57,7 +59,7 @@ Inspired by [LCM (Lossless Context Management)](https://papers.voltropy.com/LCM)
 
 **Problem**: AI coding assistants have context window limits. Format specs like `.cursorrules` or `AGENTS.md` give your AI instructions — but they can't manage **memory**, **roles**, or **cross-session knowledge**. Long conversations forget early content. New conversations start from scratch.
 
-**Solution**: MUSE wraps your AI with a **governance protocol** — role isolation, persistent dual-layer memory, 65 reusable skills, cross-role directive queue, and visual dashboards. All in plain Markdown.
+**Solution**: MUSE wraps your AI with a **governance protocol** — role isolation, persistent dual-layer memory, 66 reusable skills, cross-role directive queue, and visual dashboards. All in plain Markdown.
 
 | Without MUSE | With MUSE |
 |---------|---------|
@@ -232,7 +234,7 @@ graph TB
         CO --> CO2["Sub-agent Synthesis"]
     end
     
-    subgraph "⚡ Skills Layer (65)"
+    subgraph "⚡ Skills Layer (66)"
         G["Trigger Skills<br/>on-demand"]
         H["Lifecycle Skills<br/>strategic-compact"]
     end
@@ -467,13 +469,13 @@ Want to suggest another MCP for the list? Open a PR · we vet for free-tier avai
 ## 🤔 FAQ
 
 **Q: Does MUSE require installation?**
-No. MUSE is pure Markdown files. Copy them to your project and you're ready. Zero dependencies.
+Markdown skills can be read directly. For guarded continuity, use the native installer with Python 3.7+ and Git; see docs/CONTINUITY.md.
 
 **Q: Which AI tools does it support?**
-Ten tools with native install support: **Claude Code**, **OpenClaw**, **OpenCode**, **Cursor**, **Windsurf**, **Gemini CLI**, **Codex CLI**, **Copilot**, **Aider**, and **Antigravity**. Run `./scripts/install.sh --tool <name>` to install in the correct format for each tool. Additionally, `./scripts/convert-skills.sh --tool <name>` exports all 65 skills to any supported format. Import from [agency-agents](https://github.com/msitarzewski/agency-agents) (35K+ ⭐) with `--import agency-agents`.
+Ten tools with native install support: **Claude Code**, **OpenClaw**, **OpenCode**, **Cursor**, **Windsurf**, **Gemini CLI**, **Codex CLI**, **Copilot**, **Aider**, and **Antigravity**. Run `./scripts/install.sh --tool <name>` to install in the correct format for each tool. Additionally, `./scripts/convert-skills.sh --tool <name>` exports all 66 skills to any supported format. Import from [agency-agents](https://github.com/msitarzewski/agency-agents) (35K+ ⭐) with `--import agency-agents`.
 
 **Q: How is this different from lossless-claw?**
-lossless-claw is a code plugin (SQLite + DAG + sub-agents) that requires the OpenClaw runtime. MUSE is pure Markdown SOPs, works with any AI tool, zero dependencies. Same principles, different implementation.
+lossless-claw is a code plugin (SQLite + DAG + sub-agents) that requires the OpenClaw runtime. MUSE uses Markdown skills and a Python continuity runtime. Its recorded-source boundaries and supported clients are described in the continuity guide.
 
 **Q: What if memory/ files pile up?**
 Archive files older than 30 days to `memory/archive/`. Use `/distill` to extract key lessons into `MEMORIES.md` first, then safely archive the originals.
@@ -519,6 +521,6 @@ MIT © [Myths Labs](https://github.com/myths-labs)
 </p>
 
 <p align="center">
-  <i>MUSE v3.5.0</i>
+  <i>MUSE v3.6.0</i>
 </p>
 

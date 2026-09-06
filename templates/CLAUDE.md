@@ -10,9 +10,9 @@
 1. **Language**: 🚨 YOU MUST communicate in **[Your preferred language for communication]**. Every response, explanation, question, and comment MUST be in this language. This is NON-NEGOTIABLE. Do NOT default to English unless this rule explicitly says English.
 2. **Skill-First**: Before ANY task, check if a relevant Skill exists in `.agent/skills/` (or `.agents/skills/` for OpenCode)
 3. **Large Files**: Only view ≤300 lines at a time. Never blindly read entire large files.
-4. **Context Protection**: When context ≥ 80%, immediately run `/bye`
+4. **Context Protection**: At observed context ≥80%, save the current Lane, compact if available, verify its current state and continue. Unknown occupancy remains unknown; never infer it from a model name or cumulative tokens.
 5. **Verify Before Claiming Done**: Run `verification-before-completion` skill before saying "done"
-6. **End Sessions Properly**: Always use `/bye` to end conversations
+6. **Continuity**: Use `/save` for ordinary progress and pauses; `/bye` is an explicit formal closeout. Preserve the selected role and Lane across clients.
 7. **Research-First Development**: When implementing unfamiliar technical patterns (SDK APIs, coordinate systems, rendering pipelines, etc.), **MUST search the web first** for proven solutions before writing code. Never reinvent what the community has already solved.
 
 ## Skill-Driven Execution
@@ -72,9 +72,9 @@ Record both corrections AND confirmations from user.
 
 ## Context Health Pre-Check
 
-Every session start: estimate context usage. If ≥ 70%, suggest opening new conversation.
+Use current native context observations if available; do not guess percentages. Context pressure alone does not require a new conversation or full Bye.
 
-Defensive saving: every 10 interaction rounds silently update `memory/CRASH_CONTEXT.md`.
+Defensive saving: preserve meaningful deltas in the current Lane checkpoint at least every ten interaction rounds when changes are unsaved. Only a legacy session without a Lane uses `memory/CRASH_CONTEXT.md`; never overwrite another Lane's recovery state.
 
 ## Safety Protocols
 

@@ -1,8 +1,8 @@
 # MUSE — The AI Coding Governance System
 
-> Roles, Memory, Skills, in Plain Markdown. Zero dependencies.
+> Roles, memory and skills in Markdown, with Python-powered continuity.
 
-MUSE is the only full governance system for AI pair programming. It goes beyond format specs (AGENTS.md, .cursorrules) and memory infrastructure (mem0, MemOS) by providing role isolation, persistent memory, 65 skills, cross-role directives, TF-IDF search, and visual dashboards — all in pure Markdown.
+MUSE is the only full governance system for AI pair programming. It goes beyond format specs (AGENTS.md, .cursorrules) and memory infrastructure (mem0, MemOS) by providing role isolation, persistent memory, 66 skills, cross-role directives, TF-IDF search, and visual dashboards — all in pure Markdown.
 
 ## Core Concept
 
@@ -11,7 +11,7 @@ AGENTS.md defines the format. MUSE builds the system.
 MUSE wraps AI coding assistants with a governance protocol that enables:
 - Role-based context isolation (build, qa, growth, strategy)
 - Dual-layer memory persistence (short-term + long-term)
-- 65 reusable skills loaded on demand
+- 66 reusable skills loaded on demand
 - Cross-role async directive queue with delivery tracking
 - TF-IDF search across all project context
 - Web Dashboard + VS Code Extension for visualization
@@ -31,7 +31,7 @@ L0  Format Specs            AGENTS.md · .cursorrules       ← MUSE is compatib
 - **Role Isolation**: Build, QA, Growth, Strategy — each role reads only its own state file
 - **Directive Queue**: Async cross-role messaging with 🟡/✅ status protocol
 - **MCP Server**: Built-in Bash MCP server with 6 JSON-RPC tools, zero dependencies
-- **65 Skills**: Core (7) + Toolkit (45) + Ecosystem (13) reusable skill packs
+- **66 Skills**: Core (8) + Toolkit (44) + Ecosystem (13) + Growth distribution (1) reusable skill packs
 - **Builder Ethos**: 5 core principles for AI-governed development (Boil the Lake, Search Before Building, Ship the Narrowest Wedge, Memory Over Momentum, Governance Is Speed)
 - **Sprint Pipeline**: `/sprint` — 7-phase feature development workflow (Think→Plan→Build→Review→Test→Ship→Reflect)
 - **Weekly Retro**: `/retro` — automated retrospective from memory logs + git history

@@ -1,0 +1,25 @@
+name: Continuity release checks
+on:
+  push:
+  pull_request:
+jobs:
+  continuity:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python: '3.9'
+          - os: ubuntu-latest
+            python: '3.12'
+          - os: macos-latest
+            python: '3.12'
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Release files and metadata
+        run: bash scripts/lint.sh --release
+      - name: Real installer and state CLI regressions
+        run: python3 -m unittest discover -s tests/continuity -p 'test_release_*.py' -v

@@ -6,7 +6,7 @@ description: Specification for making MUSE role files machine-readable as an Age
 # Agent Protocol Specification
 
 > Inspired by MemOS (multi-agent isolation + sharing) and multi-agent-memory (cross-agent persistence).
-> Adapted for MUSE's pure Markdown zero-dependency architecture.
+> Adapted for MUSE's Markdown role records.
 > Added in v2.12.0 (Batch 2 — competitive tech absorption).
 
 ## Why

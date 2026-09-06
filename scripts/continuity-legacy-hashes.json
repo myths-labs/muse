@@ -1,0 +1,44 @@
+{
+  ".agent/workflows/distill.md": [
+    "7867e548fb16e5f45f4ccf23ed195fde0e4daa4a7b58e503b3e7c929dcb36601"
+  ],
+  ".agent/workflows/settings.md": [
+    "b72a3ce1b1a00e3506c995465f9cd2aa699884e8e2255bc1f218210ee1fde7c8"
+  ],
+  ".agent/workflows/model.md": [
+    "efeb4b1ef49fea50b113517ed5237c741a3fd16c51e1a9b534cb55c60096a81c"
+  ],
+  ".agent/workflows/launch.md": [
+    "a828fdc714ef3ba9fe9ade0aaef53af6096ab3f954a7c3241f8b8992cca57060"
+  ],
+  ".agent/workflows/sprint.md": [
+    "37eee0203375c4a1e52125d9831768a4138c0d2d5ad511b3b5207f6661c60fd6"
+  ],
+  ".agent/workflows/retro.md": [
+    "aae4c06d2cf25c346a8525790ebc089917809da5ea5666c2ee04b7773b6d83fd"
+  ],
+  ".agent/workflows/ctx.md": [
+    "92c8f222e70ad73f4a7ac0339117f288592562ecc57f88c02b692a5a2d64d513"
+  ],
+  ".agent/workflows/resume.md": [
+    "6ca8b2bc461f2503beef8cc446ff60e0c0d6a509850c4bf5aa86511b2aa41106"
+  ],
+  ".agent/workflows/release.md": [
+    "ca9e95ef6b4424a80eb4145843099ed8618ceecf9c315bb1ae4f40b17f6aa335"
+  ],
+  ".agent/workflows/bye.md": [
+    "861bf72cb1c40c4d543e35c69f0aae622f45b685b0f825f9bd7e93760905c30e"
+  ],
+  ".agent/workflows/sync.md": [
+    "a091d2ab1fed2fa1cbabdb5e74be2219ffbe6262c61aae8737669a906c9730f8"
+  ],
+  ".agent/workflows/setup-lazyweb.md": [
+    "eb4c179730218c97ae12200a73447bb2612f554e7214384ff0c4657ae3df4674"
+  ],
+  ".agent/workflows/start.md": [
+    "0c87807cf49427fbca34f3f24c02a61ef1a491a97d1d7a42af4bf67d52671745"
+  ],
+  ".agent/workflows/role.md": [
+    "9dce13a7425e70f86cf68407118dd42591dc5960051462932d76ce0897a779da"
+  ]
+}
