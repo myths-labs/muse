@@ -65,6 +65,9 @@ readiness. Native Windows and network filesystem durability are not certified.
 
 ## Documentation
 
+- [Plain-language beginner guide](https://muse.mythslabs.ai/guide-en.html)
+- [中文入门：让 AI 接着上次做](https://muse.mythslabs.ai/guide.html)
+- [Beginner guide Markdown source](https://github.com/myths-labs/muse/blob/main/docs/QUICKSTART.md)
 - [English usage and migration](https://github.com/myths-labs/muse/blob/v3.6.0/docs/CONTINUITY.md)
 - [中文使用与迁移说明](https://github.com/myths-labs/muse/blob/v3.6.0/docs/CONTINUITY_CN.md)
 - [3.6 release and validation scope](https://github.com/myths-labs/muse/releases/tag/v3.6.0)

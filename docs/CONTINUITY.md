@@ -1,5 +1,7 @@
 # Continuous work with MUSE 3.6
 
+New to MUSE? Read the [beginner guide](QUICKSTART.md), then follow the setup instructions below.
+
 MUSE keeps role/Lane checkpoints in your project so Codex and Claude Code can each
 continue the same work. Use one client, switch clients, or use different Lanes for
 independent work. Provider choice does not change your role. This release adds a

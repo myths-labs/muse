@@ -697,6 +697,7 @@ body {
 }
 
 .command-card {
+  min-width: 0;
   padding: 24px;
   background: var(--bg-primary);
   border: 1px solid var(--border);
@@ -714,6 +715,7 @@ body {
 }
 
 .command-card p {
+  overflow-wrap: anywhere;
   color: var(--text-muted);
   font-size: 0.85rem;
 }

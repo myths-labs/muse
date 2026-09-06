@@ -32,6 +32,14 @@
 
 **3.6 新增：** 增量 Save、Codex／Claude 同角色同 Lane 接续、保留配置的安装与回退。[完整使用与升级说明](docs/CONTINUITY_CN.md)。
 
+## 第一次用？先看这里
+
+**把 MUSE 想成 AI 的项目笔记本：记住决定、进度和下一步，让下次工作接得上。**
+
+你说想做什么，AI 负责规划、执行、检查和记录。平常记住：**Resume 接着做 · Save 存进度 · Bye 正式收尾**。每天收工通常保存并暂停就够了。
+
+**[读简单入门教程 →](docs/QUICKSTART_CN.md)** · [分享给朋友的网页版](https://muse.mythslabs.ai/guide.html) · [English](docs/QUICKSTART.md)
+
 MUSE（缪斯）是一套以 **Markdown 与 Python 连续开发工具**组成的 AI 编程协作系统。通过角色、检查点、来源证据和执行工作流支持跨对话接续，来源不完整时保留明确边界。
 
 灵感来源：[LCM（Lossless Context Management）](https://papers.voltropy.com/LCM) 论文 + [lossless-claw](https://github.com/Martian-Engineering/lossless-claw) 插件。MUSE（缪斯）以 Markdown 工作流与 Python 工具管理必要的上下文和接续证据。
@@ -46,7 +54,7 @@ MUSE（缪斯）是一套以 **Markdown 与 Python 连续开发工具**组成的
 |---------|--------|
 | 长对话后 AI 忘记早期内容 | Pre/Post Compaction 协议保护关键信息 |
 | 新对话要手动交代背景 | `/resume` 5 步自动组装上下文 |
-| 结束对话忘记保存进度 | `/bye` 零输入一键收尾 |
+| 工作进度没有及时记录 | `/save` 增量保存；正式收尾才 `/bye` |
 | 跨天任务断档 | `grep memory/` 自动搜索历史 |
 | 同样的坑踩两遍 | `/distill` 蒸馏教训到长期记忆 |
 
@@ -59,7 +67,7 @@ MUSE（缪斯）是一套以 **Markdown 与 Python 连续开发工具**组成的
 | Cursor | `./scripts/install.sh --tool cursor` | `.cursor/rules/*.mdc` |
 | Windsurf | `./scripts/install.sh --tool windsurf` | `.windsurf/rules/*.md` |
 | Gemini CLI | `./scripts/install.sh --tool gemini` | `.gemini/skills/` + `GEMINI.md` |
-| Codex CLI | `./scripts/install.sh --tool codex` | `AGENTS.md`（单文件） |
+| Codex | `./scripts/install.sh --tool codex` | `AGENTS.md` 入口 + 技能链接 + 连续开发运行器 |
 | Copilot | `./scripts/install.sh --tool copilot` | `.github/copilot-instructions.md` |
 | Aider | `./scripts/install.sh --tool aider` | `CONVENTIONS.md` |
 | Antigravity | `./scripts/install.sh --tool antigravity` | `.gemini/antigravity/skills/` |
@@ -111,12 +119,14 @@ cat muse/templates/.gitignore-template >> 你的项目/.gitignore
 ### 开始使用
 
 ```
-你: /resume           ← AI 自动读宪法 → 读 memory → 开始工作
+你: /resume strategy Lane A  ← 恢复项目实际使用的角色和工作线
     ... 工作 ...
-你: /ctx              ← 查上下文还够不够
-    ... 继续工作 ...
-你: /bye              ← 一键收尾，自动保存
+你: /save                    ← 保存进度，可以继续工作
+你: 今天先到这里，保存并暂停。 ← 日常收工通常不需要 Bye
+你: /bye                     ← 需要正式核对、封存阶段结果时使用
 ```
+
+`strategy Lane A` 是示例；沿用自己的角色和 Lane。同一对话继续时直接说「继续」。
 
 **Sprint 工作流** (v2.29+)：
 

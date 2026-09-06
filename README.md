@@ -32,6 +32,14 @@
 
 **New in 3.6:** incremental Save, reviewed role/Lane recovery across Codex and Claude, safe installation and rollback. [Complete usage and upgrade guide](docs/CONTINUITY.md).
 
+## New to MUSE? Start here
+
+**Think of MUSE as your AI's project notebook: decisions, progress and a next step to come back to.**
+
+You explain what you want; the AI plans, works, checks and records progress. Remember: **Resume to pick up work · Save to keep progress · Bye to formally wrap up**. For a daily stop, save and pause.
+
+**[Read the beginner guide →](docs/QUICKSTART.md)** · [Shareable web guide](https://muse.mythslabs.ai/guide-en.html) · [简体中文](docs/QUICKSTART_CN.md)
+
 MUSE is a Markdown-based governance system for AI pair programming, with a Python runtime for guarded continuity. It goes beyond format specs (like AGENTS.md or .cursorrules) by providing a **full system** — role isolation, persistent memory, 66 skills, cross-role directives, and visual dashboards — with portable local tooling for supported clients.
 
 ```
@@ -100,7 +108,7 @@ Inspired by [LCM (Lossless Context Management)](https://papers.voltropy.com/LCM)
 | Cursor | `./scripts/install.sh --tool cursor` | `.cursor/rules/*.mdc` |
 | Windsurf | `./scripts/install.sh --tool windsurf` | `.windsurf/rules/*.md` |
 | Gemini CLI | `./scripts/install.sh --tool gemini` | `.gemini/skills/` + `GEMINI.md` |
-| Codex CLI | `./scripts/install.sh --tool codex` | `AGENTS.md` (single file) |
+| Codex | `./scripts/install.sh --tool codex` | `AGENTS.md` entry + skill links + continuity runtime |
 | Copilot | `./scripts/install.sh --tool copilot` | `.github/copilot-instructions.md` |
 | Aider | `./scripts/install.sh --tool aider` | `CONVENTIONS.md` |
 | Antigravity | `./scripts/install.sh --tool antigravity` | `.gemini/antigravity/skills/` |
@@ -193,12 +201,14 @@ This is MUSE's core — the AI's "constitution". Edit to match your project:
 ### 3. Start using
 
 ```
-You: /resume           ← AI reads constitution → reads memory → starts work
+You: /resume strategy Lane A  ← Recover your actual role and workstream
      ... work ...
-You: /ctx              ← Check if context is enough
-     ... continue ...
-You: /bye              ← One-click wrap-up, auto-save
+You: /save                    ← Save progress and keep working
+You: Save and pause for today. ← A daily stop usually needs no Bye
+You: /bye                     ← Formally review and close out a stage
 ```
+
+`strategy Lane A` is an example; retain your project's role and Lane. In the same conversation, just say "continue."
 
 **Sprint workflow** (v2.29+):
 
@@ -523,4 +533,3 @@ MIT © [Myths Labs](https://github.com/myths-labs)
 <p align="center">
   <i>MUSE v3.6.0</i>
 </p>
-

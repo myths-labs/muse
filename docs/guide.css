@@ -1,0 +1,57 @@
+/* A quiet notebook for the first-time reader. No scripts or remote fonts needed. */
+:root { color-scheme: light; --paper: #faf6ed; --ink: #24342e; --muted: #5b6861; --line: #d7d9ca; --green: #285440; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 2rem; }
+body { margin: 0; color: var(--ink); background: var(--paper); font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; line-height: 1.85; }
+a { color: var(--green); text-underline-offset: 4px; }
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible, summary:focus-visible { outline: 3px solid #9a6f1e; outline-offset: 5px; border-radius: 2px; }
+.guide-header, footer { max-width: 1080px; margin: auto; padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.guide-header { border-bottom: 1px solid var(--line); }
+.brand { text-decoration: none; font-family: Georgia, serif; font-weight: 700; font-size: 24px; letter-spacing: 0.06em; }
+.brand span { font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 400; font-size: 13px; letter-spacing: 0; color: var(--muted); }
+.guide-header nav { display: flex; flex-wrap: wrap; gap: 20px; font-size: 14px; }
+main { max-width: 840px; margin: auto; padding: 48px 32px 24px; }
+.eyebrow { color: var(--green); font-size: 12px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; }
+h1 { font-family: "Songti SC", "Noto Serif CJK SC", Georgia, serif; font-size: clamp(32px, 4.6vw, 52px); line-height: 1.28; letter-spacing: -0.03em; margin: 16px 0; max-width: 740px; text-wrap: balance; }
+.deck { font-size: 18px; color: var(--muted); }
+.guide-toc { display: flex; flex-wrap: wrap; gap: 10px 22px; margin: 26px 0 32px; font-size: 14px; }
+section { padding: 30px 0; border-top: 1px solid var(--line); }
+h2 { margin: 0 0 16px; font-size: 24px; line-height: 1.5; letter-spacing: -0.02em; }
+p { margin: 12px 0; }
+li { margin: 10px 0; padding-left: 4px; }
+ul, ol { padding-left: 24px; }
+strong { font-weight: 650; }
+code { font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; font-size: 0.9em; background: #e9eee3; padding: 3px 6px; border-radius: 4px; overflow-wrap: anywhere; }
+blockquote { margin: 22px 0; padding: 14px 24px; background: #eaf0e5; border-left: 4px solid var(--green); border-radius: 0 8px 8px 0; }
+#intro { padding: 24px 28px; border: 1px solid #c8d5bf; background: #f0f3e8; border-radius: 12px; margin-bottom: 28px; }
+#intro h2 { font-size: 17px; color: var(--green); }
+#intro p:first-of-type { font-size: 22px; line-height: 1.6; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; margin: 20px 0; }
+th { text-align: left; font-weight: 600; color: var(--muted); font-size: 13px; }
+th, td { padding: 13px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th:first-child, td:first-child { padding-left: 0; }
+td:last-child { min-width: 172px; }
+details { border-bottom: 1px solid var(--line); padding: 15px 0; }
+summary { cursor: pointer; font-weight: 600; padding-right: 8px; }
+details p { color: var(--muted); padding: 0 0 4px 20px; }
+footer { font-size: 14px; border-top: 1px solid var(--line); }
+.skip-link { position: absolute; left: 16px; top: -100px; padding: 10px 20px; background: white; z-index: 10; }
+.skip-link:focus { top: 12px; }
+@media (max-width: 620px) {
+  .guide-header, footer { padding: 18px 20px; gap: 12px; flex-wrap: wrap; }
+  .guide-header nav { gap: 16px; }
+  .brand span { display: none; }
+  main { padding: 30px 20px 16px; }
+  section { padding: 24px 0; }
+  h2 { font-size: 21px; }
+  #intro { padding: 20px; }
+  #intro p:first-of-type { font-size: 20px; }
+  table, tbody, tr, td { display: block; }
+  thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  tr { padding: 14px 0; border-bottom: 1px solid var(--line); }
+  td, td:first-child { padding: 4px 0; border: none; }
+  td::before { content: attr(data-label); display: block; font-size: 12px; color: var(--muted); }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+@media print { .guide-header nav, .guide-toc, .skip-link, footer { display: none; } body { background: white; } main { max-width: none; padding: 0; } details::details-content { content-visibility: visible; } }

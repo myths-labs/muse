@@ -14,6 +14,10 @@ jobs:
         run: |
           node --check docs/site-controls.js
           node tests/site-controls.test.cjs
+      - name: Beginner pages match the Markdown guides
+        run: |
+          python3 scripts/render-guides.py
+          git diff --exit-code -- docs/guide.html docs/guide-en.html
   continuity:
     strategy:
       matrix:

@@ -1,5 +1,7 @@
 # MUSE 3.6 连续开发使用说明
 
+第一次接触 MUSE？先看[简单入门教程](QUICKSTART_CN.md)，再按下面的说明安装。
+
 MUSE 将角色、Lane 和必要证据保存在项目中。你可以只用 Codex、只用 Claude
 Code，或者在两者之间接续同一份工作；换客户端不会改变角色。
 本版在原有 Markdown 技能之外新增 Python 运行器，支持有 Git、Python 3.7+
