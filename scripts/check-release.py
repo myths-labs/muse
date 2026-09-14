@@ -10,7 +10,9 @@ errors = []
 required = ['scripts/install-continuity.py', 'docs/CONTINUITY.md', 'docs/CONTINUITY_CN.md',
             'workflows/save.md', 'workflows/daily-resume.md', 'workflows/daily-bye.md',
             'workflows/legacy/resume.md', 'workflows/legacy/bye.md',
-            'skills/core/muse-commands/SKILL.md', 'skills/core/muse-commands/continuity.json']
+            'skills/core/muse-commands/SKILL.md', 'skills/core/muse-commands/continuity.json',
+            'skills/core/muse-commands/scripts/muse-runtime-dependencies.py',
+            'skills/core/muse-commands/references/RUNTIME_DEPENDENCIES.md']
 for relative in required:
     if not (ROOT/relative).is_file(): errors.append('MISSING: '+relative)
 skill = ROOT/'skills/core/muse-commands'

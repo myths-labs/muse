@@ -1,3 +1,17 @@
+## [3.7.1] - 2026-09-14
+
+### Added
+- Optional runtime dependency preflight checks the exact selected Python in isolation, preserving virtual environment launchers and reporting the actual runtime.
+- Optional Pillow verification fully checks and decodes PNG and JPEG fixtures. Ordinary continuity remains standard-library-only; the installer does not add Pillow.
+- Portable troubleshooting and release guidance, bilingual usage instructions, and regression coverage for missing dependencies, import isolation, broken decoding and malformed startup output.
+
+### Fixed
+- The dependency probe returns a structured failure for invalid output encoding on either stdout or stderr instead of an unhandled exception.
+
+### Compatibility
+- Python 3.7+ and existing full-scope recovery/writer guards remain unchanged. The optional image check does not add a native attachment adapter or certify an actual attachment workflow.
+- Installation and rollback are verified against v3.7.0. Preflight success is limited to the selected runtime and requested fixtures; workflow and product acceptance require their own evidence.
+
 ## [3.7.0] - 2026-09-14
 
 ### Added

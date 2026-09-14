@@ -67,3 +67,8 @@ hash, successful save or successful compilation is not product QA. Verify the
 actual user flows relevant to the changed scope before claiming completion.
 
 Use the installed `doctor` for configuration/files preflight, not as a QA verdict.
+
+For interpreter or optional image-decoder failures, follow
+[runtime dependency preflight](references/RUNTIME_DEPENDENCIES.md). Check the
+actual selected interpreter, then rerun the affected workflow. Ordinary MUSE
+continuity does not require Pillow; preflight PASS is not workflow acceptance.
