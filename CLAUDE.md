@@ -24,6 +24,7 @@
   | Build errors | `build-error-resolver` |
   | Debugging | `systematic-debugging` |
   | MUSE runtime dependency preflight | `muse-commands` → `references/RUNTIME_DEPENDENCIES.md` |
+  | MUSE checkpoint capacity / `TOO_LARGE` | `muse-commands` → `references/CHECKPOINT_CAPACITY.md` |
   | **Verify completion** | **`verification-before-completion`** |
   | **GEO/SEO optimization** | **`geo-seo`** → `geo-audit` / `geo-citability` / `geo-schema` / `geo-report-pdf` |
   | **Git 安全守卫** | **`git-security-guard`**（commit/push 前检查泄露） |

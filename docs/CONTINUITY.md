@@ -100,6 +100,29 @@ It does not certify files outside that scope or product readiness.
 See the installed [daily protocol reference](../skills/core/muse-commands/references/DAILY_V1.md)
 for the two commands and review input. Keep the same protocol on both commands.
 
+## When a checkpoint approaches its size limit
+
+The incremental save input, selected source note and checkpoint each have a
+256 KiB limit (262,144 UTF-8 bytes). The final checkpoint includes metadata and
+separators, so character counts or the size of the new text alone are insufficient.
+The larger-worktree protocol above does not expand this limit.
+
+Keep detailed test results and logs in evidence files. The agent saves the
+necessary facts and short references, using a source note that also fits its own
+limit. Only `Next Action` and `Required Reads` can be replaced; earlier decisions,
+constraints, unresolved issues and evidence remain preserved.
+
+If saving reports `TOO_LARGE`, retain the failed attempt and its evidence. The
+agent checks the current state and writer, prepares a smaller supported delta,
+then uses the guarded save and verifies the archive and actual checkpoint. If
+that still cannot fit, retain the unsaved evidence for a separate storage review.
+Do not raise limits or delete history to make the save pass. Short references do
+not provide unlimited checkpoint capacity.
+
+The installed [checkpoint capacity guide](../skills/core/muse-commands/references/CHECKPOINT_CAPACITY.md)
+describes the exact preservation and readback steps. This documents existing
+behavior; it does not add automatic history compaction or change release 3.7.1.
+
 ## What is stored
 
 - `.muse/config.json`: stable project names and the role-home mapping.

@@ -68,6 +68,10 @@ actual user flows relevant to the changed scope before claiming completion.
 
 Use the installed `doctor` for configuration/files preflight, not as a QA verdict.
 
+Before a large save or after `TOO_LARGE`, follow
+[checkpoint capacity and evidence storage](references/CHECKPOINT_CAPACITY.md).
+Keep detailed evidence outside the checkpoint and preserve the guarded save limits.
+
 For interpreter or optional image-decoder failures, follow
 [runtime dependency preflight](references/RUNTIME_DEPENDENCIES.md). Check the
 actual selected interpreter, then rerun the affected workflow. Ordinary MUSE

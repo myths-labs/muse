@@ -13,6 +13,8 @@ description: 保存当前角色和Lane的本轮变化，继续当前任务，不
 5. 执行 `muse-doctor.sh save-daily --input '<绝对JSON路径>'`。`SAVED`后使用返回SHA进行读回并逐项比对预期变化；`UNCHANGED`不重写、不补造归档；失败或写后不确定时核对实际canonical和PREPARED archive，不把残留目录当成功。
 6. 在角色home和必要subject项目的当天memory追加简短结果/决定/问题/下一步与同一handoff ID；共享索引有变化时只更新相关条目。它们引用本次事实，不复制整套历史或冒充完整Bye的覆盖凭据。
 
+准备较大增量或遇到 `TOO_LARGE` 时，先读安装技能的 `muse-commands/references/CHECKPOINT_CAPACITY.md`。输入、source 和检查点各受 256 KiB 限制，按渲染后的 UTF-8 字节核对；完整范围 Git 分批校验不增加此容量。完整证据留在工件中，检查点保留必要事实和指针；只替换允许的两个当前指针区段，不删除历史或扩大上限。
+
 阶段结果、关键决定和上下文保存提醒均可使用本流程，无需用户每次手打 `/save`。没有实质变化时不为了确认反复保存。保存只证明声明版本的记录可读，不替代本轮真实测试、语义核对、正式Bye或产品QA。保存后继续当前任务。
 
 来源账本已安装时，步骤3之前按 SOURCES_V1.md 获取精确原生会话的新增用户消息，source-update 导入并完整审阅；随后重新取得保存SHA。Codex用原生read_thread投影用户消息，Claude用已落盘的UserPromptSubmit记录。原始记录与source note分开，note不冒充原话。缺接口/缺历史标UNKNOWN，只继续不依赖缺口的工作。不要每次重放全部历史。保存完成后继续执行用户的完整目标，只有真实缺授权/登录/信息才请求用户介入。
