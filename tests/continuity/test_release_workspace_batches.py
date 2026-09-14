@@ -120,6 +120,68 @@ class WorkspaceBatchesTests(unittest.TestCase):
         self.assertTrue(any('BATCH_READ_INCOMPLETE:CONTENT_SIZE_LIMIT' in issue
                             for issue in actual['issues']), actual['issues'])
 
+    def check_actual_read_growth(self, timing):
+        scope = self.scope((4 * 1024 * 1024,) * 2)
+        growing = scope['files'][1]
+        original_open, original_fdopen = os.open, os.fdopen
+        tracked = {}
+        observed = {'bytes': 0, 'grew': False}
+
+        def grow():
+            if not observed['grew']:
+                observed['grew'] = True
+                with Path(growing).open('ab') as stream:
+                    stream.write(b'x' * 65536)
+
+        def open_counted(path, flags, *args, **kwargs):
+            if str(path) == growing and timing == 'before_open':
+                grow()
+            fd = original_open(path, flags, *args, **kwargs)
+            if str(path) in scope['files']:
+                tracked[fd] = str(path)
+            return fd
+
+        class CountedStream:
+            def __init__(self, stream, fd, filename):
+                self.stream, self.fd, self.filename = stream, fd, filename
+
+            def __enter__(self):
+                self.stream.__enter__()
+                return self
+
+            def __exit__(self, *args):
+                tracked.pop(self.fd, None)
+                return self.stream.__exit__(*args)
+
+            def fileno(self):
+                return self.stream.fileno()
+
+            def read(self, count=-1):
+                if self.filename == growing and timing == 'during_read':
+                    grow()
+                data = self.stream.read(count)
+                observed['bytes'] += len(data)
+                return data
+
+        def fdopen_counted(fd, *args, **kwargs):
+            stream = original_fdopen(fd, *args, **kwargs)
+            if fd in tracked:
+                return CountedStream(stream, fd, tracked[fd])
+            return stream
+
+        with patch.object(os, 'open', side_effect=open_counted), \
+                patch.object(os, 'fdopen', side_effect=fdopen_counted):
+            result = self.scan(scope)
+        self.assertTrue(observed['grew'])
+        self.assertEqual(result['content_coverage'], 'PARTIAL', result)
+        self.assertLessEqual(observed['bytes'], B.MAX_BATCH)
+
+    def test_growth_after_lstat_before_open_never_overreads_batch(self):
+        self.check_actual_read_growth('before_open')
+
+    def test_growth_during_read_never_overreads_batch(self):
+        self.check_actual_read_growth('during_read')
+
     def test_symlink_leaf_parent_and_directory_reject(self):
         scope = self.scope()
         target = Path(scope['files'][0])
