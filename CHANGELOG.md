@@ -1,3 +1,17 @@
+## [3.7.0] - 2026-09-14
+
+### Added
+- Explicit `full-scope-batches-v1` recovery for registered scopes larger than the legacy 16 MiB content budget. Every declared path is verified in deterministic batches and two complete content passes.
+- Fresh proof validation inside the writer lock binds scope membership, content, Git state, checkpoint, source revision, protocol and the receiving native session. Original checkpoint sections and handoff IDs are preserved.
+- Public regressions cover full-scope claims, concurrent receivers, stale writers, source and scope drift, interrupted reads and invalid proofs.
+
+### Fixed
+- Strict batch reads use unbuffered handles and remaining-byte bounds. Files growing after planning cannot cause even a failed batch to read beyond its 8 MiB allowance.
+
+### Compatibility
+- Both preparation and claim explicitly select the new protocol. Default `legacy-v1`, the 5 MiB file limit and the 3000-path limit remain unchanged; unknown protocols cannot silently fall back.
+- Larger scope coverage is not an immutable filesystem snapshot, a new native-client certification or product acceptance. See the bilingual continuity guide for setup, boundaries and rollback.
+
 ## [3.6.0] - 2026-09-06
 
 ### Added

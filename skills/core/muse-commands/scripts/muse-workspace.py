@@ -19,6 +19,7 @@ def encode(value): return (json.dumps(value,sort_keys=True,ensure_ascii=True)+'\
 
 def snapshot(workspace,budget=None,depth=0,scope=None,exclude_paths=None):
     budget=budget if budget is not None else {'bytes':0,'paths':0}
+    strict_reads=budget.get('strict_reads',False)
     def run(*args):
         r=subprocess.run(['git','--no-optional-locks','-C',workspace,*args],stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,timeout=10)
         if len(r.stdout)>256*1024: raise ValueError('GIT_OUTPUT_TOO_LARGE')
@@ -86,18 +87,27 @@ def snapshot(workspace,budget=None,depth=0,scope=None,exclude_paths=None):
             if info.st_size>MAX_FILE or budget['bytes']+info.st_size>MAX_TOTAL:
                 issues.append('CONTENT_SIZE_LIMIT');continue
             fd=os.open(path,os.O_RDONLY|os.O_NOFOLLOW|os.O_NONBLOCK)
-            with os.fdopen(fd,'rb') as handle:
+            # Strict batch budgets include actual reads, without buffered prefetch.
+            with os.fdopen(fd,'rb',buffering=0 if strict_reads else -1) as handle:
                 initial=os.fstat(handle.fileno())
                 if not stat.S_ISREG(initial.st_mode) or initial.st_size>MAX_FILE:
                     issues.append('FILE_CHANGED_OR_TOO_LARGE');continue
+                if strict_reads and budget['bytes']+initial.st_size>MAX_TOTAL:
+                    issues.append('CONTENT_SIZE_LIMIT');continue
                 h=hashlib.sha256();count=0
                 while True:
-                    chunk=handle.read(min(65536,MAX_FILE-count+1))
+                    if strict_reads:
+                        remaining=min(initial.st_size-count,MAX_FILE-count,MAX_TOTAL-budget['bytes'])
+                        if remaining<=0:break
+                        chunk=handle.read(min(65536,remaining))
+                    else:
+                        chunk=handle.read(min(65536,MAX_FILE-count+1))
                     if not chunk:break
                     count+=len(chunk);budget['bytes']+=len(chunk)
                     if count>MAX_FILE or budget['bytes']>MAX_TOTAL:raise ValueError('CONTENT_SIZE_LIMIT')
                     h.update(chunk)
                 final=os.fstat(handle.fileno())
+                if strict_reads and count!=initial.st_size:issues.append('FILE_CHANGED_DURING_READ')
                 if (initial.st_size,initial.st_mtime_ns,initial.st_ctime_ns)!=(final.st_size,final.st_mtime_ns,final.st_ctime_ns):issues.append('FILE_CHANGED_DURING_READ')
                 evidence.append([relative,'file',stat.S_IMODE(initial.st_mode),count,h.hexdigest()])
         status2,dirty2=run('status','--porcelain=v1','-z','--untracked-files='+untracked)

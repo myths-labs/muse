@@ -9,7 +9,7 @@
 <p align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/myths-labs/muse/blob/main/LICENSE)
-[![Version](https://img.shields.io/badge/version-3.6.0-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-3.7.0-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
 [![Stars](https://img.shields.io/github/stars/myths-labs/muse?style=social)](https://github.com/myths-labs/muse)
 [![Markdown + Python](https://img.shields.io/badge/Markdown-Python-green.svg)](#)
 [![Continuity Runtime](https://img.shields.io/badge/continuity-Python_3.7%2B-blue.svg)](docs/CONTINUITY.md)
@@ -30,7 +30,7 @@
 >
 > *MUSE（缪斯）继承了这一血脉，帮助保存跨对话的决定和证据；来源缺失时明确保留边界。*
 
-**3.6 新增：** 增量 Save、Codex／Claude 同角色同 Lane 接续、保留配置的安装与回退。[完整使用与升级说明](docs/CONTINUITY_CN.md)。
+**3.7 新增：** 较大工作区保留完整声明范围接手，分批限制实际读取量，并延续写入者保护。[完整使用与升级说明](docs/CONTINUITY_CN.md)。
 
 ## 第一次用？先看这里
 
@@ -400,5 +400,5 @@ MIT © [Myths Labs](https://github.com/myths-labs)
 </p>
 
 <p align="center">
-  <i>MUSE v3.6.0</i>
+  <i>MUSE v3.7.0</i>
 </p>

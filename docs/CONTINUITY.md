@@ -1,11 +1,11 @@
-# Continuous work with MUSE 3.6
+# Continuous work with MUSE 3.7
 
 New to MUSE? Read the [beginner guide](QUICKSTART.md), then follow the setup instructions below.
 
 MUSE keeps role/Lane checkpoints in your project so Codex and Claude Code can each
 continue the same work. Use one client, switch clients, or use different Lanes for
-independent work. Provider choice does not change your role. This release adds a
-Python runtime to the existing Markdown skills; local macOS/Linux with Python 3.7+
+independent work. Provider choice does not change your role. MUSE combines a
+Python runtime with Markdown skills; local macOS/Linux with Python 3.7+
 and Git are supported. Native Windows and network filesystem durability are not
 certified by this release.
 
@@ -68,6 +68,23 @@ At actual observed 80% context pressure, save, compact if the client supports it
 verify current state and continue. If occupancy is unavailable, report UNKNOWN.
 Automatic compaction is not proof that every detail survived; reread missing
 evidence as needed, without replaying every historical conversation.
+
+## Larger worktrees
+
+Version 3.7 can recover a registered task scope larger than the default 16 MiB
+budget without dropping files. The receiving agent explicitly selects
+`full-scope-batches-v1` for both preparation and claim, then reviews the new proof.
+You keep using the same resume request; the agent handles the helper arguments.
+
+Each batch reads at most 8 MiB, each file stays within 5 MiB and the scope may
+contain at most 3000 paths. All paths are checked in two content passes and read
+again during the guarded claim. Changed content, missing proof, unknown protocols
+and concurrent stale writers are refused. The default legacy limits stay in place.
+Complete coverage refers to the registered scope, including its stated exclusions.
+It does not certify files outside that scope or product readiness.
+
+See the installed [daily protocol reference](../skills/core/muse-commands/references/DAILY_V1.md)
+for the two commands and review input. Keep the same protocol on both commands.
 
 ## What is stored
 

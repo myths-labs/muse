@@ -46,11 +46,34 @@ def validate_scope(data,workspace):
     return data
 
 
-def git_snapshot(workspace,checkpoint=None):
+def git_snapshot(workspace,checkpoint=None,protocol='legacy-v1'):
     scope=None
     if checkpoint and scope_path(checkpoint).exists():
         data,raw=request(scope_path(checkpoint));scope=validate_scope(data,workspace)
+    if protocol=='full-scope-batches-v1':
+        if checkpoint is None or scope is None:INC.fail('EXPLICIT_SCOPE_REQUIRED')
+        checkpoint_raw=INC.bounded_read(checkpoint);parsed=INC.parse_exact(checkpoint_raw)
+        revision,manifest=SOURCES.current(checkpoint,parsed);SOURCES.verify_graph(checkpoint,manifest)
+        marker=checkpoint.parent/'.daily'/(checkpoint.stem+'.protocol')
+        binding=dict(checkpoint_sha256=INC.digest(checkpoint_raw),scope_file_sha256=INC.digest(raw),protocol_marker_sha256=INC.digest(INC.bounded_read(marker)),source_revision=revision,receiver=RUNTIME.identity())
+        return load('muse_workspace_batches','muse-workspace-batches.py').snapshot(workspace,scope=scope,binding=binding)
+    if protocol!='legacy-v1':INC.fail('UNKNOWN_SNAPSHOT_PROTOCOL')
     return WORKSPACE.snapshot(workspace,scope=scope)
+
+
+def verify_batched_claim(checkpoint,before,source,source_raw,git):
+    if INC.bounded_read(checkpoint)!=before:INC.fail('STALE_VERSION')
+    scope,scope_raw=request(scope_path(checkpoint))
+    binding=git['binding']
+    marker=checkpoint.parent/'.daily'/(checkpoint.stem+'.protocol')
+    if INC.digest(INC.bounded_read(marker))!=binding['protocol_marker_sha256']:INC.fail('PROTOCOL_CHANGED_DURING_CLAIM')
+    if INC.digest(scope_raw)!=binding['scope_file_sha256']:INC.fail('SCOPE_CHANGED_DURING_CLAIM')
+    if INC.bounded_read(source['path'])!=source_raw:INC.fail('SOURCE_CHANGED_DURING_CLAIM')
+    revision,manifest=SOURCES.current(checkpoint,INC.parse_exact(before));SOURCES.verify_graph(checkpoint,manifest)
+    if revision!=binding['source_revision']:INC.fail('SOURCE_REVISION_CHANGED_DURING_CLAIM')
+    batches=load('muse_workspace_batches_final','muse-workspace-batches.py')
+    if batches.git_state(git['workspace'])!=git['git']:INC.fail('GIT_CHANGED_DURING_CLAIM')
+    if batches._metadata([r['path'] for r in git['plan']['metadata']])!=git['plan']['metadata']:INC.fail('SCOPE_CONTENT_CHANGED_DURING_CLAIM')
 
 
 def runtime_or_unknown():
@@ -114,12 +137,12 @@ def prepare(args):
         return dict(status='LEGACY',role_home=identity['role_home'],role=identity['role'],lane=identity['lane'])
     raw=INC.bounded_read(path);parsed=INC.parse_exact(raw)
     INC.check_identity(parsed,identity,parsed)
-    git=git_snapshot(identity['workspace'],path)
+    git=git_snapshot(identity['workspace'],path,getattr(args,'snapshot_protocol','legacy-v1'))
     source_ledger=SOURCES.status(path,parsed)
     return dict(status='RECOVERY_REVIEW_REQUIRED',protocol='daily-v1',sha256=INC.digest(raw),checkpoint_path=str(path),checkpoint=parsed,writer={k:parsed[k] for k in ('platform','session_id')},runtime=runtime_or_unknown(),git=git,checkpoint_git_matches=(git.get('branch')==parsed['branch'] and git.get('head')==parsed['head']),source_tail='UNKNOWN',source_ledger=source_ledger,next_action=parsed['sections']['Next_Action'],required_reads=parsed['sections']['Required_Reads'],review_required=['current_policy_and_role','source_tail_and_user_constraints','pending_propagation','production_scope_env_alias_if_applicable','unresolved_failures_and_product_regression','workspace_git_and_work_baseline','explicit_writer_claim_before_new_session_writes'],limits=['The stored source ledger is not a fresh native-tail observation.','Readability, writer identity and Git evidence are not product QA or execution authorization.'])
 
 
-def claim(path):
+def claim(path,snapshot_protocol='legacy-v1'):
     data,raw=request(path)
     INC.keys(data,('schema_version','command','workspace','expected','source','intent','review'))
     if type(data['schema_version']) is not int or data['schema_version']!=1 or data['intent']!='continue_this_lane': INC.fail('INVALID_CLAIM_INTENT')
@@ -142,13 +165,16 @@ def claim(path):
         if INC.digest(before)!=expected['sha256']: INC.fail('STALE_VERSION')
         parsed=INC.parse_exact(before);INC.check_identity(parsed,identity,expected)
         _,manifest=SOURCES.current(checkpoint,parsed);SOURCES.verify_graph(checkpoint,manifest)
-        git=git_snapshot(identity['workspace'],checkpoint)
+        git=git_snapshot(identity['workspace'],checkpoint,snapshot_protocol)
         if git['status']!='AVAILABLE' or git['content_coverage']!='COMPLETE' or git['sha256']!=review['git_sha256']: INC.fail('GIT_DRIFT_OR_UNAVAILABLE')
         if all(parsed[k]==runtime[k] for k in ['platform','session_id']): return dict(status='UNCHANGED',sha256=INC.digest(before),writer=runtime)
         payload=INC.payload_from(parsed)
         record=dict(kind='writer_claim',previous={k:parsed[k] for k in ['platform','session_id']},receiver=runtime,source=source,review=review)
+        if snapshot_protocol=='full-scope-batches-v1':
+            record['snapshot_evidence']=dict(protocol=snapshot_protocol,plan_sha256=git['plan_sha256'],content_sha256=git['content_sha256'],scope_sha256=git['scope_sha256'],content_paths=git['content_paths'],content_bytes=git['content_bytes'],passes=git['passes'])
         payload['sections']['Verification']+='\n\nWriter transition (identity only; not a full handoff or product verdict): '+json.dumps(record,ensure_ascii=False,sort_keys=True)
         payload.update(platform=runtime['platform'],session_id=runtime['session_id'],updated_at=datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'))
+        if snapshot_protocol=='full-scope-batches-v1':verify_batched_claim(checkpoint,before,source,source_raw,git)
         receipt=INC.publish_change(checkpoint,before,payload,raw,source_raw)
         receipt.update(status='WRITER_CLAIMED',writer=runtime,scope=review['allowed_work'],source_tail=review['source_tail'])
         return receipt
@@ -167,8 +193,12 @@ def main():
         if action in ['enable-daily','prepare-resume']:
             sub.add_argument('--scope-file',type=Path)
             sub.add_argument('--scope-sha256')
+        if action=='prepare-resume':
+            sub.add_argument('--snapshot-protocol',choices=['legacy-v1','full-scope-batches-v1'],default='legacy-v1')
     for action in ['claim-lane','save-daily','source-update','adopt-lane','initialize-lane']:
         sub=subs.add_parser(action);sub.add_argument('--input',type=Path,required=True)
+        if action=='claim-lane':
+            sub.add_argument('--snapshot-protocol',choices=['legacy-v1','full-scope-batches-v1'],default='legacy-v1')
     args=parser.parse_args()
     try:
         if args.action in ['resume-workflow','bye-workflow']:
@@ -184,7 +214,7 @@ def main():
             parsed=INC.parse_exact(INC.bounded_read(path));INC.check_identity(parsed,identity,parsed)
             result=SOURCES.status(path,parsed)
         elif args.action=='source-update':result=SOURCES.update(args.input)
-        elif args.action=='claim-lane':result=claim(args.input)
+        elif args.action=='claim-lane':result=claim(args.input,args.snapshot_protocol)
         elif args.action in ['adopt-lane','initialize-lane']:
             result=load('muse_onboarding','muse-onboarding.py').adopt(args.input,sys.modules[__name__],initialize=args.action=='initialize-lane')
         else:result=save(args.input)

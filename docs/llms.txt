@@ -1,6 +1,6 @@
 # MUSE — Continuous Development with Codex and Claude Code
 
-> MUSE 3.6 preserves roles, decisions and next steps in shared project records.
+> MUSE 3.7 preserves roles, decisions and next steps in shared project records, with complete-scope recovery for larger worktrees.
 
 MUSE combines Markdown skills and workflows with a Python continuity runtime.
 Use Codex alone, Claude Code alone, or move the same role and Lane between them.
@@ -57,9 +57,10 @@ create or claim a Lane. Keep installation/rollback receipts private.
 
 ## Verification boundaries
 
-The 3.6 release has 44 public installer/state regressions passing on Linux and
-macOS, plus a separate native Codex → Claude Code → Codex exercise. Synthetic
-fixtures are not native evidence. Missing source coverage stays incomplete;
+The 3.7 release adds full-scope handoff regressions for bounded reads, source and
+scope drift, invalid proofs and concurrent writers. The 3.6 native Codex → Claude
+Code → Codex exercise remains historical evidence; it does not certify the new
+batch protocol. Synthetic fixtures are not native evidence. Missing source coverage stays incomplete;
 Save, Bye and automatic compaction do not guarantee lossless memory or product
 readiness. Native Windows and network filesystem durability are not certified.
 
@@ -68,9 +69,9 @@ readiness. Native Windows and network filesystem durability are not certified.
 - [Plain-language beginner guide](https://muse.mythslabs.ai/guide-en.html)
 - [中文入门：让 AI 接着上次做](https://muse.mythslabs.ai/guide.html)
 - [Beginner guide Markdown source](https://github.com/myths-labs/muse/blob/main/docs/QUICKSTART.md)
-- [English usage and migration](https://github.com/myths-labs/muse/blob/v3.6.0/docs/CONTINUITY.md)
-- [中文使用与迁移说明](https://github.com/myths-labs/muse/blob/v3.6.0/docs/CONTINUITY_CN.md)
-- [3.6 release and validation scope](https://github.com/myths-labs/muse/releases/tag/v3.6.0)
+- [English usage and migration](https://github.com/myths-labs/muse/blob/v3.7.0/docs/CONTINUITY.md)
+- [中文使用与迁移说明](https://github.com/myths-labs/muse/blob/v3.7.0/docs/CONTINUITY_CN.md)
+- [3.7 release and validation scope](https://github.com/myths-labs/muse/releases/tag/v3.7.0)
 - [Source and full documentation](https://github.com/myths-labs/muse)
 - [Skill index](https://github.com/myths-labs/muse/blob/main/SKILL_INDEX.md)
 - [Website](https://muse.mythslabs.ai)
