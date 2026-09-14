@@ -10,6 +10,10 @@ description: MUSE 开源仓库版本发布 SOP — 更新 README/CHANGELOG/versi
 
 **零输入。** 版本号和标题全部自动生成，用户只需要说 `/release`。
 
+仅同步公开文档时，不执行本流程的版本递增、打 tag 或创建 release 步骤。
+在用户授权范围内通过普通 PR/CI 合并，同步官网文档入口并验证实际内容；
+版本和已发布的 release 保持原值，不把文档说明写成新的运行时能力。
+
 ## 路径约定
 
 ```bash
@@ -45,6 +49,14 @@ cd <MUSE_ROOT> && git log $(git describe --tags --abbrev=0)..HEAD --oneline
 - 所有代码改动已完成（本 SOP 只管发布，不管改代码）
 
 ---
+
+### 检查点尺寸与证据保存
+
+- 按 UTF-8 字节核对容量，包含渲染后的 metadata 和分隔符。增量运行器的输入 JSON、选定 source 文件、canonical 及渲染结果各受 262,144 bytes（256 KiB）上限约束；它与默认 16 MiB Git 内容预算及完整范围分批校验是不同限制。
+- 完整新验证留在工件与有界 source/证据索引；检查点只追加必要事实和简短证据指针。当前协议只允许替换 `Next Action`、`Required Reads`，保留历史正文、决定、限制、未决项、来源范围、writer 和 handoff。source/索引也必须符合读取上限，较大日志留在被引用工件中。
+- 保存前核对计划增量渲染后的总字节数。遇到 `TOO_LARGE`，保留失败 input/stdout/stderr、source 证据与 canonical SHA；核对当前状态和真实写入者后刷新 expected/source SHA，减少增量中的重复正文，再走官方受保护保存，逐项验证 before/after/input/source 归档及 canonical 读回。
+- 若受支持的指针替换仍无法容纳，保留未保存证据并进入独立存储/迁移设计审阅；不自动扩大限制、删除历史或改变写入身份，也不宣称已保存。简短指针是有界操作方式，不等于长期容量问题已解决。
+- 后续涉及存储策略的发行，实际验证近上限保存、超限拒绝且 canonical 不变、归档读回和历史证据恢复；完整范围 Git 校验不能替代这些检查。操作细节见安装技能的 `muse-commands/references/CHECKPOINT_CAPACITY.md`。
 
 ## Step-by-Step
 
@@ -326,6 +338,8 @@ echo "✅ Release published: https://github.com/myths-labs/muse/releases/tag/vX.
 □ 🔴 Pre-flight Gate 3 项全 PASS
 □ 固定真实解释器，安装副本预检与真实工作流通过；图片解码仅在明确需要时验证
 □ 上一版升级、逆序回滚及用户文件保留验证通过
+□ 检查点与 source 容量按 UTF-8 字节核对，详细证据留在工件中且历史/身份保留
+□ 若改动存储策略，近上限保存、超限拒绝、归档读回及历史证据恢复通过
 □ PR/CI 通过，tag、release 与官网部署对应同一提交
 □ 官网版本、双语说明、llms.txt、release 跳转及桌面/移动交互实际验证
 □ git diff --cached --stat 确认无遗漏
@@ -352,6 +366,5 @@ cd <MUSE_ROOT>
 
 ## 注意事项
 
-- **本文件是 DYA 专属**，不同步到 MUSE 开源仓库（因为包含本地路径等私密信息）
-- 未来可以泛化为 MUSE Ecosystem 的可选 GitHub 发布 skill（去掉硬编码路径，改为配置项）
+- 本文件是公开的可移植发布流程。同步本地 SOP 时，只带入通用规则；不提交私人路径、会话记录、凭据或项目证据。可选的 DYA 回传仅适用于实际配置了该角色中心的项目。
 - 版本号遵循 semver：X.Y.0（major 功能用 Y 递增，patch 修复用 Z 递增）

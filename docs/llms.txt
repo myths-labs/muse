@@ -53,6 +53,18 @@ fixtures with Pillow. Ordinary continuity remains standard-library-only; the
 installer does not add Pillow. This is not a native attachment adapter or proof
 that the real workflow completed. Rerun that workflow in the same environment.
 
+## Checkpoint capacity
+
+Incremental save input, selected source notes and checkpoints each have a 256 KiB
+limit, measured as UTF-8 bytes including rendered metadata and separators. Git
+full-scope batches do not expand it. Keep detailed evidence in referenced files
+and use bounded notes and pointers; only Next Action and Required Reads may be
+replaced. Preserve history, source coverage and writer identity. On TOO_LARGE,
+retain the failed attempt, review a smaller supported delta and verify the guarded
+save's archive and canonical readback. If it still cannot fit, retain unsaved
+evidence for a separate storage review; do not raise limits or delete history.
+This is guidance for existing behavior, not a new capacity feature or release.
+
 ## Package and compatibility
 
 - 66 skills: Core 8, Toolkit 44, Ecosystem 13, Growth distribution 1.
@@ -77,8 +89,9 @@ readiness. Native Windows and network filesystem durability are not certified.
 - [Plain-language beginner guide](https://muse.mythslabs.ai/guide-en.html)
 - [中文入门：让 AI 接着上次做](https://muse.mythslabs.ai/guide.html)
 - [Beginner guide Markdown source](https://github.com/myths-labs/muse/blob/main/docs/QUICKSTART.md)
-- [English usage and migration](https://github.com/myths-labs/muse/blob/v3.7.1/docs/CONTINUITY.md)
-- [中文使用与迁移说明](https://github.com/myths-labs/muse/blob/v3.7.1/docs/CONTINUITY_CN.md)
+- [English usage and migration](https://github.com/myths-labs/muse/blob/main/docs/CONTINUITY.md)
+- [中文使用与迁移说明](https://github.com/myths-labs/muse/blob/main/docs/CONTINUITY_CN.md)
+- [Checkpoint capacity and evidence storage](https://github.com/myths-labs/muse/blob/main/skills/core/muse-commands/references/CHECKPOINT_CAPACITY.md)
 - [3.7.1 release and validation scope](https://github.com/myths-labs/muse/releases/tag/v3.7.1)
 - [Source and full documentation](https://github.com/myths-labs/muse)
 - [Skill index](https://github.com/myths-labs/muse/blob/main/SKILL_INDEX.md)

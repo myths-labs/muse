@@ -18,6 +18,11 @@ Read the shared `save.md` / `daily-resume.md` workflow for semantics. The canoni
 
 Call `save-daily --input <path>`. Other appendable fields are Objective, Open Issues, Artifact Manifest, Verification. Required Reads may also be replaced. Preserved fields are never silently rewritten by this entry. Source and input/checkpoint are capped at 256 KiB, symlinks and lossy Markdown are rejected. The native runtime must equal the checkpoint writer on registered Lanes, even for direct low-level `save-delta`.
 
+Before a large save or after `TOO_LARGE`, follow the
+[checkpoint capacity guide](CHECKPOINT_CAPACITY.md) for bounded evidence pointers,
+supported replacements and archive/readback verification. Full-scope Git batches
+do not increase the checkpoint text limit.
+
 ## New-session claim input
 
 Use the same schema_version, command, workspace, expected and source fields as above. `expected` refers to the **old writer**. The receiver is obtained from runtime, never from a user-supplied receiver ID. Replace append/replace with:
