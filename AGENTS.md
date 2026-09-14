@@ -10,6 +10,9 @@ Use `docs/CONTINUITY.md` or `docs/CONTINUITY_CN.md` for public usage. Project-sp
 roles, goals and authorization come from the user's actual configuration and
 request, not historical author role snapshots embedded in this file.
 
+For MUSE runtime dependency checks, use `muse-commands` and its
+`references/RUNTIME_DEPENDENCIES.md` before diagnosing interpreter mismatches.
+
 Preserve the selected role/Lane. Save meaningful deltas; at observed context 80%,
 save, compact if possible, verify and continue. Unknown occupancy stays unknown.
 Do not force Bye or a new conversation because of a percentage. Formal Bye is an

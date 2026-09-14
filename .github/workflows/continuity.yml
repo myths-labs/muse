@@ -36,5 +36,7 @@ jobs:
           python-version: ${{ matrix.python }}
       - name: Release files and metadata
         run: bash scripts/lint.sh --release
+      - name: Optional image decoder for regression fixtures
+        run: python -m pip install Pillow
       - name: Real installer and state CLI regressions
         run: python3 -m unittest discover -s tests/continuity -p 'test_release_*.py' -v

@@ -1,4 +1,4 @@
-# Continuous work with MUSE 3.7
+# Continuous work with MUSE 3.7.1
 
 New to MUSE? Read the [beginner guide](QUICKSTART.md), then follow the setup instructions below.
 
@@ -29,6 +29,20 @@ The command returns `receipt_path`. Known original 3.5 workflows are backed up a
 upgraded. Unknown edits in managed runtime/workflow paths stop installation before
 overwriting them; review and reconcile those edits, then rerun. Installation does
 not adopt, initialize or modify your Lane checkpoints.
+
+## Check the Python environment
+
+Version 3.7.1 adds an optional check of the Python environment a workflow actually
+uses. It reports the selected runtime under isolation, so packages visible only
+in an ordinary shell do not produce a misleading success. Ordinary saves and
+recovery still use the Python standard library.
+
+For workflows that explicitly need image decoding, the same check can verify and
+fully decode both PNG and JPEG fixtures. Pillow is optional and is not installed
+with MUSE. This check does not add native attachment support or replace testing
+the affected workflow. Ask the agent to follow the installed
+[runtime dependency guide](../skills/core/muse-commands/references/RUNTIME_DEPENDENCIES.md),
+then rerun the real workflow with the same interpreter.
 
 ## Daily use
 

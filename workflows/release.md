@@ -200,6 +200,30 @@ echo "✅ Pre-flight PASS"
 
 **🔴 铁律: 不运行 Pre-flight = 不允许 git tag。违反 = P0 bug。**
 
+### 5b. 运行环境、升级与官网验证
+
+先固定本次真实工作流使用的 Python 绝对路径；虚拟环境要保留其 launcher，
+不能解析成基础解释器。普通 continuity 只需要标准库，Pillow 不是默认安装依赖。
+
+```bash
+MUSE_RELEASE_PYTHON="/absolute/path/to/venv/bin/python"
+"$MUSE_RELEASE_PYTHON" -I skills/core/muse-commands/scripts/muse-runtime-dependencies.py \
+  --python "$MUSE_RELEASE_PYTHON"
+```
+
+只有明确依赖图片解码的工作流才追加 `--require-image-decoder`，要求 PNG/JPEG
+均通过 verify 和完整 load。保留调用及 JSON 报告；普通终端 import 成功不证明
+隔离环境可用。失败时修复或选择合适环境，再以同一解释器和原生身份重跑实际
+工作流，不能让预检替代验收。具体诊断见技能的 `references/RUNTIME_DEPENDENCIES.md`。
+
+使用真实上一版安装包验证升级后的安装副本，保存 receipt，再验证逆序回滚
+能恢复原文件、链接和权限。安装副本也要执行预检。维护版至少运行公共回归、
+发行检查和官网交互测试；依赖、发行记录和网站必须对应同一提交。
+
+版本分支按仓库 PR/CI 规则合并后才创建 tag 和 release。官网同步版本、说明、
+双语使用文档、llms.txt 及 release 链接；发布后在真实浏览器检查生产内容和
+链接跳转，不能以 HTTP 200 或部署成功代替交互验收。
+
 ### 6. Git Commit + Push
 
 ```bash
@@ -300,6 +324,10 @@ echo "✅ Release published: https://github.com/myths-labs/muse/releases/tag/vX.
 □ find skills/ -name "SKILL.md" | wc -l = 上述所有数量
 □ 工作流文件已同步（如有改动）
 □ 🔴 Pre-flight Gate 3 项全 PASS
+□ 固定真实解释器，安装副本预检与真实工作流通过；图片解码仅在明确需要时验证
+□ 上一版升级、逆序回滚及用户文件保留验证通过
+□ PR/CI 通过，tag、release 与官网部署对应同一提交
+□ 官网版本、双语说明、llms.txt、release 跳转及桌面/移动交互实际验证
 □ git diff --cached --stat 确认无遗漏
 □ commit message 遵循 feat(vX.Y) 格式
 □ git push 成功

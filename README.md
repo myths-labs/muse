@@ -9,7 +9,7 @@
 <p align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/myths-labs/muse/blob/main/LICENSE)
-[![Version](https://img.shields.io/badge/version-3.7.0-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-3.7.1-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
 [![Stars](https://img.shields.io/github/stars/myths-labs/muse?style=social)](https://github.com/myths-labs/muse)
 [![Markdown + Python](https://img.shields.io/badge/Markdown-Python-green.svg)](#)
 [![Continuity Runtime](https://img.shields.io/badge/continuity-Python_3.7%2B-blue.svg)](docs/CONTINUITY.md)
@@ -30,7 +30,7 @@
 >
 > *MUSE inherits this lineage. It helps preserve decisions and evidence across AI conversations, with explicit boundaries when source history is incomplete.*
 
-**New in 3.7:** recover larger worktrees with the complete declared scope, bounded content reads and existing writer safeguards. [Complete usage and upgrade guide](docs/CONTINUITY.md).
+**New in 3.7.1:** check the Python environment your workflow actually uses, with optional PNG/JPEG decoding checks. Full-scope recovery and writer safeguards remain available. [Complete usage and upgrade guide](docs/CONTINUITY.md).
 
 ## New to MUSE? Start here
 
@@ -531,5 +531,5 @@ MIT © [Myths Labs](https://github.com/myths-labs)
 </p>
 
 <p align="center">
-  <i>MUSE v3.7.0</i>
+  <i>MUSE v3.7.1</i>
 </p>
