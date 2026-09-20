@@ -40,6 +40,8 @@ You explain what you want; the AI plans, works, checks and records progress. Rem
 
 **[Read the beginner guide →](docs/QUICKSTART.md)** · [Shareable web guide](https://muse.mythslabs.ai/guide-en.html) · [简体中文](docs/QUICKSTART_CN.md)
 
+**Optional tools:** [Jev tool selection and data boundaries](docs/OPTIONAL_TOOLS.md) covers browser decisions, review, routing and on-demand retrieval. These third-party projects are not bundled with MUSE; ordinary Resume and Save do not require them.
+
 MUSE is a Markdown-based governance system for AI pair programming, with a Python runtime for guarded continuity. It goes beyond format specs (like AGENTS.md or .cursorrules) by providing a **full system** — role isolation, persistent memory, 66 skills, cross-role directives, and visual dashboards — with portable local tooling for supported clients.
 
 ```

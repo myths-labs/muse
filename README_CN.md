@@ -40,6 +40,8 @@
 
 **[读简单入门教程 →](docs/QUICKSTART_CN.md)** · [分享给朋友的网页版](https://muse.mythslabs.ai/guide.html) · [English](docs/QUICKSTART.md)
 
+**可选工具：** [Jev 工具选择与数据边界](docs/OPTIONAL_TOOLS_CN.md)介绍浏览器决策、代码审查、模型路由和按需检索。这些第三方项目未内置于 MUSE；日常 Resume 和 Save 不依赖它们。
+
 MUSE（缪斯）是一套以 **Markdown 与 Python 连续开发工具**组成的 AI 编程协作系统。通过角色、检查点、来源证据和执行工作流支持跨对话接续，来源不完整时保留明确边界。
 
 灵感来源：[LCM（Lossless Context Management）](https://papers.voltropy.com/LCM) 论文 + [lossless-claw](https://github.com/Martian-Engineering/lossless-claw) 插件。MUSE（缪斯）以 Markdown 工作流与 Python 工具管理必要的上下文和接续证据。
