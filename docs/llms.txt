@@ -65,6 +65,17 @@ save's archive and canonical readback. If it still cannot fit, retain unsaved
 evidence for a separate storage review; do not raise limits or delete history.
 This is guidance for existing behavior, not a new capacity feature or release.
 
+## Optional Jev tools
+
+Separate third-party projects can assist with browser decisions, code-review
+triage or model routing in a separately launched CLI. They are not bundled MUSE
+skills or an automatic integration. MUSE remains at 3.7.1 with 66 included skills;
+its installer does not install these tools or enable provider calls. Ordinary
+Resume and Save do not require Jev. The bilingual guides cover reviewed source
+versions, outgoing data, unsupported tasks and an optional Lane retrieval pattern.
+That pattern is not a shipped muse-context command. Installation checks and model
+decisions do not certify real task outcomes.
+
 ## Package and compatibility
 
 - 66 skills: Core 8, Toolkit 44, Ecosystem 13, Growth distribution 1.
@@ -91,6 +102,8 @@ readiness. Native Windows and network filesystem durability are not certified.
 - [Beginner guide Markdown source](https://github.com/myths-labs/muse/blob/main/docs/QUICKSTART.md)
 - [English usage and migration](https://github.com/myths-labs/muse/blob/main/docs/CONTINUITY.md)
 - [中文使用与迁移说明](https://github.com/myths-labs/muse/blob/main/docs/CONTINUITY_CN.md)
+- [Optional Jev tools and data boundaries](https://github.com/myths-labs/muse/blob/main/docs/OPTIONAL_TOOLS.md)
+- [Jev 可选工具与数据边界](https://github.com/myths-labs/muse/blob/main/docs/OPTIONAL_TOOLS_CN.md)
 - [Checkpoint capacity and evidence storage](https://github.com/myths-labs/muse/blob/main/skills/core/muse-commands/references/CHECKPOINT_CAPACITY.md)
 - [3.7.1 release and validation scope](https://github.com/myths-labs/muse/releases/tag/v3.7.1)
 - [Source and full documentation](https://github.com/myths-labs/muse)
