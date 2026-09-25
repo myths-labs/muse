@@ -18,7 +18,7 @@ description: 新对话开始时恢复项目上下文的标准流程
 ②.1 🆕v3.0 记忆漂移检测 → 超 7 天的记忆附过时警告，文件/函数引用须验证
 ②.3 🆕 Conversation Summaries 交叉验证 → 防 /bye 未执行导致的记忆黑洞
 ②.5 扫描 memory `➡️ 下一步` 中的 🔲 项 → 有未完成项则主动提醒（标注可信度）
-②.6 🆕v3.5 Skills 自动更新报告 Pickup → 读 skills-update-report.md，「需要关注：是」才 surface（详见下方 ②.6 节）
+②.6 🆕v3.5 Skills 自动更新报告 Pickup → 读 skills-update-report.md，先查生成时间（超过 8 天 = 定时任务已停摆 🔴），新鲜且「需要关注：是」才 surface（详见下方 ②.6 节）
 ③ 跨天任务? grep_search memory/ 搜索任务关键词 → 定位更早的相关记忆
 ④ USER.md                  → 用户偏好 + 🧠 Digital Twin Profile（必须读 + 全角色适配）
    ⚠️ **v3.2.0 升级**: Step ④ 从"可选读"变为**必须读**。
@@ -140,15 +140,33 @@ description: 新对话开始时恢复项目上下文的标准流程
 > 最严重的 git-backed clone 落后上游**数千个 commit**，并有多个 `SKILL.md` 残留未解决的
 > merge conflict 标记（`<<<<<<< HEAD` 落在第 2 行，破坏 YAML frontmatter，很可能长期加载失败）。
 > `scripts/skills-autoupdate.sh` 可定时自动跑，但**报告需要有人读**，故加本步。
+>
+> **v3.7 补（静默停摆）**: 实测一台 macOS 上定时任务连续 8 周每次都失败，报告停在旧日期 5 周以上无人发现——
+> 定时任务失败是**静默**的，旧报告又一直「存在」，只检查「报告不存在」永远不会报警。故加第 2 步新鲜度检查。
 
 **执行（每次 /resume 都做 · 极低成本）**:
 
 1. 读 `${MUSE_CONFIG_DIR:-$HOME/.config/muse}/skills-update-report.md`
-2. 看报告头部 `> 需要关注：` 字段：
+2. **先查新鲜度**（v3.7 新增）：解析报告头部 `> 生成时间：` 行，算距今多久（macOS / Linux 通用）：
+   ```bash
+   R="${MUSE_CONFIG_DIR:-$HOME/.config/muse}/skills-update-report.md"
+   GEN=$(sed -n 's/^> 生成时间：\([0-9-]* [0-9:]*\).*/\1/p' "$R" | head -1)
+   TS=$(date -j -f '%Y-%m-%d %H:%M:%S' "$GEN" +%s 2>/dev/null || date -d "$GEN" +%s 2>/dev/null) || TS=0
+   AGE_S=$(( $(date +%s) - TS )); echo "GEN=$GEN AGE_DAYS=$(( AGE_S / 86400 ))"
+   ```
+   - `AGE_S` ≤ 8 天（691200 秒）→ 新鲜，进第 3 步
+   - `AGE_S` > 8 天，**或** `GEN` 为空（解析失败）→ 恢复报告**顶部** surface 🔴 `skills 周更已停摆 N 天`（N = `AGE_DAYS`），**跳过第 3 步**（旧报告的「需要关注」已失效，不得据此说「全部最新」），直接走第 4 步
+3. 看报告头部 `> 需要关注：` 字段：
    - **否·全部最新** → 静默跳过，不输出 noise
    - **是** → 恢复报告中列出：Layer 1 自动更新了哪些 · Layer 2 检测到哪些上游有新内容待人工合并 · 有无 dirty 跳过项
-3. 报告不存在 → 提示用户可手动跑：`bash <MUSE仓库>/scripts/skills-autoupdate.sh`
-4. 报告中出现「Layer 2 已跳过」或「上游检查失败」 → 如实转告，**不得**把跳过/失败当成「无更新」
+4. **报告不存在 或 已过期** → **不要**假设「定时任务没运行过」——它很可能每次都在跑、每次都失败。先看定时任务自己的日志：
+   - macOS launchd：`launchctl print gui/$(id -u)/<你的 label> | grep -E "runs|last exit code"`，再看 plist 里 `StandardErrorPath` 指向的日志末尾
+   - Linux cron：`journalctl -u cron --since "-14 days"` 或 `grep CRON /var/log/syslog`
+   - 🔴 **macOS 常见坑**：脚本放在 `~/Desktop` / `~/Documents` / `~/Downloads` 下时，launchd 直接拉起的 `/bin/bash` 没有这些目录的访问权（TCC），后台又弹不出授权框 → 每次静默失败，日志只有 `Operation not permitted`，退出码 126。
+     解法二选一：把 MUSE 仓库挪出这些目录；或用一个专用的小启动器程序拉起脚本，只给这个启动器授权（不要给 `/bin/bash` 全局授权）。注意：启动器重新编译 / macOS 升级后授权可能静默失效，需要重新授予
+   - 修好后**用定时器本身补跑一次**来验证（如 `launchctl kickstart gui/$(id -u)/<你的 label>`），确认报告 `生成时间` 刷新为当天。
+     ⚠️ 在终端里手动 `bash <MUSE仓库>/scripts/skills-autoupdate.sh` 只能应急出报告：终端自带目录权限，跑通**不代表**定时任务已恢复
+5. 报告中出现「Layer 2 已跳过」或「上游检查失败」 → 如实转告，**不得**把跳过/失败当成「无更新」
 
 > **映射表说明**: Layer 2 依赖 `${MUSE_CONFIG_DIR}/skills-upstream-map.json`（skill → 上游 repo，标记 AUTO/MANUAL）。
 > 该文件**不随仓库分发**——每个用户的 skill 集不同，需要自建（格式见脚本头注释；让 agent 审计一次本地 skills 的来源即可生成）。
@@ -165,7 +183,7 @@ description: 新对话开始时恢复项目上下文的标准流程
 **相关载体**:
 - 脚本 `scripts/skills-autoupdate.sh`（含 dirty 跳过 / 磁盘不足中止 / 仅 `--ff-only` 三道守卫）
 - 映射表 `${MUSE_CONFIG_DIR}/skills-upstream-map.json`（skill → 上游 repo · 标记 AUTO / MANUAL）
-- 定时：建议每周一次（上游最活跃的项目也就每天几个 commit）
+- 定时：建议每周一次（上游最活跃的项目也就每天几个 commit）· 定时任务失败是**静默**的，第 2 步新鲜度检查是唯一的报警
 
 
 ### DYA 项目
