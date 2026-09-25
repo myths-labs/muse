@@ -48,11 +48,15 @@
 #
 # 映射表格式（自建·不随仓库分发，因为每人的 skill 集不同）：
 #   { "skills": { "<skill-dir>": { "upstream": "owner/repo", "mode": "AUTO|MANUAL",
-#                                  "path": "上游目录或文件（可选）" } } }
+#                                  "path": "上游目录或文件（可选）",
+#                                  "extra": ["上游其他路径（可选）", ...] } } }
 #   MANUAL = 本地有定制，检测到更新后必须人工 diff 合并，禁止直接覆盖。
 #   path 缺省时找上游里同名、含 SKILL.md 的目录；有多个同名目录时取与本地一致
 #   （或基线记下的、或最接近）的那个，报告会提示加 path 固定。path 可以是：
 #   目录（如 .claude/skills/x）、"." = 整个仓库、单个文件（如 agents/x.md，与本地 SKILL.md 比）。
+#   extra = skill 还带着上游 path 之外的文件（如仓库根目录的 scripts/、requirements.txt）时，
+#   列出这些上游路径（目录或文件，相对仓库根），按同样的相对路径和本地 skill 目录比较。
+#   不列出来，这些文件上游再改也永远报不出来。
 #   随 CLI release 分发的 skill（非 git）用 manifest 型，只比版本号、绝不下载/安装：
 #   { "<skill-dir>": { "source": "manifest", "manifest": "<url 返回 {\"version\":..}>",
 #                      "installed": "x.y.z", "binary": "~/path/to/cli（可选）", "mode": "MANUAL" } }
@@ -223,6 +227,33 @@ def compare(local,files):
         if got!=sha: changed.append(rel)
     return sorted(changed),sorted(missing),sorted(odd)
 
+def extra_list(v):                            # -> 映射表 extra 的路径列表；格式不对 -> None
+    ex=v.get("extra")
+    if ex is None: return []
+    if isinstance(ex,str): ex=[ex]
+    if not isinstance(ex,list) or not all(isinstance(x,str) and x.strip().strip("/") for x in ex): return None
+    return [x.strip().strip("/") for x in ex]
+
+def extra_files(repo,v):
+    """extra 里的上游路径（目录或文件，相对仓库根）-> {相对仓库根的路径： (sha, mode)}，
+    与本地 skill 目录里同样的相对路径比较。查不到就报无法比较，绝不悄悄跳过。"""
+    ex=extra_list(v)
+    if ex is None: raise Unresolved("映射表 extra 必须是上游路径列表")
+    out={}
+    for x in ex:
+        e=repo.by_path.get(x)
+        if e is None:
+            raise Unresolved(("上游目录树被截断，" if repo.truncated else "")+f"映射表 extra `{x}` 在上游不存在")
+        if e.get("type")=="tree":
+            out.update({f"{x}/{r}":sm for r,sm in repo.dir_files(x).items()})
+        else:
+            out[x]=(e["sha"],e.get("mode",""))
+    return out
+
+def where_label(name,d,v):
+    ex=extra_list(v)
+    return f"`{name}` · `{d}`"+(f" + {', '.join(ex)}" if ex else "")
+
 def pick(repo,s,v,local):
     """-> ((上游路径， 文件清单， 内容不同， 本地缺， 无法比较), 基线， 候选数， 有歧义)
     基线记下的目录只要还在就一直用它，哪怕它已和本地不一致：否则一个滞后的镜像
@@ -230,12 +261,27 @@ def pick(repo,s,v,local):
     只有一个候选就用它。多个候选又没有基线 = 有歧义：取最接近的来展示
     （本地多出来的文件也算，再按目录层级最浅，主版本通常是 skills/x 而不是
     docs/<语言>/skills/x 这类翻译或各平台镜像），但绝不据此自动记基线。"""
-    res=[(d,f)+compare(local,f) for d,f in repo.candidates(s,v.get("path"))]
+    # 字段名拼错（extras / Path …）会让该比的文件悄悄不比、还被算成一致：宁可报无法比较
+    typo=[k for k in v if k not in ("path","extra") and k.lower().rstrip("s") in ("path","extra")]
+    if typo: raise Unresolved(f"映射表字段 `{typo[0]}` 疑似拼错（应为 \"path\" 或 \"extra\"），为免漏比已停止比较")
+    ex=extra_files(repo,v)
+    cands=repo.candidates(s,v.get("path"))
+    res=[]; clash={}
+    for d,f in cands:
+        c=sorted(set(f)&set(ex))
+        if c: clash[d]=c; continue            # 这个候选自己就带着 extra 里的文件，没法合并比较
+        f=dict(f); f.update(ex)
+        res.append((d,f)+compare(local,f))
     b=bases.get(s)
     base=b if isinstance(b,dict) and b.get("upstream")==repo.name and isinstance(b.get("files"),dict) else None
-    chosen=next((r for r in res if base and r[0]==base.get("path")),None)
+    bp=base.get("path") if base else None
+    # 只有「要用的那个候选」撞文件才算无法比较；无关的同名镜像撞文件不拖累这个 skill
+    if bp in clash or not res:
+        d=bp if bp in clash else sorted(clash)[0]
+        raise Unresolved(f"`{d}` 和 extra 有重复的文件：{names(clash[d])}")
+    chosen=next((r for r in res if r[0]==bp),None)
     amb=False
-    if chosen is None and len(res)==1:
+    if chosen is None and len(res)==1:        # 撞文件的候选按映射表不可能是来源，剩一个就没有歧义
         chosen=res[0]
     elif chosen is None:
         mine={os.path.relpath(os.path.join(dp,f),local) for dp,_,fs in os.walk(local) for f in fs}
@@ -245,7 +291,7 @@ def pick(repo,s,v,local):
         raise Unresolved(f"上游 `{chosen[0]}` 里没有可比较的文件")
     if chosen[4]:
         raise Unresolved(f"`{chosen[0]}` 有文件无法逐字节比较：{names(chosen[4])}")
-    return chosen,base,len(res),amb
+    return chosen,base,len(cands),amb
 
 def names(xs,n=3): return ", ".join(xs[:n])+(f" 等 {len(xs)} 个" if len(xs)>n else "")
 def parts(groups): return " · ".join(f"{k} {names(v)}" for k,v in groups if v)
@@ -276,19 +322,21 @@ if cmd=="ack":
             except Exception as e:
                 print(f"✗ {s}：比对出错（{type(e).__name__}: {e}）"); rc=1; continue
             up={r:x[0] for r,x in files.items()}
+            ex=extra_list(v) or []
+            scope=bool(base) and base.get("path")==d and base.get("extra",[])!=ex
             # 报告最多是一周前的：把这次一并确认、报告里未必出现过的上游变化列出来
             if base and base.get("path")==d:
                 bf=base["files"]
                 took=parts([("修改",sorted(k for k in up if k in bf and bf[k]!=up[k])),
                             ("新增",sorted(k for k in up if k not in bf)),
                             ("删除",sorted(k for k in bf if k not in up))]) or "无（上游自上次确认后没变）"
-                took="一并确认的上游变化："+took
+                took=("比对范围变了（映射表 extra 有改动），一并确认：" if scope else "一并确认的上游变化：")+took
             else:
                 took="首次确认"
             left=len(changed)+len(missing)
-            bases[s]={"upstream":name,"path":d,"files":up,"recorded":today,"via":"ack"}
+            bases[s]=dict({"upstream":name,"path":d,"files":up,"recorded":today,"via":"ack"},**({"extra":ex} if ex else {}))
             state_dirty=True
-            print(f"✓ {s}：已记下（`{name}` · `{d}`）。{took}"
+            print(f"✓ {s}：已记下（{where_label(name,d,v)}）。{took}"
                   +(f"；本地仍有 {left} 个文件与上游不同，视为本地定制" if left else "；本地与上游一致")
                   +(f"；上游有 {ncand} 个同名目录，按最接近的记下，不对就在映射表加 \"path\"" if amb else ""))
     if state_dirty:
@@ -367,21 +415,24 @@ for name,skills in sorted(by_repo.items()):
         except Exception as e:                # 单个 skill 出错只影响它自己，不拖垮整层
             print(f"- `{s}` ({mode}) ⚪ 无法比较（`{name}`）：比对出错 {type(e).__name__}: {e}"); n_unres+=1; continue
         up={r:x[0] for r,x in files.items()}
+        ex=extra_list(v) or []
         on_base=bool(base) and base.get("path")==d
+        scope=on_base and base.get("extra",[])!=ex   # 映射表的 extra 改了：新纳入的文件不是「上游改了」
         if not changed and not missing and amb:   # 与某个同名目录一致，但不知道该跟哪个：不自动记基线
             n_todo+=1
             print(f"- `{s}` ({mode}) ❓ 上游有 {ncand} 个同名目录，本地与其中 `{d}` 一致，但无法确定该跟哪个"
-                  f"（`{name}`；在映射表加 \"path\" 或用 --ack 固定）")
+                  f"（{where_label(name,d,v)}；在映射表加 \"path\" 或用 --ack 固定）")
             continue
         if not changed and not missing:       # 与上游一致：自动记基线
             n_same+=1
-            if not on_base or base.get("files")!=up:
-                bases[s]={"upstream":name,"path":d,"files":up,"recorded":today,"via":"identical"}; state_dirty=True
+            if not on_base or base.get("files")!=up or scope:
+                bases[s]=dict({"upstream":name,"path":d,"files":up,"recorded":today,"via":"identical"},**({"extra":ex} if ex else {}))
+                state_dirty=True
             continue
         if on_base and base["files"]==up:     # 上游自确认后没变，差异是本地定制
             n_custom+=1; continue
         n_todo+=1
-        where=f"`{name}` · `{d}`"
+        where=where_label(name,d,v)
         if amb:
             where+=f"；上游有 {ncand} 个同名目录，按最接近的比较，可在映射表加 \"path\" 或用 --ack 固定"
         if on_base:
@@ -389,7 +440,8 @@ for name,skills in sorted(by_repo.items()):
             what=parts([("修改",sorted(k for k in up if k in bf and bf[k]!=up[k])),
                         ("新增",sorted(k for k in up if k not in bf)),
                         ("删除",sorted(k for k in bf if k not in up))])
-            print(f"- `{s}` ({mode}) 🔄 上游自上次确认后改了：{what}（{where}）")
+            why_=("比对范围变了（映射表 extra 有改动），与上次确认相比" if scope else "上游自上次确认后改了")
+            print(f"- `{s}` ({mode}) 🔄 {why_}：{what}（{where}）")
         else:
             what=parts([("内容不同",changed),("本地缺",missing)])
             print(f"- `{s}` ({mode}) ❓ 与上游不同·还没有确认记录（分不清是本地定制还是上游更新）：{what}（{where}）")
