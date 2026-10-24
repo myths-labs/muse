@@ -2,26 +2,43 @@
   "schema_version": 1,
   "owner": {
     "name": "Owner",
-    "decision_words": ["decided", "approved", "go with", "定", "按建议", "同意"]
+    "decision_words": [
+      "decided",
+      "approved",
+      "go with",
+      "定",
+      "按建议",
+      "同意"
+    ]
   },
   "orchestrator": {
     "id": "orchestrator",
     "title": "Orchestrator",
     "checkpoint": "docs/lanes/orchestrator/OPEN_THREADS.md",
-    "required_reads": ["docs/lanes/RUNBOOK.md", "docs/lanes/orchestrator/OPEN_THREADS.md", "docs/lanes/RELAY_RUNBOOK.md"]
+    "required_reads": [
+      "docs/lanes/RUNBOOK.md",
+      "docs/lanes/orchestrator/OPEN_THREADS.md",
+      "docs/lanes/RELAY_RUNBOOK.md"
+    ]
   },
   "lanes": [
     {
       "id": "build",
       "title": "Build lane",
       "checkpoint": "docs/lanes/build/OPEN_THREADS.md",
-      "required_reads": ["docs/lanes/RUNBOOK.md", "docs/lanes/build/OPEN_THREADS.md"]
+      "required_reads": [
+        "docs/lanes/RUNBOOK.md",
+        "docs/lanes/build/OPEN_THREADS.md"
+      ]
     },
     {
       "id": "verify",
       "title": "Verification lane",
       "checkpoint": "docs/lanes/verify/OPEN_THREADS.md",
-      "required_reads": ["docs/lanes/RUNBOOK.md", "docs/lanes/verify/OPEN_THREADS.md"]
+      "required_reads": [
+        "docs/lanes/RUNBOOK.md",
+        "docs/lanes/verify/OPEN_THREADS.md"
+      ]
     }
   ],
   "relay_runbook": "docs/lanes/RELAY_RUNBOOK.md",
@@ -35,24 +52,32 @@
     "hub": null,
     "labels": {},
     "watch_terms": [
-      {"name": "ExampleVendor", "pattern": "examplevendor", "compare": true}
+      {
+        "name": "ExampleVendor",
+        "pattern": "examplevendor",
+        "compare": true
+      }
     ],
     "index_max_lines": 200,
     "index_max_chars": 25000,
     "block_max_age_hours": 36,
     "daily_projects": [
-      {"name": "app", "root": "."}
+      {
+        "name": "app",
+        "root": "."
+      }
     ],
     "ignore": [],
     "cross_index": ".muse/memory-cross-index.md",
-    "recall": null,
     "decision_file_pattern": null,
     "scan_extra_paths": [],
     "extra_key_patterns": []
   },
   "checkpoints": {
     "files": [],
-    "globs": ["docs/lanes/**/OPEN_THREADS*.md"],
+    "globs": [
+      "docs/lanes/**/OPEN_THREADS*.md"
+    ],
     "skip_pattern": null
   },
   "extra_search_globs": [],
@@ -63,7 +88,10 @@
     "active_hours": 6,
     "coverage_source": "docs/lanes/orchestrator/OPEN_THREADS.md",
     "coverage_skip": "docs/lanes/vault_coverage_skip.tsv",
-    "coverage_dirs": ["daily", "decisions"],
+    "coverage_dirs": [
+      "daily",
+      "decisions"
+    ],
     "id_patterns": []
   }
 }

@@ -5,6 +5,9 @@ standard library (3.7+), make no network calls and never open `.env*` or credent
 files. Run them with `python3 -I`. Each accepts `--config PATH`; otherwise it uses
 `MUSE_ORCHESTRATION_CONFIG` or the nearest `.muse/orchestration.json` (see `CONFIG.md`).
 Exit code 2 always means bad input or missing configuration, never "nothing found".
+A project config may come from an untrusted checkout: tools that print file contents read
+only plain notes, and the only configured write target must stay inside the project (see
+"Untrusted checkouts" in `CONFIG.md`).
 
 ## orchestration_config.py
 

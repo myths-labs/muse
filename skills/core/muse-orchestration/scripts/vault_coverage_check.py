@@ -104,6 +104,10 @@ def main():
                                       ('owner.name (or --owner)', owner)) if not value]
     if unset:
         return finish(2, 'UNCONFIGURED: set %s' % ', '.join(unset), 'RESULT: UNCONFIGURED')
+    if not oc.is_note_file(source):
+        # Matches are printed, so the source must be a plain note, never .env* or key material.
+        return finish(2, 'bad source: %s is not a plain note (.md/.markdown/.txt/.tsv)' % source,
+                      'RESULT: UNCONFIGURED')
     if not isinstance(owner, str) or not isinstance(patterns, list) or not all(isinstance(p, str) for p in patterns) \
             or not isinstance(dirs, list) or not all(isinstance(d, str) for d in dirs):
         return finish(2, 'bad config: owner.name must be a string, vault.id_patterns and vault.coverage_dirs '

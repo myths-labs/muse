@@ -46,7 +46,7 @@ Checks (FAIL -> RED; WARN, SKIP and UNCONFIGURED do not change the result)
                 changed within vault.active_hours
      9 daily    memory/<today>.md exists in some checkout (git worktree) of every
                 memory.daily_projects entry (yesterday's file also counts before 02:00)
-    10 recall   the recall tool exists (memory.recall, default recall.py next to this script)
+    10 recall   the bundled recall.py next to this script exists
     11 keys     key-pattern scan of every memory dir, the cross-dir index and
                 memory.scan_extra_paths; reports file:line and pattern name, never the value
 
@@ -66,6 +66,7 @@ import importlib.util  # noqa: E402
 import json  # noqa: E402
 import os  # noqa: E402
 import re  # noqa: E402
+import shlex  # noqa: E402
 import stat  # noqa: E402
 import subprocess  # noqa: E402
 import time  # noqa: E402
@@ -169,6 +170,14 @@ def read_text(path, strict=False):
     # newline="" keeps \r\n as-is so --sync / --unsync can round-trip a file byte for byte
     with open(path, encoding="utf-8", errors="strict" if strict else "replace", newline="") as fh:
         return fh.read()
+
+
+SAFE_LABEL = re.compile(r"^[^\x00-\x1f\x7f`\[\]()<>]{1,40}$")
+
+
+def printable(text):
+    """Drop control characters and Markdown/HTML delimiters from names written into MEMORY.md."""
+    return re.sub(r"[\x00-\x1f\x7f`\[\]()<>]", "_", str(text))
 
 
 def tilde(path):
@@ -309,16 +318,22 @@ class Settings(object):
         self.configured = config.path is not None
         self.config_path = str(config.path) if config.path else None
         _cfg_type(get("memory"), dict, "memory")
+        default_root = os.path.abspath(os.path.expanduser(DEFAULT_PROJECTS_ROOT))
         if args.projects_root:
             self.projects_root = os.path.abspath(os.path.expanduser(args.projects_root))
         elif _cfg_type(get("memory.projects_root"), str, "memory.projects_root"):
             self.projects_root = os.path.abspath(str(config.path_of(get("memory.projects_root"))))
         else:
-            self.projects_root = os.path.abspath(os.path.expanduser(DEFAULT_PROJECTS_ROOT))
+            self.projects_root = default_root
+        # A project config can come from an untrusted checkout: it may move the read-only audit, but
+        # --sync writes only to the default root or to a root the user names on the command line.
+        self.root_needs_flag = not args.projects_root and \
+            os.path.realpath(self.projects_root) != os.path.realpath(default_root)
         labels = _cfg_type(get("memory.labels"), dict, "memory.labels") or {}
         for k, v in labels.items():
-            if not isinstance(v, str) or not v:
-                raise ConfigError("CONFIG_INVALID: memory.labels[%s] must be a non-empty string" % k)
+            if not isinstance(v, str) or not SAFE_LABEL.match(v):
+                raise ConfigError("CONFIG_INVALID: memory.labels values must be 1-40 printable characters "
+                                  "without backticks or brackets")
         self.labels = dict(labels)
         self.ignore = [str(p) for p in (_cfg_type(get("memory.ignore"), list, "memory.ignore") or [])]
         hub = _cfg_type(get("memory.hub"), str, "memory.hub") or None
@@ -338,9 +353,9 @@ class Settings(object):
         self.decision_file_re = _cfg_regex("|".join([dfp] + ["(?:%s)" % src for _, _, src, _ in self.terms]),
                                            "memory.decision_file_pattern", re.I)
         xi = _cfg_type(get("memory.cross_index"), str, "memory.cross_index") or DEFAULT_CROSS_INDEX
-        self.cross_index = str(config.path_of(xi)) if self.configured else None
-        recall = _cfg_type(get("memory.recall"), str, "memory.recall")
-        self.recall = str(config.path_of(recall)) if recall else os.path.join(HERE, "recall.py")
+        self.cross_index = str(config.path_in_root(xi, "memory.cross_index")) if self.configured else None
+        # Always the bundled tool: its command is written into every MEMORY.md, so it never comes from config.
+        self.recall = os.path.join(HERE, "recall.py")
         extra = _cfg_type(get("memory.scan_extra_paths"), list, "memory.scan_extra_paths")
         self.scan_extra = [str(p) for p in config.paths("memory.scan_extra_paths")] if extra else []
         self.key_patterns = [(n, re.compile(p)) for n, p in BUILTIN_KEY_PATTERNS] + \
@@ -376,7 +391,7 @@ class Settings(object):
     def checkpoint_files(self):
         if self._checkpoint_files is None:
             seen, out = set(), []
-            listed = [p for p in self.config.paths("checkpoints.files") if p.is_file()]
+            listed = [p for p in self.config.paths("checkpoints.files") if p.is_file() and OC.is_note_file(p)]
             for f in listed + self.config.globbed("checkpoints.globs"):
                 real = os.path.realpath(str(f))
                 if real not in seen:
@@ -487,7 +502,7 @@ def discover(S):
 
 def load_dir(S, name):
     mdir = os.path.join(S.projects_root, name, "memory")
-    info = {"name": name, "label": S.labels.get(name, name), "dir": mdir, "ok": os.path.isdir(mdir),
+    info = {"name": name, "label": S.labels.get(name, printable(name)), "dir": mdir, "ok": os.path.isdir(mdir),
             "index_path": os.path.join(mdir, "MEMORY.md"), "index": None, "files": {}, "hooks": {}, "error": None}
     if not info["ok"]:
         return info
@@ -565,11 +580,14 @@ def term_map(S, dirs, order):
 
 # ---------------------------------------------------------------- block + cross index
 def sync_command(S):
-    return "python3 -I %s%s --sync" % (SELF, " --config %s" % S.config_path if S.config_path else "")
+    root = " --projects-root %s" % shlex.quote(S.projects_root) if S.root_needs_flag else ""
+    return "python3 -I %s%s%s --sync" % (shlex.quote(SELF), " --config %s" % shlex.quote(S.config_path)
+                                         if S.config_path else "", root)
 
 
 def recall_command(S):
-    return "python3 -I %s%s <term> ..." % (S.recall, " --config %s" % S.config_path if S.config_path else "")
+    return "python3 -I %s%s <term> ..." % (shlex.quote(S.recall), " --config %s" % shlex.quote(S.config_path)
+                                           if S.config_path else "")
 
 
 def build_block(S, dirs, order, name, now):
@@ -584,7 +602,7 @@ def build_block(S, dirs, order, name, now):
             continue
         nt = newest(info)
         tag = "shared hub" if n == S.hub else "last write %s" % (time.strftime("%m-%d", time.localtime(nt)) if nt else "-")
-        parts.append("%s=`%s` (%s, %s)" % (lab(n), tilde(info["dir"]), plural(len(info["files"]), "file"), tag))
+        parts.append("%s=`%s` (%s, %s)" % (lab(n), printable(tilde(info["dir"])), plural(len(info["files"]), "file"), tag))
     lines.append("- **Cross-dir memory (this dir = %s)**: Claude Code keeps one auto-memory dir per project and each "
                  "session loads only the first %d lines / %d characters of its own MEMORY.md. %d dirs: %s"
                  % (lab(name), S.max_lines, S.max_chars, len(order), " · ".join(parts)))
@@ -642,7 +660,7 @@ def build_cross_index(S, dirs, order, now):
             ("Money / pricing", S.money_re)]
     for name in order:
         info = dirs[name]
-        out.append("## %s — `%s`" % (info["label"], tilde(info["dir"])))
+        out.append("## %s — `%s`" % (info["label"], printable(tilde(info["dir"]))))
         out.append("")
         if not info["ok"]:
             out.extend(["(dir missing or unreadable)", ""])
@@ -822,8 +840,12 @@ def project_checkouts(root):
     outs = [root]
     env = dict((k, v) for k, v in os.environ.items()
                if k not in ("GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR", "GIT_INDEX_FILE"))
+    env.update(GIT_CONFIG_NOSYSTEM="1", GIT_TERMINAL_PROMPT="0")
+    # The root comes from project config: never let that repository run hooks or an fsmonitor.
+    git = ["git", "-c", "core.fsmonitor=false", "-c", "core.hooksPath=/dev/null",
+           "-c", "safe.bareRepository=explicit"]
     try:
-        top = subprocess.run(["git", "-C", root, "rev-parse", "--show-toplevel"], stdout=subprocess.PIPE,
+        top = subprocess.run(git + ["-C", root, "rev-parse", "--show-toplevel"], stdout=subprocess.PIPE,
                              stderr=subprocess.DEVNULL, universal_newlines=True, timeout=20, env=env)
         if top.returncode != 0 or not top.stdout.strip():
             return outs
@@ -831,7 +853,7 @@ def project_checkouts(root):
         rel = os.path.relpath(os.path.realpath(root), os.path.realpath(top))
         if rel.startswith(".."):
             return outs
-        r = subprocess.run(["git", "-C", top, "worktree", "list", "--porcelain"], stdout=subprocess.PIPE,
+        r = subprocess.run(git + ["-C", top, "worktree", "list", "--porcelain"], stdout=subprocess.PIPE,
                            stderr=subprocess.DEVNULL, universal_newlines=True, timeout=20, env=env)
         for line in r.stdout.splitlines():
             if line.startswith("worktree "):
@@ -1121,7 +1143,7 @@ def audit(S, dirs, order, now, days, show_all):
 
     # 10 recall
     add(10, PASS if os.path.isfile(S.recall) else WARN, "recall tool",
-        tilde(S.recall) if os.path.isfile(S.recall) else "missing %s (memory.recall)" % tilde(S.recall))
+        tilde(S.recall) if os.path.isfile(S.recall) else "missing %s (bundled recall.py)" % tilde(S.recall))
 
     # 11 key-pattern scan (values never printed)
     roots = sorted(set(glob.glob(os.path.join(S.projects_root, "*", "memory")) + [dirs[n]["dir"] for n in order]))
@@ -1172,6 +1194,10 @@ def main(argv):
         if a.sync and not S.configured:
             print("memory_audit: UNCONFIGURED: --sync needs .muse/orchestration.json (or --config / %s); "
                   "nothing was written" % OC.ENV_NAME)
+            return 2
+        if (a.sync or a.unsync) and S.root_needs_flag:
+            print("memory_audit: --sync/--unsync refused: the config moves memory.projects_root to %s; "
+                  "pass --projects-root with that directory to confirm, nothing was written" % tilde(S.projects_root))
             return 2
         dirs, order = discover(S)
         if a.sync or a.unsync:

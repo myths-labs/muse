@@ -17,6 +17,8 @@ Searched (nothing per-directory is hard-coded):
     <memory.projects_root>/*/memory/**/*.md   every project's memory dir (default ~/.claude/projects)
     checkpoints.files + checkpoints.globs     lane checkpoint files; a named file that is missing is reported
     extra_search_globs                        any other files worth searching (fact banks, ...)
+Only plain notes are read (.md, .markdown, .txt, .tsv; never .env* files or credential folders such
+as .ssh or .aws), because a project's config may come from an untrusted checkout.
 A path under a `removable_roots` entry is searched only while that root is a real mount point (an
 unplugged drive can leave an empty stub directory behind, so the bare path is not enough). Otherwise
 it is skipped with a warning: "not found" then does not mean "not there".
@@ -74,10 +76,12 @@ def offline_root(path, roots):
 
 
 class Sources:
-    def __init__(self, roots):
+    def __init__(self, roots, is_note):
         self.roots = roots
+        self.is_note = is_note  # only plain notes are printed; never .env*, keys or credential dirs
         self.skipped = {}  # unmounted root -> configured entries not (fully) searched
         self.missing = []  # named files that do not exist
+        self.refused = []  # configured files that are not plain notes
         self.seen = set()
 
     def gate(self, path, entry):
@@ -91,6 +95,9 @@ class Sources:
 
     def add(self, out, path, entry):
         if not os.path.isfile(path) or not self.gate(path, entry):
+            return
+        if not self.is_note(path):
+            self.refused.append(str(path))
             return
         real = os.path.realpath(path)
         if real not in self.seen:
@@ -162,7 +169,7 @@ def main(argv):
             projects_root = norm(os.path.expanduser(args.projects_root))
         else:
             projects_root = norm(config.path_of(config.get('memory.projects_root') or DEFAULT_PROJECTS_ROOT))
-        sources = Sources(roots)
+        sources = Sources(roots, oc.is_note_file)
         memory = []
         if sources.gate(projects_root, projects_root):
             memory = sources.globbed([os.path.join(projects_root, '*', 'memory', '**', '*.md')])
@@ -190,6 +197,9 @@ def main(argv):
               '"not there"; search again once it is mounted.' % (root, ', '.join(entries)))
     for p in sources.missing:
         print('WARNING: missing: %s' % p)
+    if sources.refused:
+        print('WARNING: skipped %d configured file(s) that are not plain notes (.md/.markdown/.txt/.tsv, '
+              'no .env* or credential folders), e.g. %s' % (len(sources.refused), sources.refused[0]))
     found_scripts = set()
     for k in keywords:
         found_scripts |= scripts_of(k)

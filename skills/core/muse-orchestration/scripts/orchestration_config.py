@@ -26,6 +26,13 @@ CONFIG_NAME = '.muse/orchestration.json'
 ENV_NAME = 'MUSE_ORCHESTRATION_CONFIG'
 VAR = re.compile(r'\$\{([A-Za-z_][A-Za-z0-9_]*)\}')
 PATHS_LINE = re.compile(r'^\s*([A-Z_][A-Z0-9_]*)\s*:\s*(\S.*?)\s*$')
+# A project config may come from an untrusted checkout, so ${VAR} expands only names that do
+# not hold secrets; anything else is refused by name, never echoed with its value.
+SAFE_VARIABLES = {'HOME', 'PWD', 'TMPDIR', 'USER', 'XDG_CONFIG_HOME', 'XDG_DATA_HOME',
+                  'XDG_STATE_HOME', 'XDG_CACHE_HOME'}
+# Tools that print file contents read only plain notes, never credentials or key material.
+NOTE_SUFFIXES = {'.md', '.markdown', '.txt', '.tsv'}
+SENSITIVE_DIRS = {'.ssh', '.aws', '.gnupg', '.kube', '.docker', '.password-store'}
 
 
 class ConfigError(ValueError):
@@ -35,10 +42,26 @@ class ConfigError(ValueError):
 def _expand(value):
     def repl(match):
         name = match.group(1)
+        if name not in SAFE_VARIABLES and not name.startswith('MUSE_'):
+            raise ConfigError('VARIABLE_NOT_ALLOWED: ' + name)
         if name not in os.environ:
             raise ConfigError('UNSET_VARIABLE: ' + name)
         return os.environ[name]
     return os.path.expanduser(VAR.sub(repl, value))
+
+
+def is_note_file(path):
+    """True for a plain note that tools may print lines from (not .env*, keys or credential dirs)."""
+    p = Path(str(path))
+    if p.suffix.lower() not in NOTE_SUFFIXES or p.name.lower().startswith('.env'):
+        return False
+    return not any(part.lower() in SENSITIVE_DIRS for part in p.parts)
+
+
+def inside(path, root):
+    """True when `path` (after resolving symlinks) is `root` or below it."""
+    real, base = os.path.realpath(str(path)), os.path.realpath(str(root))
+    return real == base or real.startswith(base.rstrip(os.sep) + os.sep)
 
 
 def find(explicit=None, start=None):
@@ -47,7 +70,7 @@ def find(explicit=None, start=None):
     if chosen:
         path = Path(_expand(str(chosen)))
         if not path.is_file():
-            raise ConfigError('CONFIG_NOT_FOUND: ' + str(path))
+            raise ConfigError('CONFIG_NOT_FOUND: ' + str(chosen))
         return path.resolve()
     anchor = Path(start or os.getcwd()).resolve()
     for root in (anchor, *anchor.parents):
@@ -99,13 +122,21 @@ class Config:
     def paths(self, dotted):
         return [self.path_of(v) for v in (self.get(dotted) or []) if v]
 
-    def globbed(self, dotted):
-        """Expand configured glob patterns; results are sorted and de-duplicated."""
+    def path_in_root(self, value, key):
+        """Resolve a path the tools will write to; it must stay inside the project root."""
+        path = self.path_of(value)
+        if path is not None and not inside(path, self.root):
+            raise ConfigError('PATH_OUTSIDE_PROJECT: ' + key)
+        return path
+
+    def globbed(self, dotted, notes_only=True):
+        """Expand configured glob patterns; results are sorted, de-duplicated and, by default,
+        limited to plain note files (see is_note_file)."""
         seen, out = set(), []
         for pattern in self.paths(dotted):
             for hit in sorted(glob.glob(str(pattern), recursive=True)):
                 real = os.path.realpath(hit)
-                if real not in seen and os.path.isfile(hit):
+                if real not in seen and os.path.isfile(hit) and (not notes_only or is_note_file(hit)):
                     seen.add(real)
                     out.append(Path(hit))
         return out
