@@ -172,7 +172,7 @@ def read_text(path, strict=False):
         return fh.read()
 
 
-SAFE_LABEL = re.compile(r"^[^\x00-\x1f\x7f`\[\]()<>]{1,40}$")
+SAFE_LABEL = re.compile(r"\A[^\x00-\x1f\x7f`\[\]()<>]{1,40}\Z")
 
 
 def printable(text):
@@ -502,7 +502,7 @@ def discover(S):
 
 def load_dir(S, name):
     mdir = os.path.join(S.projects_root, name, "memory")
-    info = {"name": name, "label": S.labels.get(name, printable(name)), "dir": mdir, "ok": os.path.isdir(mdir),
+    info = {"name": name, "label": printable(S.labels.get(name, name)), "dir": mdir, "ok": os.path.isdir(mdir),
             "index_path": os.path.join(mdir, "MEMORY.md"), "index": None, "files": {}, "hooks": {}, "error": None}
     if not info["ok"]:
         return info
