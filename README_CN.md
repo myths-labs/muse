@@ -9,7 +9,7 @@
 <p align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/myths-labs/muse/blob/main/LICENSE)
-[![Version](https://img.shields.io/badge/version-3.7.1-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-3.8.0-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
 [![Stars](https://img.shields.io/github/stars/myths-labs/muse?style=social)](https://github.com/myths-labs/muse)
 [![Markdown + Python](https://img.shields.io/badge/Markdown-Python-green.svg)](#)
 [![Continuity Runtime](https://img.shields.io/badge/continuity-Python_3.7%2B-blue.svg)](docs/CONTINUITY.md)
@@ -30,7 +30,7 @@
 >
 > *MUSE（缪斯）继承了这一血脉，帮助保存跨对话的决定和证据；来源缺失时明确保留边界。*
 
-**3.7.1 新增：** 检查工作流实际使用的 Python 环境，可按需验证 PNG/JPEG 解码；完整范围恢复与写入者保护继续保留。[完整使用与升级说明](docs/CONTINUITY_CN.md)。
+**3.8.0 新增：** 多个长期会话组成一支队：一个编排者（总管）加你自己定义的各条线；额度用完用 `/handoff` 接力换账号，离开时 `/away`、回来 `/back`；巡检与额度哨兵定时模板、记忆检索与审计工具、Stop 钩子守卫、可选的 Obsidian 库核对。[完整使用与升级说明](docs/CONTINUITY_CN.md)。
 
 ## 第一次用？先看这里
 
@@ -164,7 +164,7 @@ graph TB
         CO --> CO2["子 Agent 综合"]
     end
     
-    subgraph "⚡ 技能层 (66)"
+    subgraph "⚡ 技能层 (67)"
         G["触发型技能<br/>按需加载"]
         H["生命周期技能<br/>strategic-compact"]
     end
@@ -212,6 +212,8 @@ graph TB
 | `/sync receive` | 对话中拉取其他角色的更新 | 无需输入 |
 | `/resume [项目] qa` | 启动 QA 验证（独立于 build） | 项目名（可选） |
 | `/resume crash` | 上下文爆掉后恢复 | 无需输入 |
+| `/handoff save` · `/handoff <线>` · `/handoff status` | 多线账号接力：换账号前存档，新账号接着做 | `.muse/orchestration.json` 里的线 id |
+| `/away`（`/托`）· `/back`（`/回`） | 托管：能定的自己定，要你定的攒着；回来一次过 | 无需输入 |
 
 ### 防御式自动保存（L0 防御）
 
@@ -402,5 +404,5 @@ MIT © [Myths Labs](https://github.com/myths-labs)
 </p>
 
 <p align="center">
-  <i>MUSE v3.7.1</i>
+  <i>MUSE v3.8.0</i>
 </p>

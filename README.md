@@ -9,7 +9,7 @@
 <p align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/myths-labs/muse/blob/main/LICENSE)
-[![Version](https://img.shields.io/badge/version-3.7.1-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-3.8.0-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
 [![Stars](https://img.shields.io/github/stars/myths-labs/muse?style=social)](https://github.com/myths-labs/muse)
 [![Markdown + Python](https://img.shields.io/badge/Markdown-Python-green.svg)](#)
 [![Continuity Runtime](https://img.shields.io/badge/continuity-Python_3.7%2B-blue.svg)](docs/CONTINUITY.md)
@@ -30,7 +30,7 @@
 >
 > *MUSE inherits this lineage. It helps preserve decisions and evidence across AI conversations, with explicit boundaries when source history is incomplete.*
 
-**New in 3.7.1:** check the Python environment your workflow actually uses, with optional PNG/JPEG decoding checks. Full-scope recovery and writer safeguards remain available. [Complete usage and upgrade guide](docs/CONTINUITY.md).
+**New in 3.8.0:** run several long-lived sessions as one team. An orchestrator lane plus your own lanes, account relay with `/handoff` when usage runs out, `/away` and `/back` for unattended work, patrol and quota-sentinel timer templates, memory recall and audit tools, Stop-hook guards and optional Obsidian vault checks. [Complete usage and upgrade guide](docs/CONTINUITY.md).
 
 ## New to MUSE? Start here
 
@@ -42,7 +42,7 @@ You explain what you want; the AI plans, works, checks and records progress. Rem
 
 **Optional tools:** [Jev tool selection and data boundaries](docs/OPTIONAL_TOOLS.md) covers browser decisions, review, routing and on-demand retrieval. These third-party projects are not bundled with MUSE; ordinary Resume and Save do not require them.
 
-MUSE is a Markdown-based governance system for AI pair programming, with a Python runtime for guarded continuity. It goes beyond format specs (like AGENTS.md or .cursorrules) by providing a **full system** — role isolation, persistent memory, 66 skills, cross-role directives, and visual dashboards — with portable local tooling for supported clients.
+MUSE is a Markdown-based governance system for AI pair programming, with a Python runtime for guarded continuity. It goes beyond format specs (like AGENTS.md or .cursorrules) by providing a **full system** — role isolation, persistent memory, 67 skills, cross-role directives, and visual dashboards — with portable local tooling for supported clients.
 
 ```
 ┌─────────────────────────────────────────────────────┐
@@ -69,7 +69,7 @@ Inspired by [LCM (Lossless Context Management)](https://papers.voltropy.com/LCM)
 
 **Problem**: AI coding assistants have context window limits. Format specs like `.cursorrules` or `AGENTS.md` give your AI instructions — but they can't manage **memory**, **roles**, or **cross-session knowledge**. Long conversations forget early content. New conversations start from scratch.
 
-**Solution**: MUSE wraps your AI with a **governance protocol** — role isolation, persistent dual-layer memory, 66 reusable skills, cross-role directive queue, and visual dashboards. All in plain Markdown.
+**Solution**: MUSE wraps your AI with a **governance protocol** — role isolation, persistent dual-layer memory, 67 reusable skills, cross-role directive queue, and visual dashboards. All in plain Markdown.
 
 | Without MUSE | With MUSE |
 |---------|---------|
@@ -246,7 +246,7 @@ graph TB
         CO --> CO2["Sub-agent Synthesis"]
     end
     
-    subgraph "⚡ Skills Layer (66)"
+    subgraph "⚡ Skills Layer (67)"
         G["Trigger Skills<br/>on-demand"]
         H["Lifecycle Skills<br/>strategic-compact"]
     end
@@ -294,6 +294,8 @@ graph TB
 | `/sync receive` | Pull updates from other roles mid-conversation | None needed |
 | `/resume [project] qa` | Start QA verification (independent from build) | Project name (optional) |
 | `/resume crash` | Recover from context blowout | None needed |
+| `/handoff save` · `/handoff <lane>` · `/handoff status` | Multi-lane account relay: save before switching accounts, continue under the new one | Lane id from `.muse/orchestration.json` |
+| `/away` (`/托`) · `/back` (`/回`) | Away mode: agents decide what they may and queue the rest; on return, one list | None needed |
 
 ### Defensive Auto-Save (L0 Defense)
 
@@ -484,7 +486,7 @@ Want to suggest another MCP for the list? Open a PR · we vet for free-tier avai
 Markdown skills can be read directly. For guarded continuity, use the native installer with Python 3.7+ and Git; see docs/CONTINUITY.md.
 
 **Q: Which AI tools does it support?**
-Ten tools with native install support: **Claude Code**, **OpenClaw**, **OpenCode**, **Cursor**, **Windsurf**, **Gemini CLI**, **Codex CLI**, **Copilot**, **Aider**, and **Antigravity**. Run `./scripts/install.sh --tool <name>` to install in the correct format for each tool. Additionally, `./scripts/convert-skills.sh --tool <name>` exports all 66 skills to any supported format. Import from [agency-agents](https://github.com/msitarzewski/agency-agents) (35K+ ⭐) with `--import agency-agents`.
+Ten tools with native install support: **Claude Code**, **OpenClaw**, **OpenCode**, **Cursor**, **Windsurf**, **Gemini CLI**, **Codex CLI**, **Copilot**, **Aider**, and **Antigravity**. Run `./scripts/install.sh --tool <name>` to install in the correct format for each tool. Additionally, `./scripts/convert-skills.sh --tool <name>` exports all 67 skills to any supported format. Import from [agency-agents](https://github.com/msitarzewski/agency-agents) (35K+ ⭐) with `--import agency-agents`.
 
 **Q: How is this different from lossless-claw?**
 lossless-claw is a code plugin (SQLite + DAG + sub-agents) that requires the OpenClaw runtime. MUSE uses Markdown skills and a Python continuity runtime. Its recorded-source boundaries and supported clients are described in the continuity guide.
@@ -533,5 +535,5 @@ MIT © [Myths Labs](https://github.com/myths-labs)
 </p>
 
 <p align="center">
-  <i>MUSE v3.7.1</i>
+  <i>MUSE v3.8.0</i>
 </p>

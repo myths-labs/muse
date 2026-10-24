@@ -1,4 +1,4 @@
-# Continuous work with MUSE 3.7.1
+# Continuous work with MUSE 3.8.0
 
 New to MUSE? Read the [beginner guide](QUICKSTART.md), then follow the setup instructions below.
 
@@ -32,7 +32,7 @@ not adopt, initialize or modify your Lane checkpoints.
 
 ## Check the Python environment
 
-Version 3.7.1 adds an optional check of the Python environment a workflow actually
+Version 3.7.1 added an optional check of the Python environment a workflow actually
 uses. It reports the selected runtime under isolation, so packages visible only
 in an ordinary shell do not produce a misleading success. Ordinary saves and
 recovery still use the Python standard library.
@@ -122,6 +122,30 @@ not provide unlimited checkpoint capacity.
 The installed [checkpoint capacity guide](../skills/core/muse-commands/references/CHECKPOINT_CAPACITY.md)
 describes the exact preservation and readback steps. This documents existing
 behavior; it does not add automatic history compaction or change release 3.7.1.
+
+## Several lanes, account switches and away mode
+
+Optional. When one project runs several long-lived sessions ("lanes"), describe them in
+`.muse/orchestration.json` (template:
+[orchestration.example.json](../skills/core/muse-orchestration/templates/orchestration.example.json)):
+one orchestrator plus your own lanes, each with a checkpoint file and the files a new
+session must read. MUSE ships no fixed lane names.
+
+| Say | What happens |
+|---|---|
+| `/handoff save` | Before an account switch: write memory, the lane checkpoint and a relay snapshot |
+| `/handoff <lane id>` | In a session under the new account: read, re-sync, report, continue |
+| `/handoff status` | Read-only: each lane's latest snapshot and its age |
+| `/away` (`/托`) | You leave: the agents decide what they may and queue the rest |
+| `/back` (`/回`) | You return: one list of what was done, decided and needs you |
+
+Saving is triggered by a forecast, not a fixed percentage: when weekly usage is
+expected to run out within 20 minutes, or reaches 95%, every lane saves and then keeps
+working until the wall. Short usage windows never trigger a global save; each lane keeps
+a one-shot timer at reset + 1 minute instead. The orchestrator's patrol, quota sentinel
+and twice-daily report prompts, the memory tools (`recall.py`, `memory_audit.py`), two
+Stop-hook guards and the optional Obsidian vault checks are described in the
+[orchestration skill](../skills/core/muse-orchestration/SKILL.md).
 
 ## What is stored
 

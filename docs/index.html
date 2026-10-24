@@ -6,12 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MUSE — Continuous Development with Codex and Claude Code</title>
   <meta name="description"
-    content="Keep your role, decisions and next steps across Codex and Claude Code. MUSE 3.7.1 adds optional Python environment checks alongside complete-scope recovery.">
+    content="Keep your role, decisions and next steps across Codex and Claude Code. MUSE 3.8.0 adds multi-lane orchestration: account relay, away mode and memory guards.">
   <meta name="keywords"
     content="MUSE, Codex, Claude Code, AI memory, AI pair programming, context management, Markdown, agent memory">
   <meta property="og:title" content="MUSE — The AI Coding Governance System">
   <meta property="og:description"
-    content="MUSE 3.7.1: continue in Codex, Claude Code or both, with shared role and Lane records. Check the environment your workflow uses and recover complete task scope.">
+    content="MUSE 3.8.0: continue in Codex, Claude Code or both, with shared role and Lane records. Run several lanes as one team and relay them across accounts.">
   <meta property="og:image" content="https://raw.githubusercontent.com/myths-labs/muse/main/assets/banner.png">
   <meta property="og:url" content="https://muse.mythslabs.ai">
   <meta property="og:type" content="website">
@@ -34,7 +34,7 @@
   "url": "https://muse.mythslabs.ai",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "macOS, Linux",
-  "softwareVersion": "3.7.1",
+  "softwareVersion": "3.8.0",
   "license": "https://opensource.org/licenses/MIT",
   "isAccessibleForFree": true,
   "codeRepository": "https://github.com/myths-labs/muse",
@@ -71,7 +71,7 @@
     "Native writer checks and stale-writer rejection through MUSE helpers",
     "Reusable closeout receipts that track changed evidence",
     "Preservation-aware installation, upgrade and rollback",
-    "66 reusable skills loaded on demand",
+    "67 reusable skills loaded on demand",
     "Skill adapters for ten AI coding tools; guarded continuity for Codex and Claude Code",
     "Local project dashboard"
   ],
@@ -123,7 +123,7 @@
       <div class="hero-overlay"></div>
     </div>
     <div class="container hero-content">
-      <div class="hero-badge">MUSE 3.7.1 · MIT Open Source</div>
+      <div class="hero-badge">MUSE 3.8.0 · MIT Open Source</div>
       <h1>Keep building.<br>Keep your context.</h1>
       <p class="hero-subtitle">A project notebook for your AI.<br>Keep decisions, progress and next steps with <strong>Codex, Claude Code, or both.</strong></p>
       <div class="hero-actions">
@@ -177,9 +177,9 @@
       <div class="benchmark-banner"
         style="margin-top:2rem;padding:1.2rem 1.5rem;border-radius:12px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);text-align:center;">
         <p style="margin:0;color:var(--accent);font-weight:600;font-size:1.05rem;">
-          MUSE 3.7.1: <strong>check the Python environment your workflow uses</strong>
+          MUSE 3.8.0: <strong>run several sessions as one team</strong>
         </p>
-        <p style="margin:0.4rem 0 0;font-size:0.9rem;">Optional environment checks, clearer dependency errors and complete-scope recovery. <a href="https://github.com/myths-labs/muse/releases/tag/v3.7.1">Read the release and validation scope →</a></p>
+        <p style="margin:0.4rem 0 0;font-size:0.9rem;">An orchestrator plus your own lanes, <code>/handoff</code> account relay, <code>/away</code> and <code>/back</code>, memory recall and audit tools. <a href="https://github.com/myths-labs/muse/releases/tag/v3.8.0">Read the release notes →</a></p>
       </div>
     </div>
   </section>
@@ -239,7 +239,7 @@
               <rect width="7" height="7" x="14" y="14" rx="1" />
               <rect width="7" height="7" x="3" y="14" rx="1" />
             </svg></div>
-          <h3>66 Reusable Skills</h3>
+          <h3>67 Reusable Skills</h3>
           <p>Git workflows, debugging, security guard, coordinator mode, iterative retrieval, deep-dive analysis —
             pre-built
             skills your AI loads on demand.</p>
@@ -310,7 +310,7 @@
               <path d="M10 9H8" />
             </svg></div>
           <h3>Skill Manifest</h3>
-          <p>One script indexes all 66 skills into <code>manifest.json</code> — name, category, size, assets.
+          <p>One script indexes all 67 skills into <code>manifest.json</code> — name, category, size, assets.
             Machine-readable. CI-friendly <code>--check</code> mode catches stale indexes.</p>
         </div>
         <div class="feature-card">
@@ -456,7 +456,7 @@
         <a class="btn btn-ghost" href="./guide.html" lang="zh-CN">第一次用？看这里</a>
         <a class="btn btn-ghost" href="https://github.com/myths-labs/muse/blob/main/docs/CONTINUITY.md">Installation &amp; advanced use</a>
         <a class="btn btn-ghost" href="https://github.com/myths-labs/muse/blob/main/docs/CONTINUITY_CN.md" lang="zh-CN">中文安装与进阶说明</a>
-        <a class="btn btn-ghost" href="https://github.com/myths-labs/muse/releases/tag/v3.7.1">MUSE 3.7.1 release notes</a>
+        <a class="btn btn-ghost" href="https://github.com/myths-labs/muse/releases/tag/v3.8.0">MUSE 3.8.0 release notes</a>
       </div>
       <h3 style="margin-top:2.5rem;text-align:center;">Optional Jev tools</h3>
       <p class="section-subtitle">Explore browser decisions, code review, model routing and on-demand retrieval. The guides explain when each tool fits and what data it sends. These third-party tools are not bundled with MUSE; daily Resume and Save work without them.</p>
@@ -539,7 +539,7 @@
       <div class="footer-brand">
         <img src="https://raw.githubusercontent.com/myths-labs/muse/main/assets/logo.png" alt="MUSE" width="24"
           height="24">
-        <span>MUSE v3.7.1</span>
+        <span>MUSE v3.8.0</span>
       </div>
       <div class="footer-links">
         <a href="https://github.com/myths-labs/muse" target="_blank" rel="noopener">GitHub</a>
