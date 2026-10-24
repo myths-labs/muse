@@ -12,17 +12,24 @@ required = ['scripts/install-continuity.py', 'docs/CONTINUITY.md', 'docs/CONTINU
             'workflows/legacy/resume.md', 'workflows/legacy/bye.md',
             'skills/core/muse-commands/SKILL.md', 'skills/core/muse-commands/continuity.json',
             'skills/core/muse-commands/scripts/muse-runtime-dependencies.py',
-            'skills/core/muse-commands/references/RUNTIME_DEPENDENCIES.md']
+            'skills/core/muse-commands/references/RUNTIME_DEPENDENCIES.md',
+            'skills/core/muse-orchestration/SKILL.md',
+            'skills/core/muse-orchestration/scripts/orchestration_config.py',
+            'skills/core/muse-orchestration/templates/orchestration.example.json',
+            'workflows/handoff.md', 'workflows/away.md', 'workflows/back.md']
 for relative in required:
     if not (ROOT/relative).is_file(): errors.append('MISSING: '+relative)
-skill = ROOT/'skills/core/muse-commands'
-files = [p for p in skill.rglob('*') if p.is_file() and '__pycache__' not in p.parts]
-files += [ROOT/p for p in ['scripts/install-continuity.py','docs/CONTINUITY.md','docs/CONTINUITY_CN.md']]
+files = []
+for skill in (ROOT/'skills/core/muse-commands', ROOT/'skills/core/muse-orchestration'):
+    files += [p for p in skill.rglob('*') if p.is_file() and '__pycache__' not in p.parts]
+files += [ROOT/p for p in ['scripts/install-continuity.py','docs/CONTINUITY.md','docs/CONTINUITY_CN.md',
+                           'workflows/handoff.md','workflows/away.md','workflows/back.md',
+                           'workflows/save.md','workflows/daily-bye.md']]
 for path in files:
     if path.is_symlink(): errors.append('SYMLINK: '+str(path.relative_to(ROOT))); continue
     if path.stat().st_size > 5*1024*1024: errors.append('OVERSIZED: '+path.name); continue
     raw = path.read_bytes()
-    if re.search(rb'/Users/[^/\s]+/|/Desktop/(DYA|Prometheus)', raw):
+    if re.search(rb'/Users/[^/\s]+/|/Volumes/[^/\s]+/|/Desktop/(DYA|Prometheus)', raw):
         errors.append('AUTHOR_PATH: '+str(path.relative_to(ROOT)))
     if path.suffix == '.py':
         try: compile(raw,str(path),'exec')

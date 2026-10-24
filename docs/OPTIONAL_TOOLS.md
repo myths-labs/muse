@@ -4,7 +4,7 @@
 
 MUSE keeps your role, decisions, evidence and next steps across conversations. Jev tools can help with a narrower decision inside that work: selecting a browser action, triaging a code change or choosing a model for a separate CLI session.
 
-**This is guidance for optional third-party tools, not a new MUSE release or a bundled integration.** MUSE remains at 3.7.1 with 66 included skills. Its installer does not install these projects, supply credentials or enable provider calls. Ordinary Resume and Save do not need Jev. The descriptions below refer to the [reviewed source versions](#reviewed-source-versions), not a promise about future upstream versions.
+**This is guidance for optional third-party tools, not a new MUSE release or a bundled integration.** MUSE 3.8.0 includes 67 skills. Its installer does not install these projects, supply credentials or enable provider calls. Ordinary Resume and Save do not need Jev. The descriptions below refer to the [reviewed source versions](#reviewed-source-versions), not a promise about future upstream versions.
 
 ## Choose by the task
 
@@ -34,7 +34,7 @@ Exclude credentials, unrelated private correspondence, financial/identity record
 
 ## Optional retrieval within a Lane
 
-This is an integration pattern, not a shipped `muse-context` command or automatic behavior of MUSE 3.7.1.
+This is an integration pattern, not a shipped `muse-context` command or automatic behavior of MUSE 3.8.0.
 
 1. Read the current authoritative Lane state and required task facts first. If they are sufficient, make no retrieval call.
 2. Let each Lane maintain its own explicitly reviewed source registry. Bind entries to file hashes and bounded excerpts so a stale or changed source can be detected.

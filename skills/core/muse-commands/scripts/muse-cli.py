@@ -11,7 +11,9 @@ import sys
 
 HERE = Path(__file__).resolve().parent
 COMMANDS = ('resume', 'save', 'bye', 'sync', 'ctx', 'distill', 'settings', 'model',
-            'role', 'start', 'sprint', 'retro', 'launch', 'release', 'migrate-to-myths-labs')
+            'role', 'start', 'sprint', 'retro', 'launch', 'release', 'migrate-to-myths-labs',
+            'handoff', 'away', 'back')
+ALIASES = {'boot': 'resume', '托': 'away', '回': 'back'}
 STATE = ('new-handoff-id', 'write-checkpoint', 'read-checkpoint', 'verify-handoff')
 DAILY = ('enable-daily', 'disable-daily', 'resume-workflow', 'bye-workflow', 'prepare-resume',
          'save-daily', 'claim-lane', 'adopt-lane', 'initialize-lane', 'source-update', 'source-status')
@@ -52,6 +54,7 @@ def main(args):
 
     def resolve(command):
         name = command.lstrip('/')
+        name = ALIASES.get(name, name)
         if name not in COMMANDS:
             raise ValueError('UNSUPPORTED_COMMAND: ' + name)
         p = workflows / (name + '.md')

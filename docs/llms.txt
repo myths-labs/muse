@@ -1,6 +1,6 @@
 # MUSE — Continuous Development with Codex and Claude Code
 
-> MUSE 3.7.1 preserves roles, decisions and next steps in shared project records, with complete-scope recovery for larger worktrees.
+> MUSE 3.8.0 preserves roles, decisions and next steps in shared project records, with complete-scope recovery for larger worktrees and optional multi-lane orchestration across account switches.
 
 MUSE combines Markdown skills and workflows with a Python continuity runtime.
 Use Codex alone, Claude Code alone, or move the same role and Lane between them.
@@ -47,7 +47,7 @@ create or claim a Lane. Keep installation/rollback receipts private.
 
 ## Runtime environment checks
 
-Version 3.7.1 adds an optional preflight for the Python interpreter a workflow
+MUSE includes an optional preflight for the Python interpreter a workflow
 actually uses. It checks isolation and can verify and fully decode PNG/JPEG
 fixtures with Pillow. Ordinary continuity remains standard-library-only; the
 installer does not add Pillow. This is not a native attachment adapter or proof
@@ -69,7 +69,7 @@ This is guidance for existing behavior, not a new capacity feature or release.
 
 Separate third-party projects can assist with browser decisions, code-review
 triage or model routing in a separately launched CLI. They are not bundled MUSE
-skills or an automatic integration. MUSE remains at 3.7.1 with 66 included skills;
+skills or an automatic integration. MUSE 3.8.0 includes 67 skills;
 its installer does not install these tools or enable provider calls. Ordinary
 Resume and Save do not require Jev. The bilingual guides cover reviewed source
 versions, outgoing data, unsupported tasks and an optional Lane retrieval pattern.
@@ -78,7 +78,7 @@ decisions do not certify real task outcomes.
 
 ## Package and compatibility
 
-- 66 skills: Core 8, Toolkit 44, Ecosystem 13, Growth distribution 1.
+- 67 skills: Core 9, Toolkit 44, Ecosystem 13, Growth distribution 1.
 - Guarded native continuity: Codex and Claude Code.
 - Existing skill adapters: Claude Code, OpenClaw, OpenCode, Cursor, Windsurf,
   Gemini CLI, Codex, Copilot, Aider, Antigravity. Adapter support does not imply
@@ -105,7 +105,8 @@ readiness. Native Windows and network filesystem durability are not certified.
 - [Optional Jev tools and data boundaries](https://github.com/myths-labs/muse/blob/main/docs/OPTIONAL_TOOLS.md)
 - [Jev 可选工具与数据边界](https://github.com/myths-labs/muse/blob/main/docs/OPTIONAL_TOOLS_CN.md)
 - [Checkpoint capacity and evidence storage](https://github.com/myths-labs/muse/blob/main/skills/core/muse-commands/references/CHECKPOINT_CAPACITY.md)
-- [3.7.1 release and validation scope](https://github.com/myths-labs/muse/releases/tag/v3.7.1)
+- [Multi-lane orchestration skill](https://github.com/myths-labs/muse/blob/main/skills/core/muse-orchestration/SKILL.md)
+- [3.8.0 release notes](https://github.com/myths-labs/muse/releases/tag/v3.8.0)
 - [Source and full documentation](https://github.com/myths-labs/muse)
 - [Skill index](https://github.com/myths-labs/muse/blob/main/SKILL_INDEX.md)
 - [Website](https://muse.mythslabs.ai)

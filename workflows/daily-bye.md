@@ -16,3 +16,7 @@ description: 已登记 Lane 的有界收尾与收据复核
 一次报告全部已发现问题，修复后只重跑必要检查及相关回归；持续失败保留具体原因，不要求用户反复问完整吗。收据不授权merge、部署或产品launch。80%是保存/压缩后的恢复检查点，不自动退出；当前上下文数值不可得标UNKNOWN。
 
 同一Lane之前未撤销的产品失败、认可基线及既定回归义务必须继续保留；纯文档/收尾轮不能使其消失或免除。属于本次声明完成范围的回归需真实执行，缺失则不能封存该完成范围；范围外义务明确记为未闭并指定接续位置，不能因此宣称产品就绪。其他Lane的失败保留引用及归属，不擅自接手或扩大授权。
+
+## 同步 Obsidian 库（可选）
+
+配置了库时，在收尾末尾按 `.agent/skills/core/muse-orchestration/references/VAULT.md` 写：`daily/` 本轮一节；改变架构、战略或工具选型的重大决策写 `decisions/`；有明确根因分析的缺陷写 `bugs/`；`_index.md`「最近活动」顶部加一行（只留最近 10 条）。写完跑 `python3 -I .agent/skills/core/muse-orchestration/scripts/vault_freshness.py`，退出码 0 才算写到。没配置就静默跳过；只追加，禁写密钥、密码、`.env` 内容。

@@ -1,4 +1,4 @@
-# MUSE 3.7.1 连续开发使用说明
+# MUSE 3.8.0 连续开发使用说明
 
 第一次接触 MUSE？先看[简单入门教程](QUICKSTART_CN.md)，再按下面的说明安装。
 
@@ -28,7 +28,7 @@ Claude 的设置和已有 hooks 合并保留。客户端未发现新增技能目
 
 ## 检查实际使用的 Python 环境
 
-3.7.1 新增可选的运行环境预检，会在隔离条件下检查工作流实际选用的 Python，
+自 3.7.1 起提供可选的运行环境预检，会在隔离条件下检查工作流实际选用的 Python，
 避免普通终端里能找到的依赖在实际运行时不可用。日常保存和恢复仍只使用
 Python 标准库。
 
@@ -102,6 +102,27 @@ source note 本身也要符合读取上限。只有 `Next Action` 和 `Required 
 完整保留与读回步骤见安装技能的
 [检查点容量说明](../skills/core/muse-commands/references/CHECKPOINT_CAPACITY.md)。
 本节说明既有行为，不新增自动历史压缩，也不改变 3.7.1 发行版本。
+
+## 多线、换账号与托管
+
+可选。一个项目同时跑几个长期会话（「线」）时，在 `.muse/orchestration.json` 里登记
+（模板：[orchestration.example.json](../skills/core/muse-orchestration/templates/orchestration.example.json)）：
+一个编排者（总管）加你自己定义的各条线，每条线写明检查点文件和新会话必读的文件。
+MUSE 不内置任何固定线名。
+
+| 说 | 会发生什么 |
+|---|---|
+| `/handoff save` | 换账号前：写记忆、本线检查点和接力快照 |
+| `/handoff <线 id>` | 在新账号的会话里：读文件、对齐、报到、接着做 |
+| `/handoff status` | 只读：各线最近一条快照和距今多久 |
+| `/away`（`/托`） | 你离开：能定的它们自己定，要你定的攒着 |
+| `/back`（`/回`） | 你回来：一次给你做完了什么、替你定了什么、要你定什么 |
+
+存档按预测触发，不按固定百分比：周额度预计 20 分钟内用完、或到 95%，各线先存档，
+然后照常干到撞墙再切号。短窗（如 5 小时窗）不触发全局保存，每条线改留一条
+「重置 +1 分钟」的自续定时。编排者的巡检、额度哨兵与早晚报提示，记忆工具
+（`recall.py`、`memory_audit.py`）、两个 Stop 钩子和可选的 Obsidian 库核对，见
+[编排技能](../skills/core/muse-orchestration/SKILL.md)。
 
 ## 配置与记忆位置
 

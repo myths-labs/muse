@@ -1,3 +1,23 @@
+## [3.8.0] - 2026-10-24
+
+### Added
+- **Multi-lane orchestration** (`skills/core/muse-orchestration`): an orchestrator role plus user-defined lanes configured in `.muse/orchestration.json`, with rules that keep work from silently stopping (decisions land on the board, three endings per package, stalled list, wake after the wall, idle dispatch, heavy lock, load guard).
+- **Account relay** `/handoff save | <lane id> | status`: memory first, then checkpoint and relay snapshot; a forecast save line (weekly exhaustion within 20 minutes or ≥95%), keep working until the wall, no global save for short windows, and a self-resume timer per lane.
+- **Away mode** `/away` (`/托`) and `/back` (`/回`), plus `/boot` as an alias of `/resume`. The Claude installer creates these commands and `resolve` maps them for every client.
+- **Orchestrator timer templates**: patrol, quota sentinel, tight sentinel and twice-daily reports, with timer hygiene for handoffs and retired sessions.
+- **Tools** (standard library, read-only unless stated): `recall.py`, `memory_audit.py` (with opt-in `--sync`), `negative_claim_guard.py` and the optional `licence_stop_guard.py` Stop hooks, `vault_coverage_check.py`, `vault_freshness.py`, `wall_recover.py`, and the shared `orchestration_config.py` loader.
+- Optional Obsidian vault steps in `/save`, daily `/bye` and `/handoff save`, using `vault.root` or `OBSIDIAN_VAULT` from `.muse/paths.md`.
+
+### Security
+- `.muse/orchestration.json` is treated as untrusted input from the checkout: only non-secret `${VAR}` names expand, tools that print file contents read only plain notes (never `.env*` or credential folders), the cross-directory index must stay inside the project, `--sync` needs `--projects-root` when the config moves the memory root, generated commands always name the bundled `recall.py` with quoted paths, labels cannot inject lines into memory indexes, and git runs without hooks, fsmonitor or system config.
+
+### Changed
+- `check-release.py` also scans the orchestration skill and the new workflows for author-machine paths, including mounted-volume paths.
+
+### Compatibility
+- Single-lane projects are unchanged: `/resume`, `/save` and `/bye` behave as in 3.7.1. Without `.muse/orchestration.json` the tools report what is unconfigured instead of guessing paths.
+- Lane names, approvals and timers never widen authority; deployments, production data changes, payments, external messages and deletions still need the user's consent in the current session.
+
 ## [3.7.1] - 2026-09-14
 
 ### Added

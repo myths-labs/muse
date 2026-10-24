@@ -21,6 +21,7 @@ BEGIN = '<!-- MUSE CONTINUITY START -->'
 END = '<!-- MUSE CONTINUITY END -->'
 BLOCK = BEGIN + '''
 MUSE commands: read `.agent/skills/muse-commands/SKILL.md` on `/resume`, `/save` or `/bye`.
+Multi-lane `/handoff`, `/away` (`/托`), `/back` (`/回`): `.agent/skills/core/muse-orchestration/SKILL.md`.
 Preserve the selected role and Lane across clients. Derive plans and acceptance checks
 from the user's request and saved evidence; do not demand a form or switch roles.
 Save useful deltas, compact if needed, verify and continue. Context pressure does not
@@ -154,22 +155,38 @@ def plan_install(root, tool, core_only=False):
     old_ignore = snapshot(ignore_path)
     if old_ignore['kind'] not in ('absent', 'file'): raise ValueError('UNSAFE_GITIGNORE')
     ignore = base64.b64decode(old_ignore['content']).decode() if old_ignore['kind']=='file' else ''
-    private_rules = ['/.muse/installations/', '/.muse/install-state.json', '/.muse/install.lock', '/memory/.muse-source-inbox/']
+    private_rules = ['/.muse/installations/', '/.muse/install-state.json', '/.muse/install.lock', '/memory/.muse-source-inbox/',
+                     '/.muse/memory-cross-index.md']
     missing_rules = [rule for rule in private_rules if rule not in ignore.splitlines()]
     if missing_rules:
-        ignore += ('\n' if ignore and not ignore.endswith('\n') else '')+'\n# Private MUSE installation receipts and prompt inbox\n'+'\n'.join(missing_rules)+'\n'
+        ignore += ('\n' if ignore and not ignore.endswith('\n') else '')+'\n# Private MUSE files: installation receipts, prompt inbox, memory index\n'+'\n'.join(missing_rules)+'\n'
     desired['.gitignore'] = file_state(ignore.encode(), old_ignore.get('mode',0o644))
     if tool == 'claude':
-        for command_name in ('resume', 'save', 'bye'):
+        # Multi-lane commands: command -> (workflow, description); /boot is an alias of /resume.
+        orchestration = {'handoff': ('handoff', 'MUSE account relay: save before a switch, continue under a new account, status'),
+                         'away': ('away', 'MUSE away mode: decide what can be decided, queue the rest for the user'),
+                         '托': ('away', 'MUSE away mode (same as /away)'),
+                         'back': ('back', 'MUSE return: end away mode with the return list'),
+                         '回': ('back', 'MUSE return (same as /back)')}
+        for command_name in ('resume', 'save', 'bye', 'boot', *orchestration):
             rel = '.claude/commands/'+command_name+'.md'
             command_file = safe_path(root, rel)
             # Preserve unrelated user commands; explicit /muse-commands is available too.
             if (not command_file.exists() and not command_file.is_symlink()) or rel in old_manifest['files']:
-                raw = ('---\ndescription: MUSE '+command_name+' with shared role and Lane continuity\n---\n\n'
-                       'Execute MUSE /'+command_name+' $ARGUMENTS. Read this project\'s '
-                       '`.agent/skills/muse-commands/SKILL.md` and the selected shared workflow. '
-                       'Preserve the requested role/Lane; derive helper inputs from actual intent. '
-                       'Do not use another project\'s same-named command or initialize an old Lane as blank.\n').encode()
+                if command_name in orchestration:
+                    workflow, description = orchestration[command_name]
+                    raw = ('---\ndescription: '+description+'\n---\n\n'
+                           'Execute MUSE /'+workflow+' $ARGUMENTS. Read this project\'s '
+                           '`.agent/skills/core/muse-orchestration/SKILL.md`, `.muse/orchestration.json` when present, '
+                           'and `.agent/workflows/'+workflow+'.md`. Lanes come from the project configuration; '
+                           'do not assume lane names, paths or approvals from another project.\n').encode()
+                else:
+                    name = 'resume' if command_name == 'boot' else command_name
+                    raw = ('---\ndescription: MUSE '+command_name+' with shared role and Lane continuity\n---\n\n'
+                           'Execute MUSE /'+name+' $ARGUMENTS. Read this project\'s '
+                           '`.agent/skills/muse-commands/SKILL.md` and the selected shared workflow. '
+                           'Preserve the requested role/Lane; derive helper inputs from actual intent. '
+                           'Do not use another project\'s same-named command or initialize an old Lane as blank.\n').encode()
                 desired[rel] = file_state(raw)
         settings = json_file(safe_path(root, '.claude/settings.json'), {})
         if not isinstance(settings,dict): raise ValueError('INVALID_CLAUDE_SETTINGS')

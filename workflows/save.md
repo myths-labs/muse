@@ -18,3 +18,7 @@ description: 保存当前角色和Lane的本轮变化，继续当前任务，不
 阶段结果、关键决定和上下文保存提醒均可使用本流程，无需用户每次手打 `/save`。没有实质变化时不为了确认反复保存。保存只证明声明版本的记录可读，不替代本轮真实测试、语义核对、正式Bye或产品QA。保存后继续当前任务。
 
 来源账本已安装时，步骤3之前按 SOURCES_V1.md 获取精确原生会话的新增用户消息，source-update 导入并完整审阅；随后重新取得保存SHA。Codex用原生read_thread投影用户消息，Claude用已落盘的UserPromptSubmit记录。原始记录与source note分开，note不冒充原话。缺接口/缺历史标UNKNOWN，只继续不依赖缺口的工作。不要每次重放全部历史。保存完成后继续执行用户的完整目标，只有真实缺授权/登录/信息才请求用户介入。
+
+## 同步 Obsidian 库（可选，只写 daily）
+
+配置了库（`.muse/orchestration.json` 的 `vault.root`，或 `.muse/paths.md` 的 `OBSIDIAN_VAULT`）时，在步骤 6 之后把本轮摘要追加到 `<库>/daily/YYYY-MM-DD.md`（不存在则以 `# YYYY-MM-DD` 开头新建），格式见 `.agent/skills/core/muse-orchestration/references/VAULT.md`；没配置就静默跳过。`/save` 不写 `decisions/`、`bugs/`，也不改 `_index.md`，这些留给正式收尾。禁写密钥、密码、`.env` 内容、电话与个人邮箱。

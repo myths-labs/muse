@@ -76,3 +76,9 @@ For interpreter or optional image-decoder failures, follow
 [runtime dependency preflight](references/RUNTIME_DEPENDENCIES.md). Check the
 actual selected interpreter, then rerun the affected workflow. Ordinary MUSE
 continuity does not require Pillow; preflight PASS is not workflow acceptance.
+
+Multi-lane work is optional and lives in the sibling `muse-orchestration` skill
+(`.agent/skills/core/muse-orchestration/SKILL.md`): `/handoff save | <lane id> |
+status` for account relay, `/away` (`/托`) and `/back` (`/回`) for unattended work,
+and `/boot` as an alias of `/resume`. `resolve` maps these to their shared workflows.
+Lanes come from the project's `.muse/orchestration.json`, never from another project.
