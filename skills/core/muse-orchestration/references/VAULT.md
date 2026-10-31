@@ -13,7 +13,8 @@ ran did not include a vault step. So every flow below writes it, and two tools c
 |---|---|---|---|
 | `/save` | one short section | no | no |
 | `/bye` (daily-bye) | one section | major decisions | recent activity line |
-| `/handoff save` | one section per lane | every new user decision | orchestrator only |
+| `/handoff save` | no (since 3.9) | no (since 3.9) | no |
+| Orchestrator evening report (daily maintenance) | one section per lane for the day | every new user decision of the day | orchestrator only |
 | Orchestrator reports | the report points | no | no |
 
 ## Formats
@@ -27,9 +28,9 @@ ran did not include a vault step. So every flow below writes it, and two tools c
 - **Next**: key next step
 ```
 
-`/handoff save` may use `## <lane id> · HH:MM` with three to eight lines of
-`- **Done** / **Decision** / **Problem** / **Next**: one sentence (source: file:line)`,
-where the source points at the checkpoint just written.
+The orchestrator's daily maintenance may use `## <lane id> · HH:MM` with three to eight
+lines of `- **Done** / **Decision** / **Problem** / **Next**: one sentence (source:
+file:line)`, where the source points at the lane checkpoint the lines were taken from.
 
 `decisions/YYYY-MM-DD-short-name.md`: title, time, who decided, the user's words verbatim,
 Background, Options, Decision, Rationale, Risks, Execution status, Source. Skip when a file

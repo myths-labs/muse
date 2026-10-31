@@ -34,6 +34,17 @@ of guessing. `python3 -I scripts/orchestration_config.py` prints what was resolv
 - **Lanes**: whatever the project defines (for example build, verification, design).
   Each owns its checkpoint, reports to the orchestrator and messages other lanes directly.
 
+## Working mode (3.9)
+
+Sessions run on automatic compaction and rolling checkpoints. A session is replaced only
+for an account switch, a confused session, or a long idle wait with a large context;
+never because its context reached a percentage. Parallel work inside a lane goes to that
+lane's subagents, not to extra sessions. Full test suites run in CI or on a remote
+runner, not on the local machine. `/handoff save` writes only the checkpoint, the relay
+snapshot and the user's new decisions; the orchestrator runs vault and memory maintenance
+once a day with the evening report. See `references/ACCOUNT_RELAY.md` and
+`references/ORCHESTRATOR.md`.
+
 ## Tools (`scripts/`, Python 3 standard library, read-only unless stated)
 
 | Script | Purpose |

@@ -24,7 +24,8 @@ minutes to exhaustion = (100 - weekly % now) / burn per minute
 save when minutes to exhaustion <= 20  or  weekly % >= 95
 ```
 
-`/handoff save` took 3–5 minutes per lane when measured, and a sentinel every 10 minutes
+`/handoff save` took 3–5 minutes per lane when measured (before saves were slimmed, see
+"What a save writes"), and a sentinel every 10 minutes
 still sees the line with at least 10 minutes left. At the fastest burn observed
 (0.62 points/minute) 20 minutes is about 12 points, so the earliest save lands near 88%;
 at a typical 0.3–0.4 points/minute it lands near 92–94%. After saving, lanes keep working
@@ -42,6 +43,55 @@ Each lane updates its checkpoint's "current state" whenever it dispatches or col
 batch of subagents and whenever it closes a package: which subagents and branches are
 running, the next step, who it is waiting for. Before re-dispatching ten or more subagents
 at once (after a wake-up or a switch), write the checkpoint first.
+
+## What a save writes
+
+`/handoff save` writes three things: the lane checkpoint, the relay snapshot and the
+user's new decisions (into memory, after a `recall.py` duplicate check). It does not
+write the Obsidian vault and does not run `vault_coverage_check.py` or
+`memory_audit.py --sync`. The orchestrator does those once a day with the evening report
+(`ORCHESTRATOR.md`, "Daily maintenance"), so a global save stays short when every lane
+saves at once.
+
+## Sessions: compaction first, switch rarely
+
+A lane does not start a new session because its context reached some percentage. The
+client compacts a long session by itself and the rolling checkpoint is the safety net.
+At about 80% context a lane updates its checkpoint incrementally and keeps working: no
+stop, no new session. A lane runs `/handoff save` and continues in a fresh session in
+only three cases:
+
+1. the account is being switched (every lane saves together);
+2. the session is clearly confused: it keeps misreading state, or key facts contradict
+   each other after a compaction;
+3. a usage wall is expected to leave the lane idle for more than 60 minutes and its
+   context is above 300k tokens. Save first; after the reset a fresh session takes over
+   from the checkpoint and the old session is not woken. (Rereading a large context after
+   a long idle gap costs more than restarting from the checkpoint.)
+
+Work that has to run at the same time inside one lane goes to that lane's subagents, not
+to extra sessions. Lanes that share an owner and a rhythm are merged rather than
+multiplied.
+
+Why: every extra session costs machine memory and attention, and every replacement loses
+running subagents, session addresses and timers. Observed in one deployment (trend, not
+a benchmark: two days under the new mode, day boundaries not identical across phases):
+
+| Mode | Lanes | Sessions replaced | Observed |
+|---|---|---|---|
+| Few lanes (8 days) | about 4 | at the wall | 15.5 merged pull requests per day |
+| Many parallel lanes (12 days) | about 8 | at the wall | 12.0 merged pull requests per day |
+| Sliced work, 13 lanes (about 2.5 days) | 13 | at 70–80% context | 12 session replacements in 51 minutes; load peak 52 with 13+ sessions open at 0.4–0.55 GB each |
+| Compaction first (first 2 days) | 6 plus orchestrator | account switch, confused session, long idle | 30 and 15 merged pull requests; 2 and 1 handoffs per day |
+
+Machine load did not improve in those two days (load peaks 52 and 49), which is why the
+load guard now pairs swap with memory pressure instead of treating swap alone as the
+signal (`ORCHESTRATOR.md`, "Shared machine"). Most of the stopped time in the earlier
+phases came from usage walls and machine downtime, which this mode does not remove.
+
+The earlier rule (3.8.0) was that a lane whose context reached 70% before a switch saved
+on its own, and that the orchestrator handed itself off at 70–76%. Compaction-first
+replaces it.
 
 ## Switching accounts (the user, about 2 minutes)
 
@@ -84,7 +134,7 @@ The relay runbook ends with a "Relay snapshots" section. Each `/handoff save` ap
 entry; the newest entry per lane wins (see `templates/RELAY_RUNBOOK.example.md`):
 
 ```
-### Relay snapshot · <lane id> · YYYY-MM-DD HH:MM (<trigger: global save / context 70% / final>)
+### Relay snapshot · <lane id> · YYYY-MM-DD HH:MM (<trigger: global save / confused session / long idle / final>)
 - Doing: …
 - Next: …
 - Waiting for: …

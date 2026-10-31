@@ -9,7 +9,7 @@
 <p align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/myths-labs/muse/blob/main/LICENSE)
-[![Version](https://img.shields.io/badge/version-3.8.0-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-3.9.0-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
 [![Stars](https://img.shields.io/github/stars/myths-labs/muse?style=social)](https://github.com/myths-labs/muse)
 [![Markdown + Python](https://img.shields.io/badge/Markdown-Python-green.svg)](#)
 [![Continuity Runtime](https://img.shields.io/badge/continuity-Python_3.7%2B-blue.svg)](docs/CONTINUITY.md)
@@ -30,7 +30,7 @@
 >
 > *MUSE inherits this lineage. It helps preserve decisions and evidence across AI conversations, with explicit boundaries when source history is incomplete.*
 
-**New in 3.8.0:** run several long-lived sessions as one team. An orchestrator lane plus your own lanes, account relay with `/handoff` when usage runs out, `/away` and `/back` for unattended work, patrol and quota-sentinel timer templates, memory recall and audit tools, Stop-hook guards and optional Obsidian vault checks. [Complete usage and upgrade guide](docs/CONTINUITY.md).
+**New in 3.9.0:** a lighter way to run several long-lived sessions as one team. Sessions run on automatic compaction and are replaced only for an account switch, a confused session or a long idle wait, not at a context percentage; parallel work inside a lane goes to subagents; full test suites run in CI; `/handoff save` shrinks to the checkpoint, the relay snapshot and new decisions; the machine load guard reads memory pressure. [Complete usage and upgrade guide](docs/CONTINUITY.md).
 
 ## New to MUSE? Start here
 
@@ -535,5 +535,5 @@ MIT © [Myths Labs](https://github.com/myths-labs)
 </p>
 
 <p align="center">
-  <i>MUSE v3.8.0</i>
+  <i>MUSE v3.9.0</i>
 </p>
