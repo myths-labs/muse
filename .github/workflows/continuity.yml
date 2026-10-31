@@ -20,9 +20,11 @@ jobs:
           git diff --exit-code -- docs/guide.html docs/guide-en.html
   continuity:
     strategy:
+      fail-fast: false
       matrix:
         include:
-          - os: ubuntu-latest
+          # Python 3.9 is not published for the newest ubuntu-latest image; pin the oldest supported runtime to an image that still ships it.
+          - os: ubuntu-24.04
             python: '3.9'
           - os: ubuntu-latest
             python: '3.12'
