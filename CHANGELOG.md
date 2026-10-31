@@ -1,3 +1,25 @@
+## [3.9.0] - 2026-10-31
+
+### Added
+- **Compaction-first sessions** (`muse-orchestration`, `/handoff`): a lane no longer replaces its session because its context reached a percentage. It relies on the client's automatic compaction and its rolling checkpoint, updates the checkpoint at about 80% context and keeps working. `/handoff save` plus a fresh session is for three cases only: an account switch, a clearly confused session, or an expected idle wait of more than 60 minutes with more than 300k tokens of context.
+- **Subagents inside a lane**: work that has to run in parallel within one lane goes to that lane's subagents instead of extra sessions; prefer a few lanes with clear owners to many that share one.
+- **Daily maintenance** in the orchestrator's evening report: vault writes, `vault_coverage_check.py` and `memory_audit.py` (with `--sync` when only the cross-directory block is stale) run once a day.
+- **Cross-session message cap** rule: when the client's cap on messages to other sessions is reached, queue the unsent messages as pending drafts in the checkpoint and send them after the user's next message. No other channel, timer or session is used to get around the cap.
+- **Test browser profile** rule: a profile directory owned by automation is opened by hand only with the automation's own launch flags (for example Puppeteer's `--use-mock-keychain --password-store=basic`); an ordinary browser instance can leave every test account logged out.
+- An evidence table in `references/ACCOUNT_RELAY.md` comparing four working modes observed in one deployment (trend, not a benchmark).
+
+### Changed
+- `/handoff save` writes only the lane checkpoint, the relay snapshot and the user's new decisions (memory). It no longer writes the Obsidian vault or runs `vault_coverage_check.py` and `memory_audit.py --sync`; `/save` and `/bye` keep their own vault steps.
+- Full test suites run in CI or on a remote runner, not on the local machine. The heavy lock now covers only what has to stay local: production builds, timing-sensitive tests, virtual machines and simulators.
+- Load guard: swap alone is no longer the signal, because macOS allocates swap files on demand and is slow to release them, so free swap can stay low while memory is plentiful. It trips when free swap is below 2 GB and `memory_pressure` reports less than 30% free memory, or when the 1-minute load is above 20 (thresholds are tunable). Quota sentinel lines also record free memory.
+- Orchestrator timers: the patrol no longer runs the memory audit or vault coverage; wake-after-wall and idle dispatch no longer depend on a 70% context threshold; the "hand off at 70–76% context" rule is removed. Relay snapshot trigger labels are now `global save / confused session / long idle / final`.
+- Version references, site pages, `llms.txt` and the bilingual continuity guides updated to 3.9.0.
+
+### Compatibility
+- Rules, prompt templates and documentation only: the continuity runtime, installer, Stop hooks and Python tools are unchanged, and no configuration key was added. Single-lane projects and projects without `.muse/orchestration.json` behave as in 3.8.0.
+- To refresh an existing project, rerun the installer. Checked against a real 3.8.0 install: the upgrade rewrites only the orchestration skill's reference and template files, the `handoff` workflow and the install state. As before, hand-edited managed files stop the installer until you reconcile them.
+- Lane names, approvals and timers never widen authority; deployments, production data changes, payments, external messages and deletions still need the user's consent in the current session.
+
 ## [3.8.0] - 2026-10-24
 
 ### Added

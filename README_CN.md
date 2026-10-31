@@ -9,7 +9,7 @@
 <p align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/myths-labs/muse/blob/main/LICENSE)
-[![Version](https://img.shields.io/badge/version-3.8.0-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-3.9.0-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
 [![Stars](https://img.shields.io/github/stars/myths-labs/muse?style=social)](https://github.com/myths-labs/muse)
 [![Markdown + Python](https://img.shields.io/badge/Markdown-Python-green.svg)](#)
 [![Continuity Runtime](https://img.shields.io/badge/continuity-Python_3.7%2B-blue.svg)](docs/CONTINUITY.md)
@@ -30,7 +30,7 @@
 >
 > *MUSE（缪斯）继承了这一血脉，帮助保存跨对话的决定和证据；来源缺失时明确保留边界。*
 
-**3.8.0 新增：** 多个长期会话组成一支队：一个编排者（总管）加你自己定义的各条线；额度用完用 `/handoff` 接力换账号，离开时 `/away`、回来 `/back`；巡检与额度哨兵定时模板、记忆检索与审计工具、Stop 钩子守卫、可选的 Obsidian 库核对。[完整使用与升级说明](docs/CONTINUITY_CN.md)。
+**3.9.0 新增：** 多个长期会话组成一支队的更轻做法：会话靠自动压缩续跑，只在切账号、会话糊涂或预计长时间空闲时才换会话，不再按上下文百分比换；同一线里并行的活交给子代理；全量测试走 CI；`/handoff save` 只写检查点、接力快照和用户的新决定；机器负荷闸同时看内存压力。[完整使用与升级说明](docs/CONTINUITY_CN.md)。
 
 ## 第一次用？先看这里
 
@@ -404,5 +404,5 @@ MIT © [Myths Labs](https://github.com/myths-labs)
 </p>
 
 <p align="center">
-  <i>MUSE v3.8.0</i>
+  <i>MUSE v3.9.0</i>
 </p>

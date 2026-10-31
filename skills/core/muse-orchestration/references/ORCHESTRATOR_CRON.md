@@ -24,18 +24,21 @@ Paths below use the installed layout. `$SCRIPTS` is
 > account usage (plan, short window %, weekly %). Compare with the previous sentinel or
 > patrol reading in `$CHECKPOINT`: weekly burn per minute and minutes to exhaustion
 > (remaining points ÷ burn; burn 0 → "will not hit"). Read machine load (`uptime`, swap
-> usage, top processes by resident memory); over the project's thresholds → identify the
-> lane owning the largest process and ask it to pause at its next safe point. Save line:
-> weekly exhaustion within 20 minutes, or weekly ≥ 95%, whichever comes first → the first
-> time in this cycle, message every lane "Global save: run /handoff save, then keep
+> usage, memory pressure such as `memory_pressure`, top processes by resident memory);
+> load guard tripped (free swap below the threshold and memory pressure below its
+> threshold, or load above its threshold; `ORCHESTRATOR.md`, "Shared machine") →
+> identify the lane owning the largest process and ask it to pause at its next safe
+> point. Save line: weekly exhaustion within 20 minutes, or weekly ≥ 95%, whichever comes
+> first → the first time in this cycle, message every lane "Global save: run /handoff save, then keep
 > working until the wall; no deployments or production data windows while critical",
 > run /handoff save yourself and tell the user "snapshots written; switch accounts at
 > the wall". Already sent → only check that every snapshot is written. Weekly ≥ 85% →
 > if no tight sentinel exists, create one with this prompt; delete it after the switch
 > or when weekly falls below 85%. Short window: record only, never send a global save.
 > Nothing triggered → append one line to `$CHECKPOINT`: "- sentinel HH:MM: short x%,
-> weekly y%, burn z/min, n min to exhaustion; load a, free swap b GB". Timers fire only
-> while the session is idle; if you are busy for more than 20 minutes, read usage yourself.
+> weekly y%, burn z/min, n min to exhaustion; load a, free swap b GB, free memory c%".
+> Timers fire only while the session is idle; if you are busy for more than 20 minutes,
+> read usage yourself.
 
 ## Patrol
 
@@ -53,24 +56,20 @@ Paths below use the installed layout. `$SCRIPTS` is
 > `YYYY-MM-DD`, and take the latest): id, status, date, first 60 characters of the note.
 > Then yourself: ask each stalled row's owner "where is it stuck, who does it, when will
 > it land"; a row stalled two patrols in a row goes to the user as one line with a
-> recommendation. Run `python3 -I $SCRIPTS/memory_audit.py` (read-only, last line
-> RESULT GREEN/RED); write GREEN or RED with failing items, and send gaps to the lanes
-> that own them (the patrol itself never edits memory; when only the cross-directory block
-> is stale, run `--sync` yourself as a separate command). With a vault configured, run
-> `python3 -I $SCRIPTS/vault_coverage_check.py --from <last checked line + 1>`; GREEN →
-> write "vault checked to line N GREEN"; RED → add each missing item verbatim to that
-> day's vault note (non-quotes go into the skip file with a reason) and rerun to GREEN.
-> Read machine load as in the sentinel. Read usage and apply the save line as in the
-> sentinel. Chase anything stuck for more than 30 minutes. Wake after the wall: idle lanes
-> whose last turn hit a usage limit with no activity since → below 70% context send
-> "window reset, continue from the last line of your progress file"; at 70% or more
-> propose a fresh session and have the new one run `wall_recover.py`. Idle dispatch: while
-> weekly usage is below 100%, idle lanes that ended normally and are below 70% context get
-> their next task that waits on nobody (commit or write to disk at each step, work until
-> the wall); none → write "idle: <lane> has nothing dispatchable (reason)". Append one
-> line to `$CHECKPOINT`: "- **Patrol HH:MM**: production …; main …; PRs …; stalled …;
-> memory …; vault …; load …; usage short/weekly …; context …". If nothing needs the user,
-> do not message the user. At about 76% context, write a checkpoint and prepare a handoff.
+> recommendation. Memory audit and vault checks are not part of the patrol; they run once
+> a day in the evening report. Read machine load as in the sentinel. Read usage and apply
+> the save line as in the sentinel. Chase anything stuck for more than 30 minutes. Wake
+> after the wall: idle lanes whose last turn hit a usage limit with no activity since →
+> send "window reset, continue from the last line of your progress file"; a lane that
+> saved because it expected more than 60 minutes idle with more than 300k tokens of
+> context is not woken: have a fresh session take over from its checkpoint and run
+> `wall_recover.py`. Idle dispatch: while weekly usage is below 100%, idle lanes that
+> ended normally get their next task that waits on nobody (commit or write to disk at
+> each step, work until the wall); none → write "idle: <lane> has nothing dispatchable
+> (reason)". Append one line to `$CHECKPOINT`: "- **Patrol HH:MM**: production …; main …;
+> PRs …; stalled …; load …; usage short/weekly …; context …". If nothing needs the user,
+> do not message the user. Do not hand off by context percentage: at about 80% context
+> update your checkpoint incrementally and keep working.
 
 ## Report
 
@@ -83,7 +82,16 @@ Paths below use the installed layout. `$SCRIPTS` is
 > decisions for the user, each with a recommendation; (4) one line of things only the user
 > can do. Write the same points as a new section "MM/DD HH:MM morning report points" in
 > `$CHECKPOINT` and, with a vault configured, append them to the vault's daily note under
-> "## Orchestrator morning report HH:MM" (append only).
+> "## Orchestrator morning report HH:MM" (append only). Evening report only: also do the
+> daily maintenance (`ORCHESTRATOR.md`, "Daily maintenance"). With a vault configured,
+> append each lane's section and the day's new user decisions to the vault, then run
+> `python3 -I $SCRIPTS/vault_coverage_check.py --from <last checked line + 1>`; GREEN →
+> write "vault checked to line N GREEN"; RED → add each missing item verbatim to that
+> day's vault note (non-quotes go into the skip file with a reason) and rerun to GREEN.
+> Run `python3 -I $SCRIPTS/memory_audit.py` (read-only, last line RESULT GREEN/RED);
+> write GREEN or RED with failing items and send gaps to the lanes that own them (the
+> report itself never edits memory; when only the cross-directory block is stale, run
+> `--sync` yourself as a separate command). Put both results into the report points.
 
 ## Timer hygiene
 

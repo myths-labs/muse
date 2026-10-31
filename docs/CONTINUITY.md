@@ -1,4 +1,4 @@
-# Continuous work with MUSE 3.8.0
+# Continuous work with MUSE 3.9.0
 
 New to MUSE? Read the [beginner guide](QUICKSTART.md), then follow the setup instructions below.
 
@@ -133,7 +133,7 @@ session must read. MUSE ships no fixed lane names.
 
 | Say | What happens |
 |---|---|
-| `/handoff save` | Before an account switch: write memory, the lane checkpoint and a relay snapshot |
+| `/handoff save` | Before an account switch: write the user's new decisions to memory, the lane checkpoint and a relay snapshot |
 | `/handoff <lane id>` | In a session under the new account: read, re-sync, report, continue |
 | `/handoff status` | Read-only: each lane's latest snapshot and its age |
 | `/away` (`/托`) | You leave: the agents decide what they may and queue the rest |
@@ -142,9 +142,22 @@ session must read. MUSE ships no fixed lane names.
 Saving is triggered by a forecast, not a fixed percentage: when weekly usage is
 expected to run out within 20 minutes, or reaches 95%, every lane saves and then keeps
 working until the wall. Short usage windows never trigger a global save; each lane keeps
-a one-shot timer at reset + 1 minute instead. The orchestrator's patrol, quota sentinel
-and twice-daily report prompts, the memory tools (`recall.py`, `memory_audit.py`), two
-Stop-hook guards and the optional Obsidian vault checks are described in the
+a one-shot timer at reset + 1 minute instead.
+
+Since 3.9.0 sessions are not replaced when their context reaches a percentage. Lanes rely
+on the client's automatic compaction and their rolling checkpoints, and start a fresh
+session only for an account switch, a clearly confused session, or a long idle wait
+(over 60 minutes) with a large context (over 300k tokens). Parallel work inside a lane
+goes to that lane's subagents, full test suites run in CI or on a remote runner, and
+`/handoff save` writes only the checkpoint, the relay snapshot and the user's new
+decisions; vault and memory-audit maintenance runs once a day with the orchestrator's
+evening report. The machine load guard watches swap together with memory pressure, and
+a session that reaches the client's cap on messages to other sessions queues drafts
+until the user's next message instead of routing around the cap.
+
+The orchestrator's patrol, quota sentinel and twice-daily report prompts, the memory
+tools (`recall.py`, `memory_audit.py`), two Stop-hook guards and the optional Obsidian
+vault checks are described in the
 [orchestration skill](../skills/core/muse-orchestration/SKILL.md).
 
 ## What is stored
