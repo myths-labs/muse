@@ -13,6 +13,7 @@
 4. **Context Protection**: At observed context ≥80%, save the current Lane, compact, verify and continue; do not force Bye
 5. **Verify Before Claiming Done**: Run `verification-before-completion` skill before saying "done"
 6. **End Sessions Properly**: Use `/save` for ordinary progress and `/bye` for explicit formal closeout
+7. **Iterate on Your Own Server**: While a feature is unfinished, change and test it on environments you own. PR, CI and release happen once, after it is done. Skill: `iterating-on-own-server`.
 
 ## Skill-Driven Execution
 

@@ -127,6 +127,16 @@ a 2-hour "what was I doing?" recovery.
 
 ---
 
+## 6. Iterate on Your Own Server
+
+While a feature is unfinished, change and test it on environments you own. PR, CI, review and release happen once, after it is done.
+
+Those gates protect production. Used as a development loop, they turn minutes into days: a PR that merged in an hour starts to take a day, CI bills multiply, and a third of the work never reaches main.
+
+Keep every gate. Move it to the end.
+
+---
+
 ## How They Work Together
 
 | Principle | Says | Prevents |
@@ -136,5 +146,6 @@ a 2-hour "what was I doing?" recovery.
 | Ship the Narrowest Wedge | Scope tight, ship fast | Feature creep |
 | Memory Over Momentum | Learn from the past | Repeating mistakes |
 | Governance Is Speed | Structure enables speed | Solo builder chaos |
+| Iterate on Your Own Server | Gates come after the work | Waiting on CI to see your change |
 
 Together: **search first, scope tight, build complete, remember everything, ship governed.**

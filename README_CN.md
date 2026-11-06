@@ -9,7 +9,7 @@
 <p align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/myths-labs/muse/blob/main/LICENSE)
-[![Version](https://img.shields.io/badge/version-3.9.0-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-3.10.0-blue.svg)](https://github.com/myths-labs/muse/blob/main/CHANGELOG.md)
 [![Stars](https://img.shields.io/github/stars/myths-labs/muse?style=social)](https://github.com/myths-labs/muse)
 [![Markdown + Python](https://img.shields.io/badge/Markdown-Python-green.svg)](#)
 [![Continuity Runtime](https://img.shields.io/badge/continuity-Python_3.7%2B-blue.svg)](docs/CONTINUITY.md)
@@ -30,7 +30,7 @@
 >
 > *MUSE（缪斯）继承了这一血脉，帮助保存跨对话的决定和证据；来源缺失时明确保留边界。*
 
-**3.9.0 新增：** 多个长期会话组成一支队的更轻做法：会话靠自动压缩续跑，只在切账号、会话糊涂或预计长时间空闲时才换会话，不再按上下文百分比换；同一线里并行的活交给子代理；全量测试走 CI；`/handoff save` 只写检查点、接力快照和用户的新决定；机器负荷闸同时看内存压力。[完整使用与升级说明](docs/CONTINUITY_CN.md)。
+**3.10.0 新增：** 在自己的服务器上迭代。新增一个核心 Skill 和一条 ETHOS 原则：功能没做完，只在自己掌控的环境里改、测、再改；PR、CI、审查和发布在做完之后走一次。另有：所有自动判断（闸）的 5 条评测规矩（考试集冻结、漏拦和拦错分开报、盲标、每次判决都记下）；`recall.py` 现行记忆排前、指针文件排后、标了 `superseded_by:` 的排中间，`--why` 说明某个文件为什么排在那里；切账号后核一遍排程任务。[完整使用与升级说明](docs/CONTINUITY_CN.md)。
 
 ## 第一次用？先看这里
 
@@ -164,7 +164,7 @@ graph TB
         CO --> CO2["子 Agent 综合"]
     end
     
-    subgraph "⚡ 技能层 (67)"
+    subgraph "⚡ 技能层 (68)"
         G["触发型技能<br/>按需加载"]
         H["生命周期技能<br/>strategic-compact"]
     end
@@ -270,7 +270,7 @@ memory/ 教训反复出现 → /distill 发现模式 → 写入 MEMORIES.md
 ```
 project/
 ├── CLAUDE.md              # 📜 宪法
-├── ETHOS.md               # 💡 Builder 哲学（5 条原则）
+├── ETHOS.md               # 💡 Builder 哲学（6 条原则）
 ├── USER.md                # 偏好（私密）
 ├── MEMORIES.md            # 长期记忆（私密）
 ├── assets/                # 🎨 项目资产
@@ -404,5 +404,5 @@ MIT © [Myths Labs](https://github.com/myths-labs)
 </p>
 
 <p align="center">
-  <i>MUSE v3.9.0</i>
+  <i>MUSE v3.10.0</i>
 </p>

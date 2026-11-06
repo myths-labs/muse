@@ -1,3 +1,23 @@
+## [3.10.0] - 2026-11-06
+
+### Added
+- **`iterating-on-own-server`** (core skill): while a feature is unfinished, change and test it on environments you own (L0 local, L1 one integration preview at a fixed address). PR, CI, review and release happen once, when the feature is done. Covers the integration-branch rules, three checks before showing anyone a build, when shipping early is acceptable, and the gates that do not change (deployment rules, production data procedure, payment and security review, secrets, deep QA).
+- **ETHOS principle 6, "Iterate on Your Own Server"**, and the matching iron rule 7 in the repository constitution.
+- **Gate eval discipline** (`skills/core/muse-commands/references/GATE_EVAL_DISCIPLINE.md`): five rules for any automated judgment and any threshold change: a frozen exam set separate from the tuning set, misses and false blocks reported separately by category, no answer leakage to the judge and blind ground-truth labels, one logged line per verdict, and distillation to a smaller model only after launch and only if it is no worse.
+- **`recall.py --why NAME`** explains why a file is or is not near the top of the results.
+- **`superseded_by:` frontmatter**: a memory that names its replacement ranks after current memories and is marked in its heading; if the line limit cuts it, the end of the output names it instead of dropping it silently.
+
+### Changed
+- `recall.py` ranking: current memories first, then superseded ones, then pointer files (`MEMORY.md`, `index-*`). In one deployment's 18 real lookups, ranking pointer files last put the right file first in 12 instead of 5 (trend, not a benchmark).
+- Account relay (`references/ACCOUNT_RELAY.md`, `/handoff`): scheduled task files stay on the machine, but the app may list and run only the tasks created by the signed-in account. Keep a manifest of task id, schedule, keep or stop, and end date. `/handoff save` step 6b updates it; on the new account `/handoff <lane>` step 4b lists the tasks, compares them with the manifest and recreates every kept task that is missing and not past its end date.
+- `skills/manifest.json` regenerated: it now lists `muse-orchestration` (missing since 3.8.0) and `iterating-on-own-server`, 68 skills in total.
+- Version references, site pages, `llms.txt`, the optional tools guides and the continuity guide titles updated to 3.10.0.
+
+### Compatibility
+- No configuration key was added; the continuity runtime, installer and Stop hooks are unchanged. `recall.py` keeps its arguments and adds the optional `--why`; only the order of its results changes.
+- To refresh an existing project, rerun the installer: it picks up the new skill and reference file. As before, hand-edited managed files stop the installer until you reconcile them.
+- Lane names, approvals and timers never widen authority; deployments, production data changes, payments, external messages and deletions still need the user's consent in the current session.
+
 ## [3.9.0] - 2026-10-31
 
 ### Added

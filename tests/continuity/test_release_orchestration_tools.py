@@ -131,6 +131,56 @@ class OrchestrationTools(unittest.TestCase):
         self.assertIn('a.md:1  ExampleVendor in the default root', result.stdout)
         self.assertEqual(self.run_tool('recall.py').returncode, 2)
 
+    def test_recall_lists_pointer_files_after_content_files(self):
+        mem = self.root / 'projects' / 'p' / 'memory'
+        self.write(mem / 'MEMORY.md', '- ExampleVendor index line\n')
+        self.write(mem / 'index-vendors.md', '- ExampleVendor sub-index line\n')
+        self.write(mem / 'zz-note.md', 'ExampleVendor note body\n')
+        cfg = self.config(memory={'projects_root': str(self.root / 'projects')})
+        out = self.run_tool('recall.py', '--config', cfg, 'examplevendor').stdout
+        self.assertLess(out.index('zz-note.md'), out.index('index-vendors.md'))  # content first although 'zz' sorts last
+        self.assertLess(out.index('zz-note.md'), out.index('MEMORY.md'))  # pointer files keep path order among themselves
+        self.assertEqual(out.strip().splitlines()[-1], 'total hits: 3 lines in 3 files (shown 3)')
+
+    def test_recall_lists_superseded_memory_after_current_one_with_a_mark(self):
+        mem = self.root / 'projects' / 'p' / 'memory'
+        self.write(mem / 'a-old.md', '---\nname: a-old\ndescription: x: not strict yaml\nsuperseded_by: [[b-new]]\nmetadata:\n  type: project\n---\nExampleVendor old rule\n')
+        self.write(mem / 'b-new.md', '---\nname: b-new\n---\nExampleVendor new rule\n')
+        self.write(mem / 'c-ghost.md', '---\nname: c-ghost\nsuperseded_by: no-such-memory\n---\nExampleVendor ghost\n')
+        self.write(mem / 'd-body.md', '---\nname: d-body\n---\nsuperseded_by: only-in-the-body\nExampleVendor body\n')
+        cfg = self.config(memory={'projects_root': str(self.root / 'projects')})
+        out = self.run_tool('recall.py', '--config', cfg, 'examplevendor').stdout
+        self.assertLess(out.index('b-new.md'), out.index('a-old.md'))  # current first although a-old sorts first
+        self.assertLess(out.index('d-body.md'), out.index('a-old.md'))  # a key in the body is not frontmatter
+        self.assertIn('a-old.md (1 matching lines, superseded by: b-new)', out)
+        self.assertIn('superseded by: no-such-memory (no memory has this name)', out)
+        self.assertNotIn('only-in-the-body)', out)
+
+    def test_recall_why_explains_rank_and_missing_files(self):
+        mem = self.root / 'projects' / 'p' / 'memory'
+        self.write(mem / 'a-old.md', '---\nname: a-old\nsuperseded_by: b-new\n---\nExampleVendor old rule\n')
+        self.write(mem / 'b-new.md', '---\nname: b-new\n---\nExampleVendor new rule\n')
+        self.write(mem / 'other.md', 'nothing here\n')
+        cfg = self.config(memory={'projects_root': str(self.root / 'projects')})
+        why = self.run_tool('recall.py', '--config', cfg, 'examplevendor', '--why', 'a-old').stdout
+        self.assertIn('== why: a-old ==', why)
+        self.assertIn('it is superseded (-> b-new), listed after 1 current files', why)
+        self.assertIn('successor "b-new": matches 1 lines, rank 1', why)
+        self.assertIn('- shown.', why)
+        zero = self.run_tool('recall.py', '--config', cfg, 'examplevendor', '--why', 'other').stdout
+        self.assertIn('0 matching lines', zero)
+        none = self.run_tool('recall.py', '--config', cfg, 'examplevendor', '--why', 'nope-xyz').stdout
+        self.assertIn('No searched file has a path containing "nope-xyz"', none)
+        self.assertEqual(self.run_tool('recall.py', '--config', cfg, 'examplevendor', '--why', '').returncode, 2)
+
+    def test_recall_why_says_when_the_line_limit_hid_a_file(self):
+        projects = self.root / 'projects'
+        for n in range(12):
+            self.write(projects / ('proj-%02d' % n) / 'memory' / 'n.md', ''.join('needle row %d\n' % i for i in range(9)))
+        cfg = self.config(memory={'projects_root': str(projects)})
+        out = self.run_tool('recall.py', '--config', cfg, 'needle', '--why', 'proj-11').stdout
+        self.assertIn('NOT shown: the 80-line limit was used up', out)
+
     # vault coverage
     def coverage_fixture(self, id_patterns=('rel_[A-Za-z0-9]{6,}',)):
         self.write(self.project / 'docs' / 'OPEN_THREADS.md', '\n'.join([
