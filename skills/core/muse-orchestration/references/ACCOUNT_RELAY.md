@@ -122,8 +122,14 @@ re-dispatch only the unfinished work.
 | Checkpoints, board, relay runbook | Running subagents and background jobs |
 | Memory directories | Addresses between sessions (list sessions again) |
 | Worktrees and progress files | Session timers |
-| Local scheduled tasks | Browser extension connection and per-session connectors |
+| Scheduled task files | Browser extension connection and per-session connectors |
 | Browser and CLI sign-ins | |
+
+Scheduled tasks need a check after every switch. Their files stay on the machine, but the app may
+list and run only the tasks created by the signed-in account. Keep a manifest of task id, schedule,
+keep or stop, and end date. On the new account, list the tasks, compare with the manifest, and
+recreate every kept task that is missing and not past its end date. Session timers are set again
+from their prompts.
 
 Old sessions remain listed under their titles. Rename them "retired, do not message" or
 archive them, after detaching any live session they started.

@@ -1,4 +1,4 @@
-# Continuous work with MUSE 3.9.0
+# Continuous work with MUSE 3.10.0
 
 New to MUSE? Read the [beginner guide](QUICKSTART.md), then follow the setup instructions below.
 

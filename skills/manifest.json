@@ -1,10 +1,10 @@
 {
   "version": "1.0.0",
-  "generated": "2026-09-21",
+  "generated": "2026-11-06",
   "generator": "scripts/generate-manifest.sh",
-  "total": 66,
+  "total": 68,
   "categories": {
-    "core": 8,
+    "core": 10,
     "toolkit": 44,
     "ecosystem": 13,
     "growth": 1
@@ -12,8 +12,10 @@
   "skills": [
     {"name": "agent-protocol", "description": "Specification for making MUSE role files machine-readable as an Agent Protocol — enabling multi-agent coordination and tool interoperability", "category": "core", "path": "skills/core/agent-protocol", "sizeBytes": 8065},
     {"name": "context-health-check", "description": "Check actual session context observations; save and reassess after compaction without forcing Bye or guessing model limits.", "category": "core", "path": "skills/core/context-health-check", "sizeBytes": 1640},
+    {"name": "iterating-on-own-server", "description": "Use when a feature is not finished and the next step looks like opening a PR, starting CI, waiting for a release train, or testing in production; before sharing a preview link; when work feels slow...", "category": "core", "path": "skills/core/iterating-on-own-server", "sizeBytes": 3351},
     {"name": "layered-context", "description": "L0/L1/L2 three-layer context loading protocol — reduces token consumption during /resume boot", "category": "core", "path": "skills/core/layered-context", "sizeBytes": 3153},
-    {"name": "muse-commands", "description": "Run MUSE /resume, /save and /bye for continuous work in Codex or Claude Code, preserving the selected role, Lane, decisions and source evidence across sessions.", "category": "core", "path": "skills/core/muse-commands", "sizeBytes": 4361, "hasScripts": true, "extraFiles": 1},
+    {"name": "muse-commands", "description": "Run MUSE /resume, /save and /bye for continuous work in Codex or Claude Code, preserving the selected role, Lane, decisions and source evidence across sessions.", "category": "core", "path": "skills/core/muse-commands", "sizeBytes": 5075, "hasScripts": true, "extraFiles": 1},
+    {"name": "muse-orchestration", "description": "Run several long-lived AI coding sessions (\"lanes\") as one team led by an orchestrator lane. Covers account relay when usage runs out (/handoff save, /handoff <lane>, /handoff status), away mode (/...", "category": "core", "path": "skills/core/muse-orchestration", "sizeBytes": 4451, "hasScripts": true},
     {"name": "semantic-search", "description": "Zero-dependency TF-IDF search across MUSE memory, roles, and skills. Use when user wants to find information across their project context.", "category": "core", "path": "skills/core/semantic-search", "sizeBytes": 1981},
     {"name": "strategic-compact", "description": "Suggests manual context compaction at logical intervals to preserve context through task phases rather than arbitrary auto-compaction. Supports focus-aware compaction for targeted context preservat...", "category": "core", "path": "skills/core/strategic-compact", "sizeBytes": 4431},
     {"name": "using-superpowers", "description": "Use when starting any conversation - establishes how to find and use skills, requiring Skill tool invocation before ANY response including clarifying questions", "category": "core", "path": "skills/core/using-superpowers", "sizeBytes": 3798},

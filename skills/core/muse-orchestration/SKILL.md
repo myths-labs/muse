@@ -49,7 +49,7 @@ once a day with the evening report. See `references/ACCOUNT_RELAY.md` and
 
 | Script | Purpose |
 |---|---|
-| `recall.py <word> <synonym> …` | Search every memory directory and checkpoint before saying "not in my records" |
+| `recall.py [--why NAME] <word> <synonym> …` | Search every memory directory and checkpoint before saying "not in my records". Current memories come first, then ones whose frontmatter says `superseded_by: <newer-memory>` (marked in the heading), then pointer files (`MEMORY.md`, `index-*`). `--why NAME` explains why a file is or is not near the top |
 | `memory_audit.py [--sync]` | Audit memory indexes, cross-directory visibility, decision backlog, vault freshness, key patterns; `--sync` writes cross-directory blocks |
 | `negative_claim_guard.py` | Stop hook: blocks a negative memory claim made without running `recall.py` |
 | `licence_stop_guard.py` | Optional Stop hook encoding a policy: a licence is one line of fact, not by itself a reason to skip evaluation |

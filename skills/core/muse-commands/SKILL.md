@@ -77,6 +77,11 @@ For interpreter or optional image-decoder failures, follow
 actual selected interpreter, then rerun the affected workflow. Ordinary MUSE
 continuity does not require Pillow; preflight PASS is not workflow acceptance.
 
+Before creating an automated gate or changing its threshold (identity, quality,
+semantic and voice checks, action classifiers), follow
+[gate eval discipline](references/GATE_EVAL_DISCIPLINE.md): frozen exam set,
+misses and false blocks reported separately, blind labels, every verdict logged.
+
 Multi-lane work is optional and lives in the sibling `muse-orchestration` skill
 (`.agent/skills/core/muse-orchestration/SKILL.md`): `/handoff save | <lane id> |
 status` for account relay, `/away` (`/托`) and `/back` (`/回`) for unattended work,
